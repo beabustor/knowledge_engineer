@@ -286,11 +286,11 @@ El archivo de origen contiene 13.750 códigos únicos normalizados y su proceden
 y SHA-256 constan en [la ficha de la fuente](data/sources/cie10/README.md).
 Su edición y derechos de reutilización están sin verificar; no se presenta como
 CIE-10-ES ni como edición OMS vigente. La licencia MIT no cubre esta hoja de terceros.
-También se pueden cargar XLS/XLSX/CSV locales (8 MB y 30.000 filas como máximo).
+El módulo permite procesar XLS/XLSX/CSV locales (8 MB y 30.000 filas), pero la interfaz pública usa la copia incluida sin controles de carga.
 El enlace Google Sheets aportado no pudo verificarse desde el entorno (403);
 puede exportarse manualmente y seleccionarse como archivo local si se dispone de acceso.
 
-La entrada admite **1.000 caracteres**, con contador y validación. El análisis se
+La entrada admite **100 caracteres**, con contador y validación. El análisis se
 actualiza 350 ms después de escribir; el botón Analizar sigue disponible. La
 «Hoja de previsualización» muestra sujeto, predicado y objeto/valor. Las pestañas
 RDF, OWL, Neo4j/Cypher, SQL, grafo e inspector cambian con el concepto elegido;
@@ -308,3 +308,57 @@ español y en la etiqueta inglesa se muestra el código, sin traducción inventa
 Para IA sin tarifa por consulta existe el adaptador **Ollama local, desactivado**;
 ver [configuración](optional/README.es.md). No hay una API alojada gratuita sin
 límites garantizados. Un modelo local consume recursos y está sujeto a su licencia.
+
+
+### Cobertura del lenguaje: caso de prueba, no diagnóstico
+
+«Tengo 35 años y tengo 38.5 de fiebre y manchas moradas en la piel» permite
+examinar edad y temperatura referidas como atributos, y manchas moradas como
+hallazgo descriptivo local. No se asigna un código o enfermedad a estas manchas
+por su color. El Excel no contiene todos los sinónimos coloquiales; importar
+más códigos no sustituye la capa lingüística. Las reglas actuales son explícitas,
+limitadas y comprobables. Un LLM puede ayudar con paráfrasis y desambiguación,
+pero necesita evaluación y no garantiza interpretación clínica correcta.
+
+
+## Grafo principal y enriquecimiento externo limitado
+
+El grafo aparece primero, antes de tablas y código. Incluye flechas etiquetadas,
+sinónimos/sentidos, jerarquías, códigos, atributos y acciones; los nodos abren las
+representaciones y hay controles de zoom. El Excel se carga automáticamente por
+detrás, sin panel de archivos ni contador de códigos. La entrada admite 100 caracteres.
+
+El enriquecimiento consulta bajo petición **OLS (EMBL-EBI)** y **CIMA (AEMPS)**.
+Solo se envía el término de 2–80 caracteres que se escribe en ese panel, no la
+descripción completa. El servicio externo recibe ese término y la IP de conexión.
+Se muestran hasta 5 resultados, con identificador, enlace y etiqueta original.
+`candidateMatch` es una anotación de candidato, no una equivalencia ontológica,
+traducción validada ni asignación automática de CIE-10. No hay claves API ni IA de pago.
+
+**Límite activo en Pages:** 6 solicitudes/minuto y 30 por 24 horas por perfil de
+navegador, una simultánea por pestaña, caché de sesión para repetir búsquedas.
+Se guardan únicamente marcas temporales en localStorage. Si no está disponible,
+el contador dura esa pestaña. No se identifica un ordenador ni se recopila su IP.
+Borrar almacenamiento, usar otro perfil o cambiar de navegador permite eludirlo:
+esto no es protección contra abuso. Varias pestañas también pueden competir.
+Los errores consumen petición; aciertos de caché no generan otra llamada.
+
+**Límite por IP preparado, no desplegado:** `optional/api/public_lookup.py` aplica
+6/minuto y 30/24h por IP, y 60/minuto y 500/24h de llamadas externas globales por
+proceso, con 2 solicitudes externas simultáneas y caché de 128 entradas/24h.
+No registra consultas/IP en logs de acceso; retiene identificadores hash con sal
+aleatoria de proceso y marcas temporales hasta 24h. Los límites se reinician al
+reiniciar el proceso. NAT comparte cuota; detrás de un proxy, limita la IP del
+proxy: no confía en X-Forwarded-For. Para producción se necesita una pasarela
+con proxies de confianza y un contador compartido (por ejemplo Redis) entre réplicas.
+
+Para usarlo: activar `api.enabled` y `public_lookup.enabled` en una configuración
+local revisada, fijar `allowed_origin`, desplegar tras TLS y compilar la web con
+`VITE_LOOKUP_API_BASE=https://tu-servidor.example`. Esta variable es pública y no
+lleva secretos. Por defecto está ausente y Pages consulta directamente las fuentes;
+no se ha creado un servidor público, por lo que Pages no impone cuotas por IP.
+
+Las pruebas de fuentes usan respuestas simuladas. Las consultas reales a OLS/CIMA
+fueron bloqueadas por la red del entorno con 403; disponibilidad, CORS y condiciones
+de cada fuente requieren validación desde la conexión de despliegue. Los errores
+se muestran sin inventar resultados y sin desactivar la demo local.

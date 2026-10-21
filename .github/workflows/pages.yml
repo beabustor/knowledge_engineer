@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
       - run: npm ci
         working-directory: web
-      - run: node --test typescript/demo.test.ts explorer/model.test.ts web/import-catalog.test.ts
+      - run: node --test typescript/demo.test.ts explorer/model.test.ts web/import-catalog.test.ts web/public-lookup.test.ts
       - run: PYTHONPATH=python python -m unittest discover -s python/tests -v
       - run: python -m unittest discover -s sql -p 'test_*.py' -v
       - run: python -m unittest discover -s optional/tests -v

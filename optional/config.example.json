@@ -31,5 +31,9 @@
   "research": {
     "enabled": false,
     "rights_review": "pending"
+  },
+  "public_lookup": {
+    "enabled": false,
+    "allowed_origin": "https://beabustor.github.io"
   }
 }

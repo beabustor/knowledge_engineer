@@ -17,8 +17,9 @@ call, resource provisioning, bulk query or training runs at import time.
 | `storage/` | Naming/layout plan | Storage adapter, IAM, encryption, retention and deletion implementation |
 
 These are integration starting points, not a production inference platform.
-No HTTP route invokes AI or external terminology. Enabling `api` starts only
-`/health` and `/capabilities`. Azure/OpenAI cloud identity is documented as a
+No HTTP route invokes AI. Enabling `api` alone starts only
+`/health` and `/capabilities`; enabling `public_lookup` additionally permits the
+rate-limited public-source proxy described below. Azure/OpenAI cloud identity is documented as a
 future adapter, not implemented authentication.
 
 ## Safe activation, step by step
@@ -108,3 +109,13 @@ Ollama/llama.cpp are local runtimes; WebLLM/Transformers.js are possible browser
 alternatives, not integrated here. GitHub Pages cannot host an Ollama server.
 The free demo uses deterministic rules and Excel lookup, not an LLM. Do not
 expose your local runtime publicly without authentication and rate controls.
+
+## Opt-in public terminology proxy
+
+`api/server.py` additionally supports `/lookup?source=ols|cima&term=...` only when
+`public_lookup.enabled=true`. See the root README for exact quotas, CORS origin,
+privacy, trusted-proxy and single-process limitations. No AI route is exposed.
+All source hosts are fixed; callers cannot supply arbitrary upstream URLs.
+The static frontend can use it via the public `VITE_LOOKUP_API_BASE` build setting.
+This server is a development scaffold; deploy behind a production TLS gateway,
+request/connection limits and shared rate counters before public exposure.

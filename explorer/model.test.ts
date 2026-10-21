@@ -36,3 +36,14 @@ test('fever and sin fuerzas are positive findings; temperature unit is not inven
  assert.ok(reportedConcepts('fiebre de 38 grados').some(c=>c.properties?.some(p=>p.value===38)));
  assert.equal(reportedConcepts('no tengo 38 grados').length,0);
 });
+
+test('purple spots are a descriptive finding, not an inferred disease or code', async()=>{
+ const {temperatures}=await import('../typescript/clinical-language.ts');
+ const result=matchConcepts('Tengo 35 años y tengo 38.5 de fiebre y manchas moradas en la piel',catalog);
+ const spots=result.find(r=>r.concept.id==='PurpleSkinSpots');
+ const {reportedConcepts}=await import('./observations.ts');
+ assert.ok(reportedConcepts('Tengo 35 años y tengo 38.5 de fiebre').some(c=>c.properties?.some(p=>p.property==='reportedAgeValue'&&p.value===35)));
+ assert.ok(spots);assert.equal(spots.concept.code,undefined);assert.equal(spots.evidence[0].negated,false);
+ assert.equal(temperatures('tengo 38.5 de fiebre')[0].value,38.5);
+ assert.equal(matchConcepts('no tengo manchas moradas',catalog).find(r=>r.concept.id==='PurpleSkinSpots')?.evidence[0].negated,true);
+});

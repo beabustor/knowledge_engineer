@@ -34,7 +34,8 @@
       "attribute": "Attribute",
       "action": "Action type",
       "relationship": "Relationship",
-      "individual": "Individual / instance"
+      "individual": "Individual / instance",
+      "annotation": "Annotation"
     },
     "instance": "Instance of",
     "domainLabel": "Domain",
@@ -58,7 +59,16 @@
     "object": "Object / value",
     "download": "Download this representation",
     "observedTitle": "Values reported in your text",
-    "observedHelp": "Negation is retained; temperature does not infer a disease. Select a value to inspect its attributes in every representation."
+    "observedHelp": "Negation is retained; temperature does not infer a disease. Select a value to inspect its attributes in every representation.",
+    "externalTitle": "Enrich using public vocabularies",
+    "externalHelp": "Search a short term, not a clinical history. OLS searches biomedical/chemical concepts; CIMA searches medicine names. The source receives the term and your IP. Results are unverified candidates, not automatic ICD-10 mappings or translations.",
+    "externalLimit": "Demo: 6 requests/minute and 30 per 24 hours per browser profile; one at a time; 5 results. This is a bypassable local limit, not an IP limit. Cache hits do not issue another request.",
+    "externalSource": "Source",
+    "externalTerm": "Term (2–80 characters)",
+    "externalSearch": "Look up and add graph candidates",
+    "externalResults": "candidates retrieved",
+    "externalError": "Source unavailable; try later. No results were invented.",
+    "remoteCandidate": "Unvalidated external result; original untranslated label. A link to the selected concept is only a proposed association."
   },
   "es": {
     "title": "Conceptos y representaciones",
@@ -95,7 +105,8 @@
       "attribute": "Atributo",
       "action": "Tipo de acción",
       "relationship": "Relación",
-      "individual": "Individuo / instancia"
+      "individual": "Individuo / instancia",
+      "annotation": "Anotación"
     },
     "instance": "Instancia de",
     "domainLabel": "Dominio",
@@ -119,6 +130,15 @@
     "object": "Objeto / valor",
     "download": "Descargar esta representación",
     "observedTitle": "Valores referidos en tu texto",
-    "observedHelp": "Se conserva la negación y no se infiere una enfermedad a partir de la temperatura. Selecciona un valor para verlo como atributo en las representaciones."
+    "observedHelp": "Se conserva la negación y no se infiere una enfermedad a partir de la temperatura. Selecciona un valor para verlo como atributo en las representaciones.",
+    "externalTitle": "Enriquecer con vocabularios públicos",
+    "externalHelp": "Busca un término breve, no una historia clínica. OLS busca conceptos biomédicos/químicos; CIMA busca nombres de medicamentos. La fuente recibirá el término y tu IP. Los resultados son candidatos sin verificar: no equivalen automáticamente a un código CIE-10 ni a una traducción.",
+    "externalLimit": "Demo: 6 peticiones/minuto y 30 por 24 horas por perfil de navegador; una simultánea; 5 resultados. Es un límite local evitable, no por IP. Los aciertos de caché no consumen otra petición.",
+    "externalSource": "Fuente",
+    "externalTerm": "Término (2–80 caracteres)",
+    "externalSearch": "Consultar y añadir candidatos al grafo",
+    "externalResults": "candidatos recuperados",
+    "externalError": "Fuente no disponible; prueba más tarde. No se han inventado resultados.",
+    "remoteCandidate": "Resultado externo sin validar; etiqueta original sin traducir. El enlace al concepto seleccionado solo propone una asociación."
   }
 }

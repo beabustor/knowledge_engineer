@@ -5,7 +5,7 @@ export function isNegated(text: string, start: number): boolean {
 }
 export function temperatures(text: string) {
   const normalized = text.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
-  const regex = /\b(\d{2,3}(?:[.,]\d+)?)\s*(?:°\s*([cf])\b|grados(?:\s+(celsius|centigrados|fahrenheit))?\b|degrees(?:\s+(celsius|fahrenheit))?\b|\bcelsius\b|\bfahrenheit\b)/gu;
+  const regex = /\b(\d{2,3}(?:[.,]\d+)?)\s*(?:°\s*([cf])\b|grados(?:\s+(celsius|centigrados|fahrenheit))?\b|degrees(?:\s+(celsius|fahrenheit))?\b|\bcelsius\b|\bfahrenheit\b|de\s+fiebre\b)/gu;
   return [...normalized.matchAll(regex)].map(match => {
     const token=match[0];
     const unit = /fahrenheit|°\s*f\b/.test(token)?'F':/celsius|centigrados|°\s*c\b/.test(token)?'C':'unspecified';

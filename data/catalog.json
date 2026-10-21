@@ -452,6 +452,192 @@
       "version": "2019",
       "url": "https://icd.who.int/browse10/2019/en#/R53",
       "status": "reference"
+    },
+    {
+      "id": "PurpleSkinSpots",
+      "domain": "clinical",
+      "labels": {
+        "en": "Reported purple skin spots",
+        "es": "Manchas moradas referidas en la piel"
+      },
+      "aliases": {
+        "en": [
+          "purple spots",
+          "purple skin spots",
+          "purple patches"
+        ],
+        "es": [
+          "manchas moradas",
+          "manchas violetas",
+          "manchas purpuras"
+        ]
+      },
+      "parent": "ClinicalFinding",
+      "source": "Local descriptive finding; no diagnostic equivalence",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local"
+    },
+    {
+      "id": "Headache",
+      "domain": "clinical",
+      "labels": {
+        "en": "Headache",
+        "es": "Cefalea"
+      },
+      "aliases": {
+        "en": [
+          "headache",
+          "head pain"
+        ],
+        "es": [
+          "cefalea",
+          "dolor de cabeza"
+        ]
+      },
+      "parent": "ClinicalFinding",
+      "code": "R51",
+      "source": "WHO ICD-10",
+      "version": "2019",
+      "url": "https://icd.who.int/browse10/2019/en#/R51",
+      "status": "reference"
+    },
+    {
+      "id": "Disease",
+      "domain": "modeling",
+      "kind": "entity",
+      "labels": {
+        "en": "Disease",
+        "es": "Enfermedad"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Synthetic lexical model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local"
+    },
+    {
+      "id": "RespiratoryDisease",
+      "domain": "modeling",
+      "kind": "entity",
+      "labels": {
+        "en": "Respiratory disease",
+        "es": "Enfermedad respiratoria"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Synthetic lexical model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "parent": "Disease"
+    },
+    {
+      "id": "ExampleCold",
+      "domain": "modeling",
+      "kind": "entity",
+      "labels": {
+        "en": "Example common cold",
+        "es": "Resfriado de ejemplo"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Synthetic lexical model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "parent": "RespiratoryDisease",
+      "properties": [
+        {
+          "property": "hasSymptom",
+          "target": "Cough"
+        }
+      ]
+    },
+    {
+      "id": "ExampleMigraine",
+      "domain": "modeling",
+      "kind": "entity",
+      "labels": {
+        "en": "Example migraine",
+        "es": "Migraña de ejemplo"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Synthetic lexical model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "parent": "Disease",
+      "properties": [
+        {
+          "property": "hasSymptom",
+          "target": "Headache"
+        }
+      ]
+    },
+    {
+      "id": "ColdWeather",
+      "domain": "modeling",
+      "kind": "entity",
+      "labels": {
+        "en": "Cold weather",
+        "es": "Temperatura ambiental fría"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Synthetic lexical model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local"
+    },
+    {
+      "id": "ColdSensation",
+      "domain": "modeling",
+      "kind": "entity",
+      "labels": {
+        "en": "Feeling cold",
+        "es": "Sensación de frío"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Synthetic lexical model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "parent": "ClinicalFinding"
+    },
+    {
+      "id": "hasSymptom",
+      "domain": "modeling",
+      "kind": "relationship",
+      "labels": {
+        "en": "Has symptom",
+        "es": "Tiene síntoma"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Synthetic model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "domainId": "Disease",
+      "rangeId": "ClinicalFinding"
     }
   ]
 }

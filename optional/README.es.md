@@ -16,9 +16,9 @@ llamadas de pago, aprovisionamiento, consultas masivas ni entrenamiento.
 | `bulk/` | Planificador local limitado, solo simulación | Cola duradera, trabajadores, cancelación y contabilidad de costes |
 | `storage/` | Plan de nombres y rutas | Adaptadores de almacenamiento, IAM, cifrado, conservación y borrado |
 
-Son puntos de partida, no una plataforma de inferencia de producción. Ninguna
-ruta HTTP invoca IA ni terminologías externas. Activar `api` solo ofrece
-`/health` y `/capabilities`. Azure e identidades cloud se documentan como futuras
+Son puntos de partida, no una plataforma de inferencia de producción. Ninguna ruta HTTP invoca IA. Activar solo `api` ofrece
+`/health` y `/capabilities`; activar además `public_lookup` permite el proxy
+de fuentes públicas con cuotas descrito al final. Azure e identidades cloud se documentan como futuras
 integraciones, no como autenticación implementada.
 
 ## Activación paso a paso
@@ -107,3 +107,13 @@ Ollama/llama.cpp son motores locales; WebLLM/Transformers.js son alternativas
 posibles en navegador, no integradas aquí. Pages no aloja un servidor Ollama.
 La demo gratuita usa reglas y búsqueda Excel, no un LLM. No exponer el motor
 local públicamente sin autenticación y límites.
+
+## Proxy terminológico público opcional
+
+`api/server.py` admite además `/lookup?source=ols|cima&term=...` solo con
+`public_lookup.enabled=true`. El README raíz detalla cuotas, origen CORS,
+privacidad y límites de proxies y proceso único. No se expone IA. Los destinos
+están fijados: el cliente no puede elegir una URL externa arbitraria.
+La web puede usarlo con la variable pública de compilación `VITE_LOOKUP_API_BASE`.
+Es un servidor de desarrollo: antes de exponerlo necesita pasarela TLS de
+producción, límites de conexiones/peticiones y contadores compartidos.

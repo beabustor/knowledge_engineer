@@ -41,6 +41,9 @@ def main():
         try:
             page.goto(url)
             expect(page.locator('html')).to_have_attribute('lang', 'es')
+            expect(page.locator('#primary-graph')).to_be_visible()
+            expect(page.locator('#primary-graph')).to_contain_text('denotes')
+            assert page.locator('#primary-graph').bounding_box()['y'] < page.locator('#description').bounding_box()['y']
             page.get_by_role('button', name='Síntomas respiratorios', exact=True).click()
             expect(page.locator('.candidate').first).to_contain_text('Resfriado de ejemplo')
             expect(page.locator('.candidate').first).to_contain_text('3 puntos')
@@ -100,22 +103,48 @@ def main():
             with page.expect_download() as download:
                 page.locator('#representation-download').click()
             assert '38.5' in Path(download.value.path()).read_text()
-            expect(page.locator('#description')).to_have_attribute('maxlength','1000')
+            expect(page.locator('#description')).to_have_attribute('maxlength','100')
             page.locator('#catalog-domain').select_option('all')
             page.locator('#description').fill('tengo fiebre de 38 grados y me encuentro sin fuerzas')
-            expect(page.locator('#query-counter')).to_contain_text('/ 1000')
+            expect(page.locator('#query-counter')).to_contain_text('/ 100')
             expect(page.locator('.concept-match').filter(has_text='R53')).to_contain_text('Término mencionado')
+            assert page.locator('#concept-explorer .examples').get_by_role('button',name='A00 · A00',exact=True).count() == 0
             expect(page.locator('#observation-TextTemperature0')).to_contain_text('38')
             page.locator('#observation-TextTemperature0').click()
             expect(page.locator('.preview-sheet')).to_contain_text('reportedValue')
             expect(page.locator('.preview-sheet')).to_contain_text('unspecified')
-            page.locator('#description').fill('x'*1001)
+            page.locator('#description').fill('x'*101)
             page.get_by_role('button',name='Analizar descripción →').click()
-            assert page.locator('#description').evaluate('(el)=>el.value.length<=1000 || !el.checkValidity()')
+            assert page.locator('#description').evaluate('(el)=>el.value.length<=100 || !el.checkValidity()')
             page.locator('#description').fill('sin fiebre, con debilidad')
             page.locator('#catalog-domain').select_option('all')
             page.get_by_role('button',name='Analizar descripción →').click()
             expect(page.locator('.concept-match').filter(has_text='R50.9')).to_contain_text('Mención negada')
+            page.locator('#description').fill('Tengo 35 años y tengo 38.5 de fiebre y manchas moradas en la piel')
+            expect(page.locator('.concept-match').filter(has_text='Manchas moradas')).to_be_visible()
+            expect(page.locator('#observation-TextAge0')).to_contain_text('35')
+            expect(page.locator('#observation-TextTemperature0')).to_contain_text('38.5')
+            # External services use fixtures here; CI makes no real terminology calls.
+            external_calls = []
+            def ols_fixture(route):
+                external_calls.append(route.request.url)
+                route.fulfill(json={'response': {'docs': [{'label':'Cough','short_form':'HP:0012735',
+                    'iri':'http://purl.obolibrary.org/obo/HP_0012735','ontology_name':'hp'}]}})
+            page.route('https://www.ebi.ac.uk/ols4/api/search?*', ols_fixture)
+            page.locator('#lookup-term').fill('cough')
+            page.get_by_role('button',name='Consultar y añadir candidatos al grafo',exact=True).click()
+            expect(page.get_by_role('button',name='Cough · HP:0012735',exact=True)).to_be_visible()
+            expect(page.locator('#primary-graph')).to_contain_text('candidateMatch?')
+            assert 'cough' in external_calls[0]
+            assert '35' not in external_calls[0]
+            for i in range(5):
+                page.locator('#lookup-term').fill('term'+str(i))
+                page.get_by_role('button',name='Consultar y añadir candidatos al grafo',exact=True).click()
+                expect(page.get_by_role('button',name='Consultar y añadir candidatos al grafo',exact=True)).to_be_enabled()
+            page.locator('#lookup-term').fill('over-quota')
+            page.get_by_role('button',name='Consultar y añadir candidatos al grafo',exact=True).click()
+            expect(page.locator('#concept-explorer')).to_contain_text('Limit reached')
+            assert len(external_calls) == 6
             for language in ('en', 'es'):
                 page.locator('#language').select_option(language)
                 for width in (320, 360, 390, 414, 768, 1280):

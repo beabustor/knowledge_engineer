@@ -45,7 +45,7 @@ def build_request(config, prompt):
 
 
 def complete(config, prompt):
-    """One billable request when explicitly enabled. No clinical decision is authorized."""
+    """One explicit request; hosted providers may bill, local Ollama uses local compute. No clinical decision is authorized."""
     request = build_request(config, prompt)
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.loads(response.read(1024 * 1024))

@@ -17,4 +17,4 @@ def require(config, feature):
 def readiness(config):
     """Report switches, never values of environment credentials."""
     return {name: config.get(name, {}).get('enabled') is True
-            for name in ('api', 'terminology', 'ai', 'bulk', 'storage', 'research')}
+            for name in ('api', 'terminology', 'ai', 'bulk', 'storage', 'research', 'public_lookup')}

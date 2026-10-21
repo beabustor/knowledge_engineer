@@ -1,15 +1,25 @@
+import { renderKnowledgeGraph } from './knowledge-graph.ts';
+import { lookup, type Source } from './public-lookup.ts';
 import catalog from '../data/catalog.json';
 import { reportedConcepts } from '../explorer/observations.ts';
 import { readCatalogFile } from './import-catalog.ts';
 import excelSnapshot from '../data/sources/cie10/cie10.xls?url';
 import texts from './explorer-messages.json';
-import { matchConcepts, representations, type Concept, type Language } from '../explorer/model.ts';
+import { matchConcepts, representations, displayLabel, type Concept, type Language } from '../explorer/model.ts';
 const builtin: Concept[] = catalog.concepts;
 let imported: Concept[] = [];
+let remote:Concept[]=[];
+let remoteBusy=false;
+let remoteState='';
+let remoteTerm='';
+let remoteSource:Source='ols';
+const candidateLinks=new Map<string,string[]>();
+let remoteVersion=0;
+let cachedRemoteVersion=-1;
 let concepts: Concept[] = [...builtin];
 let sourceState = '';
 let sourceAttempted = false;
-let loading = false;
+
 let refresh = () => {};
 let downloadUrl = '';
 const excelUrl=excelSnapshot;
@@ -29,36 +39,54 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', cls = '') 
 export function renderExplorer(text: string, lang: Language, analyzed: boolean, pick: (text: string) => void) {
  const t = texts[lang];
  refresh = () => renderExplorer(text,lang,analyzed,pick);
- if(cachedImported!==imported||cachedText!==text||cachedAnalyzed!==analyzed){
+ if(cachedImported!==imported||cachedText!==text||cachedAnalyzed!==analyzed||cachedRemoteVersion!==remoteVersion){
   const importedCodes=new Set(imported.map(c=>c.code));
-  concepts=[...builtin.filter(c=>!c.code||!importedCodes.has(c.code)),...imported,...(analyzed?reportedConcepts(text):[])];
+  concepts=[...builtin.filter(c=>!c.code||!importedCodes.has(c.code)),...imported,...(analyzed?reportedConcepts(text):[]),...remote];
+  for(const [id,targets] of [...candidateLinks]){const original=builtin.find(c=>c.id===id);const replacement=original?.code?imported.find(c=>c.code===original.code):undefined;if(replacement){candidateLinks.set(replacement.id,[...new Set([...(candidateLinks.get(replacement.id)??[]),...targets])]);candidateLinks.delete(id);}}
+  concepts=concepts.map(c=>candidateLinks.has(c.id)?{...c,properties:[...(c.properties??[]),...candidateLinks.get(c.id)!.map(target=>({property:'candidateMatch',target}))]}:c);
+  if(candidateLinks.size)concepts.push({id:'candidateMatch',kind:'annotation',domain:'biomedical',labels:{en:'Candidate match (unverified)',es:'Coincidencia candidata (sin verificar)'},aliases:{en:[],es:[]},source:'Local lookup association',version:'1',url:'https://github.com/beabustor/knowledge_engineer',status:'local'});
+  const replacement=new Map(builtin.flatMap(b=>{const target=b.code?imported.find(c=>c.code===b.code):undefined;return target?[[b.id,target.id] as const]:[];}));
+  const ref=(id:string|undefined)=>id?replacement.get(id)??id:undefined;
+  concepts=concepts.map(c=>({...c,parent:ref(c.parent),classId:ref(c.classId),domainId:ref(c.domainId),rangeId:ref(c.rangeId),properties:c.properties?.map(p=>({...p,target:ref(p.target)}))}));
+  cachedRemoteVersion=remoteVersion;
   cachedImported=imported;cachedText=text;cachedAnalyzed=analyzed;
  }
+ renderKnowledgeGraph(concepts,lang,selected,id=>{domain='all';const original=builtin.find(c=>c.id===id);selected=concepts.find(c=>c.id===id)?.id??concepts.find(c=>original?.code&&c.code===original.code)?.id??id;tab='sheet';refresh();document.getElementById('concept-explorer')?.scrollIntoView({behavior:'smooth',block:'start'});});
  const host = document.getElementById('concept-explorer')!; host.replaceChildren();
  host.append(el('h2',t.title),el('p',t.intro,'hint'),el('p',catalog.provenance[lang],'provenance'));
- const sourcePanel=el('section','','source-panel');sourcePanel.append(el('h3',t.sourceTitle),el('p',t.sourceHelp,'hint'));
- const loadButton=el('button',loading?t.loading:t.loadExcel,'linked-concept');loadButton.type='button';loadButton.disabled=loading;
- const fileLabel=el('label',t.localFile+' ');const file=el('input');file.type='file';file.accept='.xls,.xlsx,.csv';file.id='catalog-file';file.disabled=loading;fileLabel.append(file);
- async function load(bytes:Promise<ArrayBuffer>,name:string,url:string){
-  loading=true;sourceState=t.loading;renderExplorer(text,lang,analyzed,pick);
-  try{imported=await readCatalogFile(await bytes,name,builtin,url);sourceState=`${imported.length} ${t.loaded}`;lastText='';}
-  catch(error){sourceState=t.loadError+' '+(error instanceof Error?error.message:'');}
-  finally{loading=false;refresh();}
+ if(analyzed&&!sourceAttempted){
+  sourceAttempted=true;
+  queueMicrotask(async()=>{
+   try{
+    const response=await fetch(excelUrl,{signal:AbortSignal.timeout(20000)});
+    if(!response.ok)throw new Error(`HTTP ${response.status}`);
+    imported=await readCatalogFile(await response.arrayBuffer(),'cie10.xls',builtin,excelSource);
+    lastText='';sourceState='';
+   }catch{sourceState=lang==='es'?'No se pudo cargar el catálogo; se mantiene el vocabulario local.':'Catalog unavailable; the local vocabulary remains available.';}
+   finally{refresh();}
+  });
  }
- loadButton.addEventListener('click',()=>load((async()=>{
-  const response=await fetch(excelUrl,{signal:AbortSignal.timeout(20000)});
-  if(!response.ok)throw new Error(`HTTP ${response.status}`);
-  const length=Number(response.headers.get('Content-Length'));if(length>8000000)throw new Error('Maximum 8 MB');
-  return response.arrayBuffer();
- })(),'cie10.xls',excelSource));
- file.addEventListener('change',()=>{const chosen=file.files?.[0];if(chosen){
-  if(chosen.size>8000000){sourceState=t.loadError+' Maximum 8 MB';renderExplorer(text,lang,analyzed,pick);return;}
-  void load(chosen.arrayBuffer(),chosen.name,'https://github.com/verasativa/CIE-10');
- }});
- const clear=el('button',t.clearSource,'linked-concept');clear.type='button';clear.disabled=!imported.length||loading;
- clear.addEventListener('click',()=>{imported=[];sourceState='';lastText='';renderExplorer(text,lang,analyzed,pick);});
- sourcePanel.append(loadButton,fileLabel,clear,el('p',sourceState,'hint'));host.append(sourcePanel);
- if(analyzed&&!sourceAttempted){sourceAttempted=true;queueMicrotask(()=>loadButton.click());}
+ if(sourceState)host.append(el('p',sourceState,'hint'));
+ const external=el('section','','source-panel');external.append(el('h3',t.externalTitle),el('p',t.externalHelp,'hint'),el('p',t.externalLimit,'provenance'));
+ const sourceLabel=el('label',t.externalSource+' ');const provider=el('select');provider.id='lookup-source';
+ for(const [id,name] of [['ols','OLS · EMBL-EBI'],['cima','CIMA · AEMPS']]){const option=el('option',name);option.value=id;provider.append(option);}provider.value=remoteSource;
+ provider.addEventListener('change',()=>{remoteSource=provider.value as Source;});sourceLabel.append(provider);
+ const termLabel=el('label',t.externalTerm+' ');const term=el('input');term.id='lookup-term';term.maxLength=80;term.placeholder=remoteSource==='ols'?'cough':'paracetamol';term.value=remoteTerm;term.addEventListener('input',()=>{remoteTerm=term.value;});termLabel.append(term);
+ const button=el('button',remoteBusy?t.loading:t.externalSearch,'linked-concept');button.type='button';button.disabled=remoteBusy;
+ button.addEventListener('click',async()=>{
+  remoteTerm=term.value.trim();const anchor=selected;remoteBusy=true;remoteState=t.loading;refresh();
+  try{
+   const result=await lookup(remoteSource,remoteTerm);
+   const unique=new Map(remote.map(c=>[c.id,c]));result.concepts.forEach(c=>unique.set(c.id,c));remote=[...unique.values()].slice(-100);
+   const retained=new Set(remote.map(c=>c.id));
+   for(const [id,targets] of candidateLinks)candidateLinks.set(id,targets.filter(target=>retained.has(target)));
+   if(result.concepts.length)candidateLinks.set(anchor,[...new Set([...(candidateLinks.get(anchor)??[]),...result.concepts.map(c=>c.id)])]);
+   remoteVersion++;remoteState=`${result.concepts.length} ${t.externalResults}${result.cached?' · cache':''}`;
+  }catch(error){remoteState=t.externalError+' '+(error instanceof Error?error.message:'');}
+  finally{remoteBusy=false;refresh();}
+ });
+ external.append(sourceLabel,termLabel,button,el('p',remoteState,'hint'));
+ const matchesPanel=el('div','','examples');remote.forEach(c=>{const b=el('button',displayLabel(c,lang)+' · '+c.code);b.type='button';b.addEventListener('click',()=>{domain='all';selected=c.id;refresh();});matchesPanel.append(b);});external.append(matchesPanel);host.append(external);
  const palette=el('div','','model-palette');
  for(const [kind,id] of [['entity','Person'],['attribute','age'],['relationship','performedBy'],['action','MeasureTemperature'],['individual','SampleMeasurement']] as const){
   const button=el('button',t.kinds[kind]+' · '+concepts.find(c=>c.id===id)!.labels[lang]);button.type='button';
@@ -79,15 +107,15 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
  if(!available.some(c=>c.id===selected)) selected=available[0]?.id ?? 'Cough';
  host.append(el('h3',t.browse));
  const browse=el('div','','examples');
- available.slice(0,60).forEach(c=>{
-  const button=el('button',`${c.labels[lang]} · ${c.code??t.kinds[(c.kind??'entity') as keyof typeof t.kinds]}`);button.type='button';button.setAttribute('aria-pressed',String(c.id===selected));
-  button.addEventListener('click',()=>{selected=c.id;pick(c.aliases[lang][0]??c.labels[lang]);});browse.append(button);
+ available.filter(c=>c.status!=='imported').slice(0,30).forEach(c=>{
+  const button=el('button',`${displayLabel(c,lang)} · ${c.code??t.kinds[(c.kind??'entity') as keyof typeof t.kinds]}`);button.type='button';button.setAttribute('aria-pressed',String(c.id===selected));
+  button.addEventListener('click',()=>{selected=c.id;pick(c.aliases[lang][0]??displayLabel(c,lang));});browse.append(button);
  });host.append(browse);
  if(analyzed) {
   host.append(el('h3',t.matches));
   if(!matches.length)host.append(el('p',t.noMatch,'hint'));
   for(const {concept,evidence} of matches) {
-   const card=el('div','','concept-match');const button=el('button',`${concept.labels[lang]} · ${concept.code??concept.id}`);button.type='button';
+   const card=el('div','','concept-match');const button=el('button',`${displayLabel(concept,lang)} · ${concept.code??concept.id}`);button.type='button';
    button.addEventListener('click',()=>{selected=concept.id;renderExplorer(text,lang,analyzed,pick);});
    card.append(button,el('p',evidence.map(e=>`${e.term}: ${e.negated?t.negated:t.mentioned}`).join(' · '),'hint'));host.append(card);
   }
@@ -96,11 +124,11 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
  if(observations.length){
   host.append(el('h3',t.observedTitle),el('p',t.observedHelp,'hint'));
   const values=el('div','','examples');
-  observations.forEach(c=>{const button=el('button',c.labels[lang]);button.type='button';button.id='observation-'+c.id;
+  observations.forEach(c=>{const button=el('button',displayLabel(c,lang));button.type='button';button.id='observation-'+c.id;
    button.addEventListener('click',()=>{selected=c.id;domain='modeling';renderExplorer(text,lang,analyzed,pick);});values.append(button);});host.append(values);
  }
  const c=concepts.find(c=>c.id===selected)!;
- const detail=el('div','','concept-detail');detail.append(el('h3',c.labels[lang]),el('p',c.status==='reference'?t.reference:c.status==='imported'?t.imported:c.status==='reported'?t.reported:t.local,'hint'));
+ const detail=el('div','','concept-detail');detail.append(el('h3',displayLabel(c,lang)),el('p',c.status==='reference'?t.reference:c.status==='remote'?t.remoteCandidate:c.status==='imported'?t.imported:c.status==='reported'?t.reported:t.local,'hint'));
  const source=el('a',`${t.source}: ${c.status==='local'?t.local:c.source} · ${c.code??c.id}`);source.href=c.url;source.target='_blank';source.rel='noopener noreferrer';detail.append(source,el('p',`${t.version}: ${c.version}`,'hint'));
  detail.append(el('p',t.kinds[(c.kind??'entity') as keyof typeof t.kinds]));
  if(c.domain==='modeling'&&c.status==='local') detail.append(el('p',t.fixture,'hint'));
@@ -133,7 +161,7 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
   }table.append(body);wrapper.append(table);panel.append(wrapper);
  }else if(tab==='graph') {
   panel.append(el('p',t.graphExplain,'hint'));
-  const graph=el('div','','semantic-graph');graph.append(el('strong',c.labels[lang]));
+  const graph=el('div','','semantic-graph');graph.append(el('strong',displayLabel(c,lang)));
   for(const [label,id] of [[t.parent,c.parent],[t.instance,c.classId],[t.domainLabel,c.domainId],[t.range,c.rangeId]]){
    if(id){graph.append(el('span','→ '+label+' →'));graph.append(concepts.some(c=>c.id===id)?follow(id):el('code',id));}
   }
@@ -146,11 +174,11 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
  }else if(tab==='protege'){
   panel.append(el('p',t.instructions,'hint'));
   const tree=el('div','','ontology-tree');
-  for(const kind of ['entity','action','attribute','relationship','individual'] as const){
+  for(const kind of ['entity','action','attribute','relationship','annotation','individual'] as const){
    const section=el('section');section.append(el('h3',t.kinds[kind]));
    concepts.filter(n=>(n.kind??'entity')===kind).forEach(n=>section.append(follow(n.id)));tree.append(section);
   }
-  panel.append(tree,el('h3',c.labels[lang]));
+  panel.append(tree,el('h3',displayLabel(c,lang)));
   const table=el('dl','','ontology-inspector');
   const entries: [string,string][]=[[t.code,c.code??c.id],[t.source,c.source],[t.version,c.version]];
   if(c.parent)entries.push([t.parent,concepts.find(n=>n.id===c.parent)!.labels[lang]]);

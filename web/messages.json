@@ -6,7 +6,7 @@
     "notice": "Educational demo · Curated ICD-10 / ChEBI references and a separate synthetic disease example. Not a diagnosis, coding decision or treatment recommendation.",
     "inputTitle": "Describe & explore",
     "inputLabel": "Describe symptoms or name a chemical",
-    "privacy": "Up to 1,000 characters. Updates as you type. Analysis stays in your browser; descriptions are not sent or saved.",
+    "privacy": "Up to 100 characters. Updates as you type. Analysis stays in your browser; descriptions are not sent or saved.",
     "analyze": "Analyze description →",
     "examplesTitle": "TRY AN EXAMPLE",
     "examples": [
@@ -56,7 +56,7 @@
     "notice": "Demo educativa · Referencias seleccionadas CIE-10 / ChEBI y un ejemplo separado de enfermedades sintéticas. No es diagnóstico, decisión de codificación ni recomendación de tratamiento.",
     "inputTitle": "Describe y explora",
     "inputLabel": "Describe síntomas o nombra una sustancia química",
-    "privacy": "Hasta 1.000 caracteres. Se actualiza al escribir. El análisis ocurre en tu navegador; las descripciones no se envían ni guardan.",
+    "privacy": "Hasta 100 caracteres. Se actualiza al escribir. El análisis ocurre en tu navegador; las descripciones no se envían ni guardan.",
     "analyze": "Analizar descripción →",
     "examplesTitle": "PRUEBA UN EJEMPLO",
     "examples": [

@@ -281,11 +281,11 @@ The source yields 13,750 unique normalized codes; provenance and SHA-256 are
 recorded in the [source notes](data/sources/cie10/README.md). Source edition and
 reuse rights remain unverified; this is not advertised as a current official
 release or Spanish clinical modification. MIT does not cover this third-party
-spreadsheet. Local XLS/XLSX/CSV import is supported (8 MB and 30,000 rows maximum).
+spreadsheet. The import module supports local XLS/XLSX/CSV (8 MB and 30,000 rows maximum), but the public UI uses the bundled file without upload controls.
 The supplied Google Sheet could not be verified from the environment (403);
 if accessible, export it manually and select the local file.
 
-Input is limited to **1,000 characters**, with a counter and validation. Analysis
+Input is limited to **100 characters**, with a counter and validation. Analysis
 updates 350 ms after typing; Analyze remains available. The Preview sheet displays
 subject, predicate and object/value. RDF, OWL, Neo4j/Cypher, SQL, graph and inspector
 views change with the selected concept. Downloading is an optional next step,
@@ -303,3 +303,53 @@ fall back to codes instead of fabricated translations.
 An **optional, disabled local Ollama adapter** provides a path without per-query
 API fees; see [configuration](optional/README.md). Hosted APIs do not guarantee
 unlimited free usage; local models still consume hardware and carry license terms.
+
+
+### Language coverage: test case, not a diagnosis
+
+“Tengo 35 años y tengo 38.5 de fiebre y manchas moradas en la piel” exposes reported
+age and temperature as attributes and purple skin spots as a local descriptive
+finding. No disease or code is assigned from spot color. The spreadsheet does
+not supply every colloquial synonym; more codes do not replace language parsing.
+Current rules are explicit, limited and testable. An LLM may help with paraphrases
+and disambiguation, but requires evaluation and does not guarantee clinical accuracy.
+
+
+## Graph-first UI and bounded external enrichment
+
+The labeled graph appears first, before tables and code, with synonym/sense links,
+hierarchies, codes, attributes, actions, node selection and zoom. Excel loading
+runs behind the scenes; upload controls and code-count panels are not shown.
+Description input is limited to 100 characters.
+
+Opt-in enrichment queries **OLS (EMBL-EBI)** and **CIMA (AEMPS)**. Only the 2–80
+character term entered in that panel is sent, not the full description. The source
+receives the term and connection IP. Up to 5 results retain their identifiers,
+links and original untranslated labels. `candidateMatch` is a candidate annotation,
+not validated equivalence, translation or automatic ICD-10 coding. No paid AI/API key.
+
+**Active Pages limit:** 6 requests/minute and 30 per rolling 24 hours per browser
+profile; one in-flight request per tab; session caching for repeated terms.
+Only request timestamps are stored in localStorage. Without storage, the count
+lasts for that tab. No IP or hardware fingerprint is collected. Clearing storage,
+using another profile/browser and cross-tab races can bypass this best-effort
+limit. It is not abuse protection. Failures count; cache hits make no new request.
+
+**IP-limited proxy prepared, not deployed:** `optional/api/public_lookup.py` applies
+6/minute and 30/24h per peer IP, plus global upstream limits of 60/minute and
+500/24h per process, 2 concurrent upstream calls and a 128-entry/24h cache.
+Access logs do not retain query strings/raw IPs. Salted process-local IP hashes
+and timestamps last up to 24h; restarts reset quotas. NAT shares a quota. Behind
+a proxy it sees that proxy's IP; untrusted X-Forwarded-For is ignored. Production
+needs a trusted gateway and shared counters (e.g. Redis) across replicas.
+
+To opt in: set `api.enabled` and `public_lookup.enabled` in reviewed local config,
+set `allowed_origin`, deploy behind TLS and build with
+`VITE_LOOKUP_API_BASE=https://your-server.example`. This public variable contains
+no secrets. It is absent by default, so Pages calls sources directly. No public
+backend was provisioned; Pages itself cannot enforce per-IP limits.
+
+Source tests use fixtures. Real OLS/CIMA requests were denied by the environment
+network with 403; live availability, CORS and source terms require validation from
+the deployment connection. Errors are visible without fabricated results or
+breaking local demo functionality.

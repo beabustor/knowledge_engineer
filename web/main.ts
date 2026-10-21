@@ -12,7 +12,7 @@ let lang: Language = navigator.language.startsWith('es') ? 'es' : 'en';
 let result: ReturnType<typeof retrieve> | null = null;
 let selected = '';
 const input = $<HTMLTextAreaElement>('description');
-const QUERY_LIMIT = 1000;
+const QUERY_LIMIT = 100;
 let liveTimer: ReturnType<typeof setTimeout>;
 const labels = () => (lang === 'es' ? es : en).labels as Record<string, string>;
 const m = () => messages[lang];
@@ -23,7 +23,7 @@ function element<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', class
   return node;
 }
 function analyze() {
-  input.setCustomValidity(input.value.length>QUERY_LIMIT ? (lang==='es'?'Máximo 1.000 caracteres':'Maximum 1,000 characters') : '');
+  input.setCustomValidity(input.value.length>QUERY_LIMIT ? (lang==='es'?'Máximo 100 caracteres':'Maximum 100 characters') : '');
   $('query-counter').textContent = `${input.value.length} / ${QUERY_LIMIT} ${lang==='es'?'caracteres':'characters'}`;
   if (!input.checkValidity()) { input.reportValidity(); return; }
   result = retrieve(input.value, knowledge, labels());
@@ -107,7 +107,7 @@ function renderLanguage() {
     if (typeof value !== 'string') return;
     if (el.tagName === 'H1') { // Static translated title; no user HTML is inserted.
       el.replaceChildren(); value.split('<br>').forEach((part, i) => {
-        if (i) el.append(document.createElement('br'));
+        if (i) el.append(document.createElement('br'),document.createTextNode(' '));
         el.append(document.createTextNode(part));
       });
     } else el.textContent = value;
