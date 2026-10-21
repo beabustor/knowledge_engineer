@@ -24,7 +24,9 @@ let refresh = () => {};
 let downloadUrl = '';
 const excelUrl=excelSnapshot;
 const excelSource='https://github.com/verasativa/CIE-10/blob/8e22d45e932badbc344f81e18e677a655ab3bc3a/cie10.xls';
-let selected = 'Cough';
+let selected = '';
+let queryText:string|null=null;
+let requestGeneration=0;
 let tab: 'sheet' | 'graph' | 'rdf' | 'owl' | 'cypher' | 'sql' | 'protege' = 'sheet';
 let domain = 'all';
 let lastText = '';
@@ -38,6 +40,12 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', cls = '') 
 }
 export function renderExplorer(text: string, lang: Language, analyzed: boolean, pick: (text: string) => void) {
  const t = texts[lang];
+ if(queryText!==text){
+  queryText=text;requestGeneration++;selected='';domain='all';tab='sheet';lastText='';matchCache=null;
+  remote=[];candidateLinks.clear();remoteState='';remoteTerm='';remoteBusy=false;remoteVersion++;
+ }
+ document.getElementById('synthetic-title')!.textContent=t.synthetic;
+ document.getElementById('synthetic-hint')!.textContent=t.syntheticHint;
  refresh = () => renderExplorer(text,lang,analyzed,pick);
  if(cachedImported!==imported||cachedText!==text||cachedAnalyzed!==analyzed||cachedRemoteVersion!==remoteVersion){
   const importedCodes=new Set(imported.map(c=>c.code));
@@ -51,7 +59,7 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
   cachedRemoteVersion=remoteVersion;
   cachedImported=imported;cachedText=text;cachedAnalyzed=analyzed;
  }
- renderKnowledgeGraph(concepts,lang,selected,id=>{domain='all';const original=builtin.find(c=>c.id===id);selected=concepts.find(c=>c.id===id)?.id??concepts.find(c=>original?.code&&c.code===original.code)?.id??id;tab='sheet';refresh();document.getElementById('concept-explorer')?.scrollIntoView({behavior:'smooth',block:'start'});});
+
  const host = document.getElementById('concept-explorer')!; host.replaceChildren();
  host.append(el('h2',t.title),el('p',t.intro,'hint'),el('p',catalog.provenance[lang],'provenance'));
  if(analyzed&&!sourceAttempted){
@@ -71,19 +79,20 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
  const sourceLabel=el('label',t.externalSource+' ');const provider=el('select');provider.id='lookup-source';
  for(const [id,name] of [['ols','OLS · EMBL-EBI'],['cima','CIMA · AEMPS']]){const option=el('option',name);option.value=id;provider.append(option);}provider.value=remoteSource;
  provider.addEventListener('change',()=>{remoteSource=provider.value as Source;});sourceLabel.append(provider);
- const termLabel=el('label',t.externalTerm+' ');const term=el('input');term.id='lookup-term';term.maxLength=80;term.placeholder=remoteSource==='ols'?'cough':'paracetamol';term.value=remoteTerm;term.addEventListener('input',()=>{remoteTerm=term.value;});termLabel.append(term);
+ const termLabel=el('label',t.externalTerm+' ');const term=el('input');term.id='lookup-term';term.maxLength=80;term.placeholder=lang==='es'?'Escribe un término':'Enter a term';term.value=remoteTerm;term.addEventListener('input',()=>{remoteTerm=term.value;});termLabel.append(term);
  const button=el('button',remoteBusy?t.loading:t.externalSearch,'linked-concept');button.type='button';button.disabled=remoteBusy;
  button.addEventListener('click',async()=>{
-  remoteTerm=term.value.trim();const anchor=selected;remoteBusy=true;remoteState=t.loading;refresh();
+  remoteTerm=term.value.trim();const generation=requestGeneration;const anchor=selected;remote=[];candidateLinks.clear();remoteVersion++;remoteBusy=true;remoteState=t.loading;refresh();
   try{
    const result=await lookup(remoteSource,remoteTerm);
+   if(generation!==requestGeneration)return;
    const unique=new Map(remote.map(c=>[c.id,c]));result.concepts.forEach(c=>unique.set(c.id,c));remote=[...unique.values()].slice(-100);
    const retained=new Set(remote.map(c=>c.id));
    for(const [id,targets] of candidateLinks)candidateLinks.set(id,targets.filter(target=>retained.has(target)));
    if(result.concepts.length)candidateLinks.set(anchor,[...new Set([...(candidateLinks.get(anchor)??[]),...result.concepts.map(c=>c.id)])]);
    remoteVersion++;remoteState=`${result.concepts.length} ${t.externalResults}${result.cached?' · cache':''}`;
-  }catch(error){remoteState=t.externalError+' '+(error instanceof Error?error.message:'');}
-  finally{remoteBusy=false;refresh();}
+  }catch(error){if(generation!==requestGeneration)return;remoteState=t.externalError+' '+(error instanceof Error?error.message:'');}
+  finally{if(generation===requestGeneration){remoteBusy=false;refresh();}}
  });
  external.append(sourceLabel,termLabel,button,el('p',remoteState,'hint'));
  const matchesPanel=el('div','','examples');remote.forEach(c=>{const b=el('button',displayLabel(c,lang)+' · '+c.code);b.type='button';b.addEventListener('click',()=>{domain='all';selected=c.id;refresh();});matchesPanel.append(b);});external.append(matchesPanel);host.append(external);
@@ -104,7 +113,7 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
  if (analyzed && text !== lastText && matches.length) selected = matches[0].concept.id;
  if(analyzed) lastText = text;
  const available = concepts.filter(c=>domain==='all'||c.domain===domain);
- if(!available.some(c=>c.id===selected)) selected=available[0]?.id ?? 'Cough';
+ if(selected&&!available.some(c=>c.id===selected)) selected='';
  host.append(el('h3',t.browse));
  const browse=el('div','','examples');
  available.filter(c=>c.status!=='imported').slice(0,30).forEach(c=>{
@@ -127,6 +136,8 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
   observations.forEach(c=>{const button=el('button',displayLabel(c,lang));button.type='button';button.id='observation-'+c.id;
    button.addEventListener('click',()=>{selected=c.id;domain='modeling';renderExplorer(text,lang,analyzed,pick);});values.append(button);});host.append(values);
  }
+ renderKnowledgeGraph(concepts,lang,selected,id=>{domain='all';const original=builtin.find(c=>c.id===id);selected=concepts.find(c=>c.id===id)?.id??concepts.find(c=>original?.code&&c.code===original.code)?.id??id;tab='sheet';refresh();document.getElementById('concept-explorer')?.scrollIntoView({behavior:'smooth',block:'start'});}, text.trim()? [...new Set([...matches.map(r=>r.concept.id),...observations.map(c=>c.id),...(selected?[selected]:[])])]:[],text);
+ if(!selected){host.append(el('p',lang==='es'?'Selecciona un concepto encontrado para ver sus representaciones.':'Select a matched concept to view its representations.','hint'));return;}
  const c=concepts.find(c=>c.id===selected)!;
  const detail=el('div','','concept-detail');detail.append(el('h3',displayLabel(c,lang)),el('p',c.status==='reference'?t.reference:c.status==='remote'?t.remoteCandidate:c.status==='imported'?t.imported:c.status==='reported'?t.reported:t.local,'hint'));
  const source=el('a',`${t.source}: ${c.status==='local'?t.local:c.source} · ${c.code??c.id}`);source.href=c.url;source.target='_blank';source.rel='noopener noreferrer';detail.append(source,el('p',`${t.version}: ${c.version}`,'hint'));

@@ -42,8 +42,8 @@ def main():
             page.goto(url)
             expect(page.locator('html')).to_have_attribute('lang', 'es')
             expect(page.locator('#primary-graph')).to_be_visible()
-            expect(page.locator('#primary-graph')).to_contain_text('denotes')
-            assert page.locator('#primary-graph').bounding_box()['y'] < page.locator('#description').bounding_box()['y']
+            expect(page.locator('#primary-graph')).to_contain_text('Escribe una descripción')
+            assert page.locator('#primary-graph').bounding_box()['y'] > page.locator('#description').bounding_box()['y']
             page.get_by_role('button', name='Síntomas respiratorios', exact=True).click()
             expect(page.locator('.candidate').first).to_contain_text('Resfriado de ejemplo')
             expect(page.locator('.candidate').first).to_contain_text('3 puntos')
@@ -156,6 +156,33 @@ def main():
                             .map(el => el.tagName + '.' + el.className)
                     })""")
                     assert dimensions['scroll'] <= width, (language, dimensions)
+            isolated = browser.new_context(locale='en-US')
+            fresh = isolated.new_page()
+            held = []
+            fresh.route('https://www.ebi.ac.uk/ols4/api/search?*', lambda route: held.append(route))
+            fresh.goto(url)
+            fresh.locator('#description').fill('cough')
+            expect(fresh.locator('.concept-match')).to_have_count(1)
+            expect(fresh.locator('.concept-detail')).to_contain_text('R05')
+            fresh.locator('#lookup-term').fill('cough')
+            fresh.get_by_role('button',name='Look up and add graph candidates',exact=True).click()
+            fresh.locator('#description').fill('fever')
+            expect(fresh.locator('.concept-match')).to_have_count(1)
+            expect(fresh.locator('.concept-detail')).to_contain_text('R50.9')
+            expect(fresh.locator('.preview-sheet')).not_to_contain_text('R05')
+            expect(fresh.locator('#primary-graph')).not_to_contain_text('Cough')
+            expect(fresh.locator('#lookup-term')).to_have_value('')
+            assert held
+            held[0].fulfill(json={'response':{'docs':[{'label':'Cough','short_form':'HP:0012735','iri':'http://purl.obolibrary.org/obo/HP_0012735','ontology_name':'hp'}]}})
+            fresh.wait_for_function("!document.querySelector('#concept-explorer').textContent.includes('Loading…')")
+            expect(fresh.locator('#primary-graph')).not_to_contain_text('HP:0012735')
+            assert fresh.get_by_role('button',name='Cough · HP:0012735',exact=True).count() == 0
+            fresh.locator('#description').fill('unrecognized text')
+            expect(fresh.locator('.concept-detail')).to_have_count(0)
+            expect(fresh.locator('.preview-sheet')).to_have_count(0)
+            fresh.locator('#description').fill('')
+            expect(fresh.locator('.concept-match')).to_have_count(0)
+            isolated.close()
             assert not errors, errors
         except Exception:
             artifacts = Path(__file__).parent / 'test-results'

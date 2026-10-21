@@ -23,6 +23,7 @@ function element<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', class
   return node;
 }
 function analyze() {
+  clearTimeout(liveTimer);
   input.setCustomValidity(input.value.length>QUERY_LIMIT ? (lang==='es'?'Máximo 100 caracteres':'Maximum 100 characters') : '');
   $('query-counter').textContent = `${input.value.length} / ${QUERY_LIMIT} ${lang==='es'?'caracteres':'characters'}`;
   if (!input.checkValidity()) { input.reportValidity(); return; }
@@ -59,8 +60,8 @@ function renderResults() {
 }
 function renderGraph() {
   const host = $('graph'); host.replaceChildren();
-  const diseaseIds = Object.keys(knowledge.diseases);
-  const symptomIds = Object.keys(knowledge.symptoms);
+  const diseaseIds = result ? result.candidates.map(c=>c.id) : input.value.trim() ? [] : Object.keys(knowledge.diseases);
+  const symptomIds = result ? [...new Set([...result.positive,...result.negative])] : input.value.trim() ? [] : Object.keys(knowledge.symptoms);
   const diseaseData = knowledge.diseases as Record<string, { symptoms: string[] }>;
   const selectedSymptoms = diseaseData[selected]?.symptoms ?? [];
   const ns = 'http://www.w3.org/2000/svg';
@@ -68,7 +69,7 @@ function renderGraph() {
   svg.setAttribute('viewBox', '0 0 900 390'); svg.setAttribute('preserveAspectRatio', 'none'); svg.setAttribute('aria-hidden', 'true');
   const diseaseY = (i: number) => 90 + i * 115;
   const symptomY = (i: number) => 50 + i * 70;
-  diseaseIds.forEach((id, i) => diseaseData[id].symptoms.forEach(s => {
+  diseaseIds.forEach((id, i) => diseaseData[id].symptoms.filter(s=>symptomIds.includes(s)).forEach(s => {
     const line = document.createElementNS(ns, 'path');
     const y1 = diseaseY(i), y2 = symptomY(symptomIds.indexOf(s));
     line.setAttribute('d', `M 275 ${y1} C 450 ${y1}, 450 ${y2}, 625 ${y2}`);
@@ -112,7 +113,7 @@ function renderLanguage() {
       });
     } else el.textContent = value;
   });
-  input.placeholder = m().texts[0];
+  input.placeholder = lang==='es'?'Escribe hasta 100 caracteres':'Write up to 100 characters';
   $('query-counter').textContent = `${input.value.length} / ${QUERY_LIMIT} ${lang==='es'?'caracteres':'characters'}`;
   const examples = $('examples'); examples.replaceChildren();
   m().examples.forEach((label, i) => {

@@ -323,7 +323,7 @@ pero necesita evaluación y no garantiza interpretación clínica correcta.
 
 ## Grafo principal y enriquecimiento externo limitado
 
-El grafo aparece primero, antes de tablas y código. Incluye flechas etiquetadas,
+El grafo se genera con la consulta actual y aparece justo debajo de la entrada, antes de tablas y código. Incluye flechas etiquetadas,
 sinónimos/sentidos, jerarquías, códigos, atributos y acciones; los nodos abren las
 representaciones y hay controles de zoom. El Excel se carga automáticamente por
 detrás, sin panel de archivos ni contador de códigos. La entrada admite 100 caracteres.
@@ -362,3 +362,13 @@ Las pruebas de fuentes usan respuestas simuladas. Las consultas reales a OLS/CIM
 fueron bloqueadas por la red del entorno con 403; disponibilidad, CORS y condiciones
 de cada fuente requieren validación desde la conexión de despliegue. Los errores
 se muestran sin inventar resultados y sin desactivar la demo local.
+
+
+### Reinicio entre consultas
+
+Cambiar la descripción limpia selección, filtros, coincidencias, resultados
+externos y sus enlaces. Las respuestas externas que lleguen tarde se descartan.
+Sin coincidencias no se conserva una representación anterior; sin entrada no se
+muestra un grafo de ejemplo fijo. El Excel y las cuotas se conservan porque son
+recursos compartidos, no resultados de una búsqueda. La sección educativa de
+candidatos puede enumerar síntomas **no mencionados**; no son síntomas extraídos.

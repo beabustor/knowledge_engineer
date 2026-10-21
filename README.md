@@ -317,7 +317,7 @@ and disambiguation, but requires evaluation and does not guarantee clinical accu
 
 ## Graph-first UI and bounded external enrichment
 
-The labeled graph appears first, before tables and code, with synonym/sense links,
+The query-generated labeled graph appears directly below the input, before tables and code, with synonym/sense links,
 hierarchies, codes, attributes, actions, node selection and zoom. Excel loading
 runs behind the scenes; upload controls and code-count panels are not shown.
 Description input is limited to 100 characters.
@@ -353,3 +353,12 @@ Source tests use fixtures. Real OLS/CIMA requests were denied by the environment
 network with 403; live availability, CORS and source terms require validation from
 the deployment connection. Errors are visible without fabricated results or
 breaking local demo functionality.
+
+
+### Reset between searches
+
+Changing the description clears selection, filters, matches, external results
+and their links. Late external responses are discarded. No-match queries retain
+no previous representation, and empty input shows no fixed example graph. Excel
+and quotas remain shared resources, not query results. The separate educational
+candidate section can list **unmentioned** symptoms; these are not extracted findings.
