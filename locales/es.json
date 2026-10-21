@@ -1,0 +1,28 @@
+{
+  "labels": {
+    "Disease": "Enfermedad",
+    "Symptom": "Síntoma",
+    "RespiratoryDisease": "Enfermedad respiratoria",
+    "fever": "Fiebre",
+    "cough": "Tos",
+    "throat": "Dolor de garganta",
+    "headache": "Cefalea",
+    "nausea": "Náuseas",
+    "ExampleCold": "Resfriado de ejemplo",
+    "ExampleFlu": "Gripe de ejemplo",
+    "ExampleMigraine": "Migraña de ejemplo",
+    "ColdWeather": "Temperatura ambiental fría",
+    "ColdSensation": "Sensación de frío"
+  },
+  "notice": "EJEMPLO SINTÉTICO: candidatos, no diagnóstico ni probabilidades",
+  "default_description": "Tengo fiebre, tos y dolor de garganta",
+  "candidate": "Candidato",
+  "score": "Puntos",
+  "matched": "Coincidencias",
+  "conflicts": "Conflictos",
+  "unmentioned": "No mencionados",
+  "ambiguous": "Términos ambiguos",
+  "none": "Sin candidatos",
+  "description_help": "Descripción en inglés o español",
+  "export_help": "Directorio para exportar RDF y Cypher"
+}

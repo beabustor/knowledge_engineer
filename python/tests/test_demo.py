@@ -28,11 +28,28 @@ class DemoTests(unittest.TestCase):
         self.assertEqual(result['positive'], [])
         self.assertEqual(result['candidates'], [])
 
+    def test_bilingual_equivalence(self):
+        from demo import locale
+        spanish = retrieve('cefalea y náuseas, pero sin fiebre', load(), 'es')
+        english = retrieve('headache and nausea, but without fever', load(), 'en')
+        self.assertEqual(spanish['positive'], english['positive'])
+        self.assertEqual(spanish['negative'], english['negative'])
+        self.assertEqual(english['candidates'][0]['label'], 'Example migraine')
+        self.assertEqual(spanish['candidates'][0]['label'], 'Migraña de ejemplo')
+        self.assertEqual(set(locale('en')), set(locale('es')))
+        self.assertEqual(set(locale('en')['labels']), set(locale('es')['labels']))
+        self.assertEqual(retrieve('I do not have fever, but I have cough', load(), 'en')['negative'], ['fever'])
+        self.assertEqual(retrieve('cold', load(), 'en')['candidates'], [])
+
     def test_exports(self):
         with tempfile.TemporaryDirectory() as directory:
             export(load(), Path(directory))
             ttl = (Path(directory) / 'knowledge.ttl').read_text()
             cypher = (Path(directory) / 'knowledge.cypher').read_text()
+            self.assertIn('\"Example migraine\"@en', ttl)
+            self.assertIn('\"Migraña de ejemplo\"@es', ttl)
+            self.assertIn('label_en', cypher)
+            self.assertIn('label_es', cypher)
             self.assertEqual(ttl.count('owl:someValuesFrom'), 8)
             self.assertEqual(cypher.count('[:HAS_SYMPTOM]'), 8)
             export(load(), Path(directory))

@@ -17,3 +17,14 @@ test('ambiguity and word boundaries', () => {
   assert.equal(result.ambiguous['frío'].length, 2);
   assert.deepEqual(result.candidates, []);
 });
+
+test('English and Spanish share concepts, with localized output', () => {
+  const english = retrieve('headache and nausea, but without fever', data, 'en');
+  const spanish = retrieve('cefalea y náuseas, pero sin fiebre', data, 'es');
+  assert.deepEqual(english.positive, spanish.positive);
+  assert.deepEqual(english.negative, spanish.negative);
+  assert.equal(english.candidates[0].label, 'Example migraine');
+  assert.equal(spanish.candidates[0].label, 'Migraña de ejemplo');
+  assert.deepEqual(retrieve('cold', data, 'en').candidates, []);
+  assert.deepEqual(retrieve('not fever, but cough', data, 'en').negative, ['fever']);
+});

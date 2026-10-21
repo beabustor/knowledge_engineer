@@ -1,0 +1,28 @@
+{
+  "labels": {
+    "Disease": "Disease",
+    "Symptom": "Symptom",
+    "RespiratoryDisease": "Respiratory disease",
+    "fever": "Fever",
+    "cough": "Cough",
+    "throat": "Sore throat",
+    "headache": "Headache",
+    "nausea": "Nausea",
+    "ExampleCold": "Example common cold",
+    "ExampleFlu": "Example influenza",
+    "ExampleMigraine": "Example migraine",
+    "ColdWeather": "Cold weather",
+    "ColdSensation": "Feeling cold"
+  },
+  "notice": "SYNTHETIC EXAMPLE: candidates, not a diagnosis or probabilities",
+  "default_description": "I have fever, cough and sore throat",
+  "candidate": "Candidate",
+  "score": "Score",
+  "matched": "Matches",
+  "conflicts": "Conflicts",
+  "unmentioned": "Unmentioned",
+  "ambiguous": "Ambiguous terms",
+  "none": "No candidates",
+  "description_help": "Description in English or Spanish",
+  "export_help": "Directory for RDF and Cypher exports"
+}
