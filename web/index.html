@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore bilingual knowledge graphs. Explora grafos de conocimiento bilingües.">
+  <title>Knowledge Studio · Knowledge Engineer</title>
+</head>
+<body>
+  <a class="skip" href="#description">Skip to demo / Ir a la demo</a>
+  <header><a class="brand" href="./"><span class="brand-icon">⌘</span> Knowledge Engineer</a><div class="header-right"><a href="https://github.com/beabustor/knowledge_engineer">GitHub ↗</a><label><span class="sr-only">Language / Idioma</span><select id="language"><option value="es">Español</option><option value="en">English</option></select></label></div></header>
+  <main>
+    <section class="hero"><p class="eyebrow" data-i18n="eyebrow"></p><h1 data-i18n="title"></h1><p class="intro" data-i18n="intro"></p><div class="tags"><span>TypeScript</span><span>RDF / OWL</span><span>Neo4j</span><span>SQL</span></div></section>
+    <aside class="notice" data-i18n="notice"></aside>
+    <div class="workspace">
+      <section class="panel input-panel"><div class="section-title"><span class="step">01</span><h2 data-i18n="inputTitle"></h2></div><form id="analyze-form"><label for="description" data-i18n="inputLabel"></label><textarea id="description" rows="5" maxlength="5000" required></textarea><p class="hint" data-i18n="privacy"></p><button class="primary" type="submit" data-i18n="analyze"></button></form><p class="eyebrow examples-label" data-i18n="examplesTitle"></p><div id="examples" class="examples"></div><details><summary data-i18n="methodTitle"></summary><p data-i18n="method"></p></details></section>
+      <section class="panel results-panel" aria-live="polite" aria-atomic="true"><div class="section-title"><span class="step">02</span><h2 data-i18n="resultsTitle"></h2><span id="count" class="count"></span></div><div id="results"></div><div id="ambiguity"></div></section>
+    </div>
+    <section class="panel graph-panel"><div class="section-title"><span class="step">03</span><h2 data-i18n="graphTitle"></h2></div><p class="hint" data-i18n="graphHint"></p><div id="graph" class="graph"></div><p id="legend" class="hint"></p></section>
+    <section class="exports"><div><h2 data-i18n="exportTitle"></h2><p data-i18n="exportHint"></p></div><div class="downloads"><a id="rdf-download" download="knowledge.ttl">RDF / OWL ↓</a><a id="cypher-download" download="knowledge.cypher">Neo4j / Cypher ↓</a><button id="json-download" type="button">JSON ↓</button></div></section>
+    <footer><span data-i18n="footer"></span><a href="https://github.com/beabustor/knowledge_engineer" data-i18n="source"></a></footer>
+  </main><script type="module" src="./main.ts"></script>
+</body></html>

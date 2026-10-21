@@ -2,6 +2,8 @@
 
 [English](README.md) · [Español](README.es.md)
 
+**[Try demo →](https://beabustor.github.io/knowledge_engineer/)** · Available after GitHub Pages is enabled; see deployment instructions below.
+
 Educational example of representing medical and lexical knowledge in JSON,
 Python, TypeScript, SQL, RDF/OWL and Neo4j, then retrieving candidate diseases
 from English or Spanish descriptions. Requires Python 3.10+; TypeScript examples
@@ -154,3 +156,54 @@ Keep one implementation per technology and one shared set of concept IDs. Update
 `data/knowledge.json`. Update both READMEs in the same change, regenerate exports
 and run all tests. Do not duplicate program logic per human language. The LICENSE
 file retains the original legal text.
+
+
+## Interactive browser demo
+
+`web/` contains a responsive, bilingual application with example descriptions,
+explainable candidate cards, selectable graph nodes, and RDF/OWL, Cypher and JSON
+downloads. It imports the same pure engine (`typescript/core.ts`) as the CLI;
+there is no separate browser ranking implementation. The compiled site bundles
+the synthetic dataset and translations, so analysis requires no API, database,
+external font, account or credential. Descriptions stay in memory in the browser;
+the application does not transmit them or store them. GitHub Pages still serves
+and logs ordinary site requests. Downloads contain the full bilingual graph;
+JSON contains the current analysis.
+
+```sh
+cd web
+npm ci
+npm run dev
+# Production build, including static TypeScript checking:
+npm run build
+npm run preview
+```
+
+For browser tests, build the app, serve `web/dist` on port 4173, and in another
+terminal run from the repository root:
+
+```sh
+python -m pip install -r web/requirements-test.txt
+python -m playwright install chromium
+python web/test_browser.py
+```
+
+An existing Chromium can be selected with `CHROMIUM_PATH`. `DEMO_URL` overrides
+the test target. Tests exercise both languages, candidate selection, negation,
+ambiguity, mobile overflow, download contents and invalidation of stale results.
+
+### Publish to GitHub Pages
+
+1. Open repository **Settings → Pages → Build and deployment**.
+2. Set **Source** to **GitHub Actions** (requires repository administration access).
+3. In **Actions → Validate and deploy demo**, use **Run workflow** on `main`, or
+   push a change to `main`.
+4. After the deployment succeeds, open
+   <https://beabustor.github.io/knowledge_engineer/>.
+
+`.github/workflows/pages.yml` runs the Python, SQL, TypeScript and browser tests,
+builds the static site, and deploys using GitHub's short-lived workflow token.
+Pull requests validate without deployment. No hosting secret or paid service is
+required for a public repository under GitHub's applicable free-plan limits.
+Pages settings and successful publication must be checked separately from a Git
+push; a committed workflow alone does not establish that the site is live.
