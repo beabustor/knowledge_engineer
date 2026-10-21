@@ -12,7 +12,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Verify a real terminology response
-        run: python tests/integration/live_sources.py --output live-evidence/report.json
+        run: python 05-validation/03-integration/live_sources.py --output live-evidence/report.json
       - name: Retain live evidence including failed attempts
         if: always()
         uses: actions/upload-artifact@v4

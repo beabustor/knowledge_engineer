@@ -3,6 +3,6 @@
 **/dist
 .env*
 **/.env*
-optional/config.local.json
+07-deployment/optional/config.local.json
 var
-research
+08-research

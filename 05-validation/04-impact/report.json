@@ -1,0 +1,36 @@
+{
+  "scope": "Full 57/60-concept fixture, 288 mappings, 8640 purchase lines per state",
+  "synthetic": true,
+  "states": [
+    {
+      "state": "v1",
+      "triples": 27960,
+      "shacl_conforms": true,
+      "pending": 0,
+      "quarantined": 0,
+      "totalCents": 35518608
+    },
+    {
+      "state": "v2",
+      "triples": 27984,
+      "shacl_conforms": false,
+      "pending": 30,
+      "quarantined": 0,
+      "totalCents": 35518608
+    },
+    {
+      "state": "reviewed",
+      "triples": 28158,
+      "shacl_conforms": true,
+      "pending": 0,
+      "quarantined": 180,
+      "totalCents": 35518608
+    }
+  ],
+  "official_skos_transitive_inference": true,
+  "negative_non_inference": true,
+  "cycle_fixture_rejected": true,
+  "rdf_xml_isomorphic": true,
+  "elapsed_seconds": 19.42,
+  "savings_claim": "No measured customer time saving; prioritization and accounting invariants only"
+}

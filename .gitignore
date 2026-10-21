@@ -2,11 +2,11 @@ __pycache__/
 *.pyc
 node_modules/
 dist/
-web/test-results/
+04-app/test-results/
 .env
 .env.*
 !.env.example
-optional/config.local.json
+07-deployment/optional/config.local.json
 var/
-research/**/data/
-research/**/outputs/
+08-research/**/data/
+08-research/**/outputs/

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "skos",
+    "url": "https://www.w3.org/2009/08/skos-reference/skos.rdf",
+    "path": "02-model/01-standards/skos.rdf",
+    "sha256": "e79633b8d0564816cee8a99f5c9acf9a0e6fc7257c7209acd684ecad53a89dd6",
+    "license_reference": "https://www.w3.org/copyright/software-license/",
+    "role": "Official W3C vocabulary definitions, not the synthetic procurement catalog"
+  },
+  {
+    "name": "prov",
+    "url": "https://www.w3.org/ns/prov-o.ttl",
+    "path": "02-model/01-standards/prov.ttl",
+    "sha256": "7d203989f67b38bca572253942acc5a1bf24ce3ccfece16f072dcb4be2b79a96",
+    "license_reference": "https://www.w3.org/copyright/software-license/",
+    "role": "Official W3C vocabulary definitions, not the synthetic procurement catalog"
+  }
+]

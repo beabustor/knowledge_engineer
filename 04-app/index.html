@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Semantic Change Radar by Beatriz Bustos: trace vocabulary updates to affected data and queries. Analiza el impacto de cambios semánticos."
+    />
+    <title>Semantic Change Radar · Beatriz Bustos · Knowledge Engineer</title>
+  </head>
+  <body>
+    <a class="skip" href="#impact-workbench">Skip to demo / Ir a la demo</a>
+    <header>
+      <a class="brand" href="./"><span class="brand-icon">⌘</span> Semantic Change Radar</a>
+      <div class="header-right">
+        <a href="https://github.com/beabustor/knowledge_engineer">GitHub ↗</a
+        ><label
+          ><span class="sr-only">Language / Idioma</span
+          ><select id="language">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+          </select></label
+        >
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <p class="eyebrow" data-i18n="eyebrow"></p>
+        <h1 data-i18n="title"></h1>
+        <p class="intro" data-i18n="intro"></p>
+        <div class="tags">
+          <span>TypeScript</span><span>RDF / OWL</span><span>Neo4j</span><span>SQL</span>
+        </div>
+      </section>
+
+      <section id="impact-workbench" tabindex="-1"></section>
+      <details id="text-workbench" class="text-workbench">
+        <summary data-i18n="annotationWorkbench"></summary>
+        <div class="workspace">
+          <section class="panel input-panel">
+            <div class="section-title">
+              <span class="step">01</span>
+              <h2 data-i18n="inputTitle"></h2>
+            </div>
+            <form id="analyze-form">
+              <label for="description" data-i18n="inputLabel"></label
+              ><textarea
+                id="description"
+                rows="2"
+                maxlength="100"
+                aria-describedby="query-counter"
+                required
+              ></textarea>
+              <p id="query-counter" class="hint"></p>
+              <p class="hint" data-i18n="privacy"></p>
+              <button class="primary" type="submit" data-i18n="analyze"></button>
+            </form>
+            <p class="eyebrow examples-label" data-i18n="examplesTitle"></p>
+            <div id="examples" class="examples"></div>
+            <details>
+              <summary data-i18n="methodTitle"></summary>
+              <p data-i18n="method"></p>
+            </details>
+          </section>
+          <section id="primary-graph" class="panel primary-graph"></section>
+        </div>
+        <details class="interview-disclosure">
+          <summary data-i18n="interviewTitle"></summary>
+          <section id="guided-interview" class="panel interview-panel" aria-live="polite"></section>
+        </details>
+        <section id="concept-explorer" class="panel explorer-panel"></section>
+      </details>
+      <footer>
+        <span data-i18n="footer"></span
+        ><a href="https://github.com/beabustor/knowledge_engineer" data-i18n="source"></a>
+      </footer>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

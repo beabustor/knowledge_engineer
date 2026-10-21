@@ -18,35 +18,39 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: 04-app/package-lock.json
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - run: npm ci
-        working-directory: web
-      - run: node --test typescript/demo.test.ts explorer/model.test.ts explorer/annotations.test.ts web/import-catalog.test.ts web/public-lookup.test.ts interview/engine.test.ts
-      - run: PYTHONPATH=python python -m unittest discover -s python/tests -v
-      - run: python -m unittest discover -s sql -p 'test_*.py' -v
-      - run: python -m unittest discover -s optional/tests -v
+        working-directory: 04-app
+      - run: npm test
+        working-directory: 04-app
+      - run: PYTHONPATH=06-examples/python python -m unittest discover -s 06-examples/python/tests -v
+      - run: python -m unittest discover -s 06-examples/sql -p 'test_*.py' -v
+      - run: PYTHONPATH=07-deployment python -m unittest discover -s 07-deployment/optional/tests -v
       - run: npm run build
-        working-directory: web
-      - run: pip install -r web/requirements-test.txt
-      - run: python -m unittest discover -s explorer -p 'test_*.py' -v
-      - run: python semantic/validate.py
-      - run: node evaluation/run.ts
+        working-directory: 04-app
+      - run: pip install -r 04-app/requirements-test.txt
+      - run: python -m unittest discover -s 02-model -p 'test_*.py' -v
+      - run: python 05-validation/01-semantic/validate.py
+      - run: python 05-validation/04-impact/verify.py
+      - run: python 05-validation/05-structure/verify.py
+      - run: node 05-validation/02-extraction/run.ts
       - run: python -m playwright install --with-deps chromium
+      - run: python 05-validation/04-impact/test_browser.py
       - name: Browser smoke test
-        run: python web/test_browser.py
+        run: python 04-app/test_browser.py
       - name: Upload browser diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: browser-diagnostics
-          path: web/test-results/
+          path: 04-app/test-results/
           if-no-files-found: ignore
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: web/dist
+          path: 04-app/dist
   deploy:
     if: github.event_name != 'pull_request'
     needs: build

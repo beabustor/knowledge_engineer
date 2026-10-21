@@ -1,0 +1,19 @@
+{
+  "origin": "Original synthetic scenario; not official W3C/ChEBI release changes or real supplier data",
+  "license": "MIT",
+  "generator": "03-pipelines/01-impact/generate.py",
+  "counts": {
+    "v1_concepts": 57,
+    "v2_concepts": 60,
+    "supplier_mappings": 288,
+    "purchase_lines": 8640,
+    "suppliers": 3
+  },
+  "sha256": {
+    "catalog-v1.json": "9d086a3afc7de7484e48c71b83d6ed79d1f390491a4557b8d16eaaee01aa348d",
+    "catalog-v2.json": "92f0e40a2d6369bc261a9cc20aa23ab165cecb2d249bed0f214d14798ea088e6",
+    "mappings.json": "fa8b311983de1d0f07e546405bb5659cbca097f0ac2ebb58d446d8ede8c5d23c",
+    "records.json": "94935561a48653b05f79e50ad848e2429ee90ed8d3dc5111e835eedfda96936e"
+  },
+  "financial_unit": "synthetic EUR cents, not measured customer savings"
+}

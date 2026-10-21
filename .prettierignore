@@ -1,0 +1,5 @@
+01-data/
+02-model/01-standards/
+04-app/node_modules/
+04-app/dist/
+04-app/package-lock.json

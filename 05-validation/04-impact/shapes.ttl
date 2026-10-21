@@ -1,0 +1,22 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ex: <https://example.org/semantic-change/> .
+@prefix schema: <https://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+ex:ConceptShape a sh:NodeShape ; sh:targetClass skos:Concept ;
+ sh:property [ sh:path skos:prefLabel ; sh:minCount 2 ; sh:uniqueLang true ; sh:languageIn ("en" "es") ] ;
+ sh:property [ sh:path skos:broader ; sh:class skos:Concept ] ;
+ sh:sparql [ sh:message "Cyclic SKOS hierarchy" ; sh:select """
+ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+ SELECT $this WHERE { $this skos:broader+ $this }
+ """ ] .
+ex:MappingShape a sh:NodeShape ; sh:targetClass schema:Product ;
+ sh:or (
+  [sh:property [sh:path ex:classificationStatus; sh:hasValue "quarantined"] ; sh:property [sh:path ex:classifiedAs; sh:maxCount 0]]
+  [sh:property [sh:path ex:classifiedAs; sh:minCount 1; sh:maxCount 1; sh:class skos:Concept;
+    sh:node [sh:property [sh:path owl:deprecated; sh:not [sh:hasValue true]]]]]
+ ) .
+ex:PurchaseShape a sh:NodeShape ; sh:targetClass schema:OrderItem ;
+ sh:property [sh:path ex:sourceMapping; sh:minCount 1; sh:maxCount 1; sh:class schema:Product] ;
+ sh:property [sh:path ex:amountCents; sh:datatype xsd:integer; sh:minInclusive 0; sh:minCount 1; sh:maxCount 1] .
