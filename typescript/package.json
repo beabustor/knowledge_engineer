@@ -1,0 +1,7 @@
+{
+  "name": "knowledge-engineer-example",
+  "private": true,
+  "type": "module",
+  "engines": {"node": ">=22.18.0"},
+  "scripts": {"demo": "node demo.ts", "test": "node --test demo.test.ts"}
+}

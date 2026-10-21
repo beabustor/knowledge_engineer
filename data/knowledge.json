@@ -1,0 +1,5 @@
+{
+  "symptoms": {"fever": ["fiebre"], "cough": ["tos"], "throat": ["dolor de garganta"], "headache": ["cefalea", "dolor de cabeza"], "nausea": ["náuseas", "náusea"]},
+  "diseases": {"ExampleCold": {"label": "Resfriado de ejemplo", "parent": "RespiratoryDisease", "symptoms": ["fever", "cough", "throat"]}, "ExampleFlu": {"label": "Gripe de ejemplo", "parent": "RespiratoryDisease", "symptoms": ["fever", "cough", "headache"]}, "ExampleMigraine": {"label": "Migraña de ejemplo", "parent": "Disease", "symptoms": ["headache", "nausea"]}},
+  "ambiguous": {"frío": ["ColdWeather", "ColdSensation"]}
+}

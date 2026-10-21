@@ -1,0 +1,53 @@
+@prefix ex: <https://example.org/knowledge-demo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+ex:Ontology a owl:Ontology ; rdfs:comment "Synthetic educational data"@en .
+ex:hasSymptom a owl:ObjectProperty .
+ex:denotes a owl:AnnotationProperty .
+ex:Disease a owl:Class ; rdfs:label "Enfermedad"@es .
+ex:Symptom a owl:Class ; rdfs:label "Síntoma"@es .
+ex:RespiratoryDisease a owl:Class ; rdfs:label "Enfermedad respiratoria"@es .
+ex:fever a owl:Class ; rdfs:label "fiebre"@es .
+ex:cough a owl:Class ; rdfs:label "tos"@es .
+ex:throat a owl:Class ; rdfs:label "dolor de garganta"@es .
+ex:headache a owl:Class ; rdfs:label "cefalea"@es .
+ex:nausea a owl:Class ; rdfs:label "náuseas"@es .
+ex:ExampleCold a owl:Class ; rdfs:label "Resfriado de ejemplo"@es .
+ex:ExampleFlu a owl:Class ; rdfs:label "Gripe de ejemplo"@es .
+ex:ExampleMigraine a owl:Class ; rdfs:label "Migraña de ejemplo"@es .
+ex:ColdWeather a owl:Class ; rdfs:label "ColdWeather"@es .
+ex:ColdSensation a owl:Class ; rdfs:label "ColdSensation"@es .
+ex:RespiratoryDisease rdfs:subClassOf ex:Disease .
+ex:fever rdfs:subClassOf ex:Symptom .
+ex:cough rdfs:subClassOf ex:Symptom .
+ex:throat rdfs:subClassOf ex:Symptom .
+ex:headache rdfs:subClassOf ex:Symptom .
+ex:nausea rdfs:subClassOf ex:Symptom .
+ex:ExampleCold rdfs:subClassOf ex:RespiratoryDisease .
+ex:ExampleCold rdfs:subClassOf [ a owl:Restriction ; owl:onProperty ex:hasSymptom ; owl:someValuesFrom ex:fever ] .
+ex:ExampleCold rdfs:subClassOf [ a owl:Restriction ; owl:onProperty ex:hasSymptom ; owl:someValuesFrom ex:cough ] .
+ex:ExampleCold rdfs:subClassOf [ a owl:Restriction ; owl:onProperty ex:hasSymptom ; owl:someValuesFrom ex:throat ] .
+ex:ExampleFlu rdfs:subClassOf ex:RespiratoryDisease .
+ex:ExampleFlu rdfs:subClassOf [ a owl:Restriction ; owl:onProperty ex:hasSymptom ; owl:someValuesFrom ex:fever ] .
+ex:ExampleFlu rdfs:subClassOf [ a owl:Restriction ; owl:onProperty ex:hasSymptom ; owl:someValuesFrom ex:cough ] .
+ex:ExampleFlu rdfs:subClassOf [ a owl:Restriction ; owl:onProperty ex:hasSymptom ; owl:someValuesFrom ex:headache ] .
+ex:ExampleMigraine rdfs:subClassOf ex:Disease .
+ex:ExampleMigraine rdfs:subClassOf [ a owl:Restriction ; owl:onProperty ex:hasSymptom ; owl:someValuesFrom ex:headache ] .
+ex:ExampleMigraine rdfs:subClassOf [ a owl:Restriction ; owl:onProperty ex:hasSymptom ; owl:someValuesFrom ex:nausea ] .
+ex:term0 rdfs:label "cefalea"@es .
+ex:term0 ex:denotes ex:headache .
+ex:term1 rdfs:label "dolor de cabeza"@es .
+ex:term1 ex:denotes ex:headache .
+ex:term2 rdfs:label "dolor de garganta"@es .
+ex:term2 ex:denotes ex:throat .
+ex:term3 rdfs:label "fiebre"@es .
+ex:term3 ex:denotes ex:fever .
+ex:term4 rdfs:label "frío"@es .
+ex:term4 ex:denotes ex:ColdWeather .
+ex:term4 ex:denotes ex:ColdSensation .
+ex:term5 rdfs:label "náusea"@es .
+ex:term5 ex:denotes ex:nausea .
+ex:term6 rdfs:label "náuseas"@es .
+ex:term6 ex:denotes ex:nausea .
+ex:term7 rdfs:label "tos"@es .
+ex:term7 ex:denotes ex:cough .
