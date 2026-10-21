@@ -2,6 +2,16 @@
   "name": "knowledge-engineer-web",
   "private": true,
   "type": "module",
-  "scripts": {"dev": "vite --host 0.0.0.0", "build": "tsc --noEmit && vite build", "preview": "vite preview --host 0.0.0.0"},
-  "devDependencies": {"vite": "^7.1.0", "typescript": "^5.9.0"}
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0"
+  },
+  "dependencies": {
+    "@e965/xlsx": "0.20.3"
+  }
 }

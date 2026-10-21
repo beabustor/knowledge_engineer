@@ -8,7 +8,11 @@ from optional.settings import require
 def build_request(config, prompt):
     require(config, 'ai')
     ai = config['ai']
-    if ai.get('allow_paid_requests') is not True:
+    provider = ai.get('provider')
+    if provider == 'ollama':
+        if ai.get('allow_local_requests') is not True:
+            raise PermissionError('Local model requests disabled / Modelo local desactivado')
+    elif ai.get('allow_paid_requests') is not True:
         raise PermissionError('Paid calls disabled / Llamadas de pago desactivadas')
     if not isinstance(prompt, str) or not prompt.strip() or len(prompt) > 12000:
         raise ValueError('Prompt must contain 1–12000 characters')
@@ -16,7 +20,12 @@ def build_request(config, prompt):
     tokens = ai.get('max_output_tokens', 256)
     if not model or not isinstance(tokens, int) or isinstance(tokens, bool) or not 1 <= tokens <= 2048:
         raise ValueError('Explicit model and 1–2048 output tokens required')
-    provider = ai.get('provider')
+    if provider == 'ollama':
+        # Fixed loopback destination: no hosted API, fallback, auto-download or model pull.
+        return urllib.request.Request('http://127.0.0.1:11434/api/generate',
+            data=json.dumps({'model': model, 'prompt': prompt, 'stream': False,
+                             'options': {'num_predict': tokens}}).encode(),
+            headers={'Content-Type': 'application/json'}, method='POST')
     if provider == 'openai':
         key = os.environ.get('OPENAI_API_KEY')
         url = 'https://api.openai.com/v1/responses'
@@ -28,7 +37,7 @@ def build_request(config, prompt):
         body = {'model': model, 'max_tokens': tokens, 'messages': [{'role': 'user', 'content': prompt}]}
         headers = {'x-api-key': key or '', 'anthropic-version': '2023-06-01'}
     else:
-        raise ValueError('Supported adapters: openai, anthropic. Azure uses a separate future adapter.')
+        raise ValueError('Supported adapters: openai, anthropic, ollama. Azure uses a separate future adapter.')
     if not key:
         raise PermissionError('Configure server-side API credentials; never send them to the browser')
     headers['Content-Type'] = 'application/json'

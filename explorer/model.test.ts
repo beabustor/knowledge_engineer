@@ -23,3 +23,16 @@ test('representations retain provenance, bilingual labels and local hierarchy', 
   assert.ok(!r.owl.includes('equivalentClass'));
  }
 });
+test('fever and sin fuerzas are positive findings; temperature unit is not invented', async () => {
+ const {reportedConcepts}=await import('./observations.ts');
+ const {temperatures}=await import('../typescript/clinical-language.ts');
+ const result=matchConcepts('tengo fiebre de 38 grados y me encuentro sin fuerzas',catalog);
+ assert.ok(result.some(r=>r.concept.code==='R50.9'));
+ assert.equal(result.find(r=>r.concept.code==='R53')?.evidence[0].negated,false);
+ assert.equal(matchConcepts('sin fiebre, con debilidad',catalog).find(r=>r.concept.code==='R50.9')?.evidence[0].negated,true);
+ assert.equal(temperatures('38,5 grados Celsius')[0].value,38.5);
+ assert.equal(temperatures('38 grados')[0].unit,'unspecified');
+ assert.equal(temperatures('100 degrees Fahrenheit')[0].unit,'F');
+ assert.ok(reportedConcepts('fiebre de 38 grados').some(c=>c.properties?.some(p=>p.value===38)));
+ assert.equal(reportedConcepts('no tengo 38 grados').length,0);
+});

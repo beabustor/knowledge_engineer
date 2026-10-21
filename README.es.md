@@ -153,8 +153,7 @@ OWL sin verificar su significado.
 Para María Moliner: usar una fuente autorizada de entradas, sentidos y relaciones,
 conservando su procedencia sin copiar contenido protegido al repositorio.
 Distinguir hiperonimia léxica de inclusión entre clases conceptuales. La
-desambiguación contextual queda para una etapa futura; no hay conexión automática
-a fuentes reales.
+desambiguación contextual queda para una etapa futura; no se conecta a una API terminológica oficial en vivo.
 
 Mantener una implementación por tecnología y un conjunto común de IDs. Actualizar
 juntos `locales/en.json` y `locales/es.json`; añadir términos y su idioma en
@@ -173,7 +172,7 @@ compilado incluye los datos sintéticos y las traducciones: no necesita API,
 base de datos, fuentes externas, cuentas ni credenciales. Las descripciones
 permanecen en memoria en el navegador; la aplicación no las transmite ni las
 guarda. GitHub Pages sí sirve y registra las solicitudes normales del sitio.
-Las representaciones en pantalla contienen ambos idiomas. No hay botones de descarga.
+Las representaciones se previsualizan en pantalla; descargar la seleccionada es opcional.
 
 ```sh
 cd web
@@ -217,7 +216,7 @@ se deben comprobar por separado: subir el workflow no demuestra que la web esté
 
 ## Explorador de entidades, atributos, relaciones y acciones
 
-La demo muestra todas las representaciones **en pantalla**, sin descargables:
+La demo muestra todas las representaciones **en pantalla**, con descarga opcional:
 
 - **Tipos de entidad:** Persona y Profesional sanitario.
 - **Atributos:** Edad (entero) y Temperatura en Celsius (decimal), con dominio y rango.
@@ -234,8 +233,9 @@ Neo4j y SQL muestran la representación, sin ejecutar consultas contra servidore
 `data/catalog.json` define los conceptos y `explorer/model.ts` genera las vistas.
 Las pruebas comparan las tripletas RDF, OWL y SQL, además de probar la interfaz.
 
-El catálogo clínico contiene solo tos (`R05`) y fiebre no especificada (`R50.9`)
-de la edición **OMS CIE-10 2019**, no CIE-10-ES. El químico referencia aspirina
+El catálogo inicial de alias referencia tos (`R05`), fiebre no especificada
+(`R50.9`) y malestar/fatiga (`R53`) frente a **OMS CIE-10 2019**. El Excel
+incluido tiene edición sin verificar y cobertura más amplia; ver apartado final. El químico referencia aspirina
 (`CHEBI:15365`), agua (`CHEBI:15377`) y etanol (`CHEBI:16236`). Son referencias
 seleccionadas manualmente con enlaces a la fuente; no son una importación
 completa ni una consulta en vivo. La versión ChEBI no está fijada. Etiquetas,
@@ -276,3 +276,35 @@ conceptos/descripciones/relaciones, no necesariamente documentos clínicos.
 Se ejecutan pruebas locales de bloqueo y límites, sin peticiones de pago:
 `python -m unittest discover -s optional/tests -v`. Docker/Kubernetes, servidores
 terminológicos autorizados y cuentas de IA/cloud requieren validación posterior.
+
+
+## Excel CIE-10, consulta en directo y límite de entrada
+
+La demo carga al primer análisis la copia `data/sources/cie10/cie10.xls` del
+propio sitio. No requiere una API de pago ni manda tu consulta a GitHub/Google.
+El archivo de origen contiene 13.750 códigos únicos normalizados y su procedencia
+y SHA-256 constan en [la ficha de la fuente](data/sources/cie10/README.md).
+Su edición y derechos de reutilización están sin verificar; no se presenta como
+CIE-10-ES ni como edición OMS vigente. La licencia MIT no cubre esta hoja de terceros.
+También se pueden cargar XLS/XLSX/CSV locales (8 MB y 30.000 filas como máximo).
+El enlace Google Sheets aportado no pudo verificarse desde el entorno (403);
+puede exportarse manualmente y seleccionarse como archivo local si se dispone de acceso.
+
+La entrada admite **1.000 caracteres**, con contador y validación. El análisis se
+actualiza 350 ms después de escribir; el botón Analizar sigue disponible. La
+«Hoja de previsualización» muestra sujeto, predicado y objeto/valor. Las pestañas
+RDF, OWL, Neo4j/Cypher, SQL, grafo e inspector cambian con el concepto elegido;
+la descarga queda como opción posterior, no como sustituto de la vista.
+
+«Tengo fiebre de 38 grados y me encuentro sin fuerzas» encuentra referencias de
+fiebre y malestar/fatiga mediante alias locales y las filas de la hoja. «Sin fuerzas»
+se reconoce como expresión de debilidad, no como su negación. Se representa además
+una temperatura referida de 38; sin C/Celsius o F/Fahrenheit explícito no se inventa
+la unidad. No se infiere una enfermedad ni se comprueba una medición. Reconocer
+expresiones requiere reglas/alias: importar una clasificación no convierte el
+sistema en un intérprete clínico general. Las etiquetas no traducidas siguen en
+español y en la etiqueta inglesa se muestra el código, sin traducción inventada.
+
+Para IA sin tarifa por consulta existe el adaptador **Ollama local, desactivado**;
+ver [configuración](optional/README.es.md). No hay una API alojada gratuita sin
+límites garantizados. Un modelo local consume recursos y está sujeto a su licencia.

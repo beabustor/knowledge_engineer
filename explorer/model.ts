@@ -1,11 +1,12 @@
 /** One catalog -> lexical matches and five interoperable representations. */
 import { normalize } from '../typescript/core.ts';
+import { isNegated } from '../typescript/clinical-language.ts';
 export type Language = 'en' | 'es';
 export type Concept = {
   id: string; domain: string; labels: Record<Language, string>;
   aliases: Record<Language, string[]>; parent?: string; code?: string; formula?: string;
   kind?: string; domainId?: string; rangeId?: string; classId?: string;
-  properties?: {property: string; value?: number; target?: string}[];
+  properties?: {property: string; value?: number | string; target?: string}[];
   source: string; version: string; url: string; status: string;
 };
 const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -15,10 +16,10 @@ export function matchConcepts(text: string, concepts: Concept[], domain = 'all')
     const evidence: { term: string; negated: boolean }[] = [];
     const terms = [...new Set([...concept.aliases.en, ...concept.aliases.es, ...(concept.code ? [concept.code] : [])])];
     for (const term of terms) {
+      if(!normalized.includes(normalize(term))) continue;
       const regex = new RegExp(`(?<![\\p{L}\\p{N}_])${escape(normalize(term))}(?![\\p{L}\\p{N}_])`, 'gu');
       for (const match of normalized.matchAll(regex)) {
-        const prefix = normalized.slice(0, match.index).split(/[.,;:!?\n]|\b(?:pero|aunque|but|however)\b/).at(-1)!;
-        evidence.push({ term, negated: /\b(?:sin|no|niego|not|without|deny|denies)\b/.test(prefix) });
+        evidence.push({ term, negated: isNegated(normalized, match.index) });
       }
     }
     return evidence.length ? [{ concept, evidence }] : [];
@@ -80,7 +81,7 @@ ${triples.map(t=>`  <rdf:Description rdf:about="${xml(uri(t.s))}"><${t.p}${t.lit
     if(c.kind==='attribute')cypher.push(`MATCH (c:ExplorerConcept {id: ${q(c.id)}}) SET c.datatype = ${q(c.rangeId??'')};`);
     c.properties?.forEach(p=>{
       if(p.target)cypher.push(`MATCH (c:ExplorerConcept {id: ${q(c.id)}}), (p:ExplorerConcept {id: ${q(p.target)}}) MERGE (c)-[:${p.property}]->(p);`);
-      else cypher.push(`MATCH (c:ExplorerConcept {id: ${q(c.id)}}) SET c.${p.property} = ${p.value};`);
+      else cypher.push(`MATCH (c:ExplorerConcept {id: ${q(c.id)}}) SET c.${p.property} = ${typeof p.value==='string'?q(p.value):p.value};`);
     });
   }
   const sq=(s:string)=>"'"+s.replace(/'/g,"''")+"'";

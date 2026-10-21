@@ -41,6 +41,15 @@ class DisabledByDefaultTests(unittest.TestCase):
                 self.assertIn(host, request.full_url)
                 self.assertIn('operator-selected-model', request.data.decode())
 
+    def test_local_model_requires_separate_explicit_gate(self):
+        self.config['ai'].update(enabled=True, provider='ollama', model='operator-selected-local-model')
+        with self.assertRaises(PermissionError):
+            build_request(self.config, 'synthetic')
+        self.config['ai']['allow_local_requests'] = True
+        request = build_request(self.config, 'synthetic')
+        self.assertEqual(request.full_url, 'http://127.0.0.1:11434/api/generate')
+        self.assertFalse(self.config['ai']['allow_paid_requests'])
+
     def test_terminology_edition_host_and_license(self):
         config = copy.deepcopy(self.config)
         config['terminology']['enabled'] = True

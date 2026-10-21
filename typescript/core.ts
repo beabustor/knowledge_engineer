@@ -1,3 +1,4 @@
+import { isNegated } from './clinical-language.ts';
 /** Browser-safe shared retrieval engine. No network or storage. */
 type Disease = { parent: string; symptoms: string[] };
 type Knowledge = {
@@ -18,8 +19,7 @@ export function retrieve(description: string, data: Knowledge, labels: Record<st
   for (const [concept, terms] of Object.entries(data.symptoms)) {
     for (const term of terms) {
       for (const match of text.matchAll(pattern(term))) {
-        const prefix = text.slice(0, match.index).split(/[.,;:!?\n]|\b(?:pero|aunque|but|however)\b/).at(-1)!;
-        (/\b(?:sin|no|niego|not|without|deny|denies)\b/.test(prefix) ? negative : positive).add(concept);
+        (isNegated(text, match.index) ? negative : positive).add(concept);
       }
     }
   }

@@ -1,0 +1,13 @@
+{
+  "file": "cie10.xls",
+  "origin": "https://github.com/verasativa/CIE-10/blob/master/cie10.xls",
+  "origin_commit": "8e22d45e932badbc344f81e18e677a655ab3bc3a",
+  "sha256": "6cf08867c293d36f13110cdf3b7bf7087999fb8da0039178779a574a2cd3c140",
+  "bytes": 1771520,
+  "retrieved": "2026-10-21",
+  "license_status": "No explicit license found in source repository; reuse rights not verified. Repository MIT license does not cover this third-party file.",
+  "edition": "Unverified. Source README references DEIS Chile updates to December 2013; do not label as WHO 2019 or CIE-10-ES.",
+  "sheet": "CIE10",
+  "original_rows": 12424,
+  "normalized_unique_codes": 13750
+}

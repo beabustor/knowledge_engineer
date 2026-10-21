@@ -90,3 +90,20 @@ No registrar cuerpos de peticiones, claves API ni identificadores de pacientes.
 `python -m unittest discover -s optional/tests -v` ejecuta pruebas locales con
 credenciales simuladas, sin llamadas de pago. No se han validado credenciales
 reales, despliegues cloud, respuestas de proveedores ni importaciones licenciadas.
+
+## IA local opcional sin tarifa API por consulta
+
+El adaptador Ollama está preparado pero **desactivado**. Solo apunta a
+`http://127.0.0.1:11434/api/generate`. Para usarlo después: instalar Ollama de
+forma independiente, elegir y obtener un modelo con licencia adecuada y probar
+memoria/latencia. Activar explícitamente `ai.enabled=true`, `provider="ollama"`,
+el nombre exacto del `model` instalado y `allow_local_requests=true`. Mantener
+`allow_paid_requests=false`. Este repositorio no descarga ni arranca modelos.
+Un modelo pequeño puede fallar en extracción clínica y requiere evaluación.
+
+Esto evita cuotas por consulta de una API alojada, pero no significa cómputo
+ilimitado: RAM/VRAM, CPU/GPU, electricidad, contexto y licencia siguen limitando.
+Ollama/llama.cpp son motores locales; WebLLM/Transformers.js son alternativas
+posibles en navegador, no integradas aquí. Pages no aloja un servidor Ollama.
+La demo gratuita usa reglas y búsqueda Excel, no un LLM. No exponer el motor
+local públicamente sin autenticación y límites.

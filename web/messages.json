@@ -6,7 +6,7 @@
     "notice": "Educational demo · Curated ICD-10 / ChEBI references and a separate synthetic disease example. Not a diagnosis, coding decision or treatment recommendation.",
     "inputTitle": "Describe & explore",
     "inputLabel": "Describe symptoms or name a chemical",
-    "privacy": "English or Spanish. Analysis stays in your browser; descriptions are not sent or saved.",
+    "privacy": "Up to 1,000 characters. Updates as you type. Analysis stays in your browser; descriptions are not sent or saved.",
     "analyze": "Analyze description →",
     "examplesTitle": "TRY AN EXAMPLE",
     "examples": [
@@ -14,14 +14,16 @@
       "Negation & synonyms",
       "An ambiguous word",
       "Chemical entity",
-      "Clinical code"
+      "Clinical code",
+      "Fever & weakness"
     ],
     "texts": [
       "I have fever, cough and sore throat",
       "Headache and nausea, but without fever",
       "I feel cold",
       "Acetylsalicylic acid and water",
-      "R05"
+      "R05",
+      "I have a fever of 38 degrees and I feel weak"
     ],
     "methodTitle": "How does this work?",
     "method": "Whole-term matching, synonyms and simple negation. Each matching symptom adds 1 point; each associated negated symptom subtracts 2. Unmentioned symptoms are not treated as absent. Scores are not probabilities. Complex negation and context are not understood.",
@@ -54,7 +56,7 @@
     "notice": "Demo educativa · Referencias seleccionadas CIE-10 / ChEBI y un ejemplo separado de enfermedades sintéticas. No es diagnóstico, decisión de codificación ni recomendación de tratamiento.",
     "inputTitle": "Describe y explora",
     "inputLabel": "Describe síntomas o nombra una sustancia química",
-    "privacy": "Inglés o español. El análisis ocurre en tu navegador; las descripciones no se envían ni guardan.",
+    "privacy": "Hasta 1.000 caracteres. Se actualiza al escribir. El análisis ocurre en tu navegador; las descripciones no se envían ni guardan.",
     "analyze": "Analizar descripción →",
     "examplesTitle": "PRUEBA UN EJEMPLO",
     "examples": [
@@ -62,14 +64,16 @@
       "Negación y sinónimos",
       "Una palabra ambigua",
       "Entidad química",
-      "Código clínico"
+      "Código clínico",
+      "Fiebre y falta de fuerzas"
     ],
     "texts": [
       "Tengo fiebre, tos y dolor de garganta",
       "Cefalea y náuseas, pero sin fiebre",
       "Tengo frío",
       "Ácido acetilsalicílico y agua",
-      "R05"
+      "R05",
+      "Tengo fiebre de 38 grados y me encuentro sin fuerzas"
     ],
     "methodTitle": "¿Cómo funciona?",
     "method": "Coincidencia de términos completos, sinónimos y negación simple. Cada síntoma coincidente suma 1 punto; cada síntoma asociado negado resta 2. Los síntomas no mencionados no se consideran ausentes. Las puntuaciones no son probabilidades. No interpreta negación compleja ni contexto.",

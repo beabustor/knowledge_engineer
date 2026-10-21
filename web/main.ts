@@ -12,6 +12,8 @@ let lang: Language = navigator.language.startsWith('es') ? 'es' : 'en';
 let result: ReturnType<typeof retrieve> | null = null;
 let selected = '';
 const input = $<HTMLTextAreaElement>('description');
+const QUERY_LIMIT = 1000;
+let liveTimer: ReturnType<typeof setTimeout>;
 const labels = () => (lang === 'es' ? es : en).labels as Record<string, string>;
 const m = () => messages[lang];
 function element<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', className = '') {
@@ -21,6 +23,9 @@ function element<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', class
   return node;
 }
 function analyze() {
+  input.setCustomValidity(input.value.length>QUERY_LIMIT ? (lang==='es'?'Máximo 1.000 caracteres':'Maximum 1,000 characters') : '');
+  $('query-counter').textContent = `${input.value.length} / ${QUERY_LIMIT} ${lang==='es'?'caracteres':'characters'}`;
+  if (!input.checkValidity()) { input.reportValidity(); return; }
   result = retrieve(input.value, knowledge, labels());
   selected = result.candidates[0]?.id ?? '';
   renderResults(); renderGraph();
@@ -108,6 +113,7 @@ function renderLanguage() {
     } else el.textContent = value;
   });
   input.placeholder = m().texts[0];
+  $('query-counter').textContent = `${input.value.length} / ${QUERY_LIMIT} ${lang==='es'?'caracteres':'characters'}`;
   const examples = $('examples'); examples.replaceChildren();
   m().examples.forEach((label, i) => {
     const button = element('button', label); button.type = 'button';
@@ -118,6 +124,11 @@ function renderLanguage() {
 }
 $('analyze-form').addEventListener('submit', event => { event.preventDefault(); analyze(); });
 // Editing invalidates old evidence so it is never presented as an analysis of new text.
-input.addEventListener('input', () => { result = null; selected = ''; renderResults(); renderGraph(); });
+input.addEventListener('input', () => {
+  clearTimeout(liveTimer); input.setCustomValidity('');
+  $('query-counter').textContent = `${input.value.length} / ${QUERY_LIMIT} ${lang==='es'?'caracteres':'characters'}`;
+  result = null; selected = ''; renderResults(); renderGraph();
+  if(input.value.trim() && input.value.length<=QUERY_LIMIT)liveTimer=setTimeout(analyze,350);
+});
 $('language').addEventListener('change', () => { lang = $<HTMLSelectElement>('language').value as Language; renderLanguage(); });
 renderLanguage();

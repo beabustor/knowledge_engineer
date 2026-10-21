@@ -91,3 +91,20 @@ request bodies, API keys or patient identifiers.
 `python -m unittest discover -s optional/tests -v` runs offline tests with mock
 credentials only. No paid request is made. Live credentials, cloud deployments,
 provider responses and licensed terminology imports have not been validated.
+
+## Optional local AI without per-query API fees
+
+An Ollama adapter is available but **off**. It targets only
+`http://127.0.0.1:11434/api/generate`. To use it later, independently install
+Ollama, choose and obtain a model whose license permits your use, and test local
+memory/latency requirements. Then explicitly set `ai.enabled=true`,
+`provider="ollama"`, your exact installed `model` and `allow_local_requests=true`.
+Keep `allow_paid_requests=false`. No model is downloaded or started by this repo.
+Small models can have poor clinical extraction accuracy and require evaluation.
+
+This avoids a hosted API's per-query quota; it is not unlimited computation:
+RAM/VRAM, CPU/GPU, electricity, model context and license still impose limits.
+Ollama/llama.cpp are local runtimes; WebLLM/Transformers.js are possible browser
+alternatives, not integrated here. GitHub Pages cannot host an Ollama server.
+The free demo uses deterministic rules and Excel lookup, not an LLM. Do not
+expose your local runtime publicly without authentication and rate controls.

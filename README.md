@@ -150,7 +150,7 @@ without checking meaning.
 For María Moliner, use an authorized source for entries, senses and relationships
 and retain provenance without copying protected content into this repository.
 Distinguish lexical hypernymy from conceptual class inclusion. Contextual
-sense disambiguation is future work; real sources are not connected automatically.
+sense disambiguation is future work; no live official terminology API is connected.
 
 Keep one implementation per technology and one shared set of concept IDs. Update
 `locales/en.json` and `locales/es.json` together; add terms and their language in
@@ -168,7 +168,7 @@ there is no separate browser ranking implementation. The compiled site bundles
 the synthetic dataset and translations, so analysis requires no API, database,
 external font, account or credential. Descriptions stay in memory in the browser;
 the application does not transmit them or store them. GitHub Pages still serves
-and logs ordinary site requests. Representations include both languages. There are no download buttons.
+and logs ordinary site requests. Representations are previewed on screen; downloading the selected representation is optional.
 
 ```sh
 cd web
@@ -211,7 +211,7 @@ push; a committed workflow alone does not establish that the site is live.
 
 ## Explorer: entities, attributes, relationships and actions
 
-The demo shows all representations **on screen**, without downloads:
+The demo shows all representations **on screen**, with optional downloads:
 
 - **Entity types:** Person and Clinician.
 - **Attributes:** Age (integer) and Temperature in Celsius (decimal), with domains and ranges.
@@ -228,8 +228,9 @@ a reasoner. Neo4j and SQL show representations without executing server queries.
 `data/catalog.json` defines the concepts; `explorer/model.ts` generates the views.
 Tests compare RDF, OWL and SQL triples and exercise the browser interface.
 
-The clinical catalog includes only cough (`R05`) and unspecified fever (`R50.9`)
-from **WHO ICD-10 2019**, not the Spanish clinical modification. The chemical
+The built-in clinical alias catalog references cough (`R05`), unspecified fever
+(`R50.9`) and malaise/fatigue (`R53`) against **WHO ICD-10 2019**. The bundled
+Excel has its own unverified edition and broader coverage; see below. The chemical
 catalog references aspirin (`CHEBI:15365`), water (`CHEBI:15377`) and ethanol
 (`CHEBI:16236`). These are manually selected references with source links, not a
 full terminology import or a live query. The ChEBI release is unpinned. Labels,
@@ -270,3 +271,35 @@ are not necessarily clinical documents.
 Offline gate/limit tests make no paid calls:
 `python -m unittest discover -s optional/tests -v`. Docker/Kubernetes, authorized
 terminology servers and real AI/cloud accounts require separate validation.
+
+
+## ICD-10 Excel, live preview and input limit
+
+On first analysis the demo loads its own bundled `data/sources/cie10/cie10.xls`
+snapshot. No paid API is required and queries are not sent to GitHub/Google.
+The source yields 13,750 unique normalized codes; provenance and SHA-256 are
+recorded in the [source notes](data/sources/cie10/README.md). Source edition and
+reuse rights remain unverified; this is not advertised as a current official
+release or Spanish clinical modification. MIT does not cover this third-party
+spreadsheet. Local XLS/XLSX/CSV import is supported (8 MB and 30,000 rows maximum).
+The supplied Google Sheet could not be verified from the environment (403);
+if accessible, export it manually and select the local file.
+
+Input is limited to **1,000 characters**, with a counter and validation. Analysis
+updates 350 ms after typing; Analyze remains available. The Preview sheet displays
+subject, predicate and object/value. RDF, OWL, Neo4j/Cypher, SQL, graph and inspector
+views change with the selected concept. Downloading is an optional next step,
+not a substitute for previewing.
+
+“Tengo fiebre de 38 grados y me encuentro sin fuerzas” matches fever and
+malaise/fatigue references through local aliases and spreadsheet rows. “Sin fuerzas”
+is interpreted as weakness, not its negation. A reported value of 38 is also
+represented; absent explicit Celsius/C or Fahrenheit/F, the unit is left unspecified.
+No disease or verified measurement is inferred. Importing a classification does
+not create a general clinical language interpreter: recognition still relies on
+explicit rules/aliases. Untranslated descriptions remain Spanish; English labels
+fall back to codes instead of fabricated translations.
+
+An **optional, disabled local Ollama adapter** provides a path without per-query
+API fees; see [configuration](optional/README.md). Hosted APIs do not guarantee
+unlimited free usage; local models still consume hardware and carry license terms.

@@ -14,7 +14,8 @@ class RepresentationTests(unittest.TestCase):
         script = """
 import {readFileSync} from 'node:fs';
 import {representations} from './explorer/model.ts';
-const catalog=JSON.parse(readFileSync('data/catalog.json','utf8')).concepts;
+import {reportedConcepts} from './explorer/observations.ts';
+const catalog=[...JSON.parse(readFileSync('data/catalog.json','utf8')).concepts,...reportedConcepts('temperatura 38,5 grados Celsius')];
 console.log(JSON.stringify(catalog.map(c=>({id:c.id,...representations(c,catalog)}))));
 """
         results = json.loads(subprocess.check_output(['node', '--input-type=module', '-e', script], cwd=root, text=True))

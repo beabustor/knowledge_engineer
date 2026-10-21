@@ -1,8 +1,35 @@
 {
-  "api": {"enabled": false},
-  "terminology": {"enabled": false, "edition": "WHO ICD-10 2019", "fhir_base_url": "", "value_set_url": "", "allowed_host": "", "license_verified": false},
-  "ai": {"enabled": false, "allow_paid_requests": false, "provider": "none", "model": "", "max_output_tokens": 256},
-  "bulk": {"enabled": false, "max_items": 100, "concurrency": 1},
-  "storage": {"enabled": false, "root": "var/knowledge-engineer", "retain_query_text": false},
-  "research": {"enabled": false, "rights_review": "pending"}
+  "api": {
+    "enabled": false
+  },
+  "terminology": {
+    "enabled": false,
+    "edition": "WHO ICD-10 2019",
+    "fhir_base_url": "",
+    "value_set_url": "",
+    "allowed_host": "",
+    "license_verified": false
+  },
+  "ai": {
+    "enabled": false,
+    "allow_paid_requests": false,
+    "provider": "none",
+    "model": "",
+    "max_output_tokens": 256,
+    "allow_local_requests": false
+  },
+  "bulk": {
+    "enabled": false,
+    "max_items": 100,
+    "concurrency": 1
+  },
+  "storage": {
+    "enabled": false,
+    "root": "var/knowledge-engineer",
+    "retain_query_text": false
+  },
+  "research": {
+    "enabled": false,
+    "rights_review": "pending"
+  }
 }
