@@ -5,5 +5,5 @@
     "resolveJsonModule": true, "allowImportingTsExtensions": true,
     "noEmit": true, "skipLibCheck": true
   },
-  "include": ["*.ts", "../typescript/core.ts"]
+  "include": ["*.ts", "../typescript/core.ts", "../explorer/model.ts"]
 }

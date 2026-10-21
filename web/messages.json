@@ -2,22 +2,26 @@
   "en": {
     "eyebrow": "THE KNOWLEDGE PLAYGROUND",
     "title": "From a description<br>to a connected idea.",
-    "intro": "Explore how language becomes structured knowledge. Describe symptoms, inspect the evidence and follow the connections.",
-    "notice": "Educational demo · Synthetic data, not a diagnosis. No real SNOMED CT or María Moliner content. Do not use for clinical decisions.",
+    "intro": "Explore clinical and chemical concepts, inspect their sources and see how the same knowledge is represented across technologies.",
+    "notice": "Educational demo · Curated ICD-10 / ChEBI references and a separate synthetic disease example. Not a diagnosis, coding decision or treatment recommendation.",
     "inputTitle": "Describe & explore",
-    "inputLabel": "What does the description say?",
+    "inputLabel": "Describe symptoms or name a chemical",
     "privacy": "English or Spanish. Analysis stays in your browser; descriptions are not sent or saved.",
     "analyze": "Analyze description →",
     "examplesTitle": "TRY AN EXAMPLE",
     "examples": [
       "Respiratory symptoms",
       "Negation & synonyms",
-      "An ambiguous word"
+      "An ambiguous word",
+      "Chemical entity",
+      "Clinical code"
     ],
     "texts": [
       "I have fever, cough and sore throat",
       "Headache and nausea, but without fever",
-      "I feel cold"
+      "I feel cold",
+      "Acetylsalicylic acid and water",
+      "R05"
     ],
     "methodTitle": "How does this work?",
     "method": "Whole-term matching, synonyms and simple negation. Each matching symptom adds 1 point; each associated negated symptom subtracts 2. Unmentioned symptoms are not treated as absent. Scores are not probabilities. Complex negation and context are not understood.",
@@ -46,22 +50,26 @@
   "es": {
     "eyebrow": "LABORATORIO DE CONOCIMIENTO",
     "title": "De una descripción<br>a una idea conectada.",
-    "intro": "Explora cómo el lenguaje se convierte en conocimiento estructurado. Describe síntomas, examina la evidencia y sigue las conexiones.",
-    "notice": "Demo educativa · Datos sintéticos, no un diagnóstico. Sin contenido real de SNOMED CT ni de María Moliner. No usar para decisiones clínicas.",
+    "intro": "Explora conceptos clínicos y químicos, examina sus fuentes y descubre cómo se representa el mismo conocimiento en distintas tecnologías.",
+    "notice": "Demo educativa · Referencias seleccionadas CIE-10 / ChEBI y un ejemplo separado de enfermedades sintéticas. No es diagnóstico, decisión de codificación ni recomendación de tratamiento.",
     "inputTitle": "Describe y explora",
-    "inputLabel": "¿Qué dice la descripción?",
+    "inputLabel": "Describe síntomas o nombra una sustancia química",
     "privacy": "Inglés o español. El análisis ocurre en tu navegador; las descripciones no se envían ni guardan.",
     "analyze": "Analizar descripción →",
     "examplesTitle": "PRUEBA UN EJEMPLO",
     "examples": [
       "Síntomas respiratorios",
       "Negación y sinónimos",
-      "Una palabra ambigua"
+      "Una palabra ambigua",
+      "Entidad química",
+      "Código clínico"
     ],
     "texts": [
       "Tengo fiebre, tos y dolor de garganta",
       "Cefalea y náuseas, pero sin fiebre",
-      "Tengo frío"
+      "Tengo frío",
+      "Ácido acetilsalicílico y agua",
+      "R05"
     ],
     "methodTitle": "¿Cómo funciona?",
     "method": "Coincidencia de términos completos, sinónimos y negación simple. Cada síntoma coincidente suma 1 punto; cada síntoma asociado negado resta 2. Los síntomas no mencionados no se consideran ausentes. Las puntuaciones no son probabilidades. No interpreta negación compleja ni contexto.",

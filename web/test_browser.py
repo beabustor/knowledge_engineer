@@ -3,7 +3,6 @@ from contextlib import contextmanager
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import threading
-import json
 import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
@@ -34,7 +33,7 @@ def main():
         if os.environ.get('CHROMIUM_PATH'):
             options['executable_path'] = os.environ['CHROMIUM_PATH']
         browser = p.chromium.launch(**options)
-        context = browser.new_context(locale='es-ES', accept_downloads=True)
+        context = browser.new_context(locale='es-ES')
         page = context.new_page()
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
@@ -42,7 +41,6 @@ def main():
         try:
             page.goto(url)
             expect(page.locator('html')).to_have_attribute('lang', 'es')
-            expect(page.locator('#json-download')).to_be_disabled()
             page.get_by_role('button', name='Síntomas respiratorios', exact=True).click()
             expect(page.locator('.candidate').first).to_contain_text('Resfriado de ejemplo')
             expect(page.locator('.candidate').first).to_contain_text('3 puntos')
@@ -56,19 +54,10 @@ def main():
             page.get_by_role('button', name='Negation & synonyms', exact=True).click()
             expect(page.locator('.candidate').first).to_contain_text('Example migraine')
             expect(page.locator('.candidate').nth(1).locator('.conflicts')).to_contain_text('Fever')
-            with page.expect_download() as download:
-                page.locator('#json-download').click()
-            data = json.loads(Path(download.value.path()).read_text())
-            assert data['candidates'][0]['id'] == 'ExampleMigraine'
-            for selector, content in [('#rdf-download', 'owl:Ontology'), ('#cypher-download', 'KnowledgeDemo')]:
-                with page.expect_download() as download:
-                    page.locator(selector).click()
-                assert content in Path(download.value.path()).read_text()
             page.get_by_role('button', name='An ambiguous word', exact=True).click()
             expect(page.locator('#ambiguity')).to_contain_text('Cold weather')
             expect(page.locator('#count')).to_have_text('0')
             page.locator('#description').fill('<img src=x onerror=alert(1)> unknown')
-            expect(page.locator('#json-download')).to_be_disabled()
             page.get_by_role('button', name='Analyze description →').click()
             expect(page.locator('#count')).to_have_text('0')
             assert page.locator('#results img').count() == 0
@@ -77,6 +66,36 @@ def main():
             page.locator('#language').select_option('es')
             page.get_by_role('button', name='Negación y sinónimos', exact=True).click()
             expect(page.locator('.candidate').first).to_contain_text('Migraña de ejemplo')
+            page.get_by_role('button', name='Entidad química', exact=True).click()
+            expect(page.locator('.concept-detail')).to_contain_text('CHEBI:15365')
+            page.get_by_role('tab', name='OWL / RDF/XML', exact=True).click()
+            expect(page.locator('#representation-panel code')).to_contain_text('rdf:Description')
+            page.get_by_role('tab', name='Protégé', exact=True).click()
+            expect(page.locator('.ontology-tree')).to_contain_text('Atributo')
+            page.get_by_role('tab', name='SQL', exact=True).click()
+            expect(page.locator('#representation-panel code')).to_contain_text('C9H8O4')
+            page.get_by_role('tab', name='Neo4j / Cypher', exact=True).click()
+            expect(page.locator('#representation-panel code')).to_contain_text('IS_A')
+            page.get_by_role('tab', name='RDF / Turtle', exact=True).click()
+            expect(page.locator('#representation-panel code')).to_contain_text('rdfs:seeAlso')
+            page.locator('#description').fill('sin tos, tomo aspirina')
+            page.get_by_role('button', name='Analizar descripción →').click()
+            expect(page.locator('.concept-match').first).to_contain_text('Mención negada')
+            page.locator('#catalog-domain').select_option('chemical')
+            expect(page.locator('.concept-match')).to_have_count(1)
+            page.locator('#catalog-domain').select_option('all')
+            page.locator('#catalog-domain').select_option('modeling')
+            page.locator('#concept-explorer .examples button').filter(has_text='Medición de ejemplo').click()
+            page.get_by_role('tab', name='Grafo del concepto', exact=True).click()
+            expect(page.locator('.semantic-graph')).to_contain_text('38.5')
+            expect(page.locator('.semantic-graph')).to_contain_text('Realizada por')
+            page.get_by_role('tab', name='Protégé', exact=True).click()
+            expect(page.locator('.ontology-inspector')).to_contain_text('Profesional de ejemplo')
+            page.get_by_role('tab', name='OWL / RDF/XML', exact=True).click()
+            expect(page.locator('#representation-panel code')).to_contain_text('NamedIndividual')
+            page.get_by_role('tab', name='SQL', exact=True).click()
+            expect(page.locator('#representation-panel code')).to_contain_text('38.5')
+            assert page.locator('a[download]').count() == 0
             for language in ('en', 'es'):
                 page.locator('#language').select_option(language)
                 for width in (320, 360, 390, 414, 768, 1280):
@@ -101,7 +120,7 @@ def main():
             context.tracing.stop()
         finally:
             browser.close()
-        print('Browser: bilingual analysis, negation, graph, ambiguity, downloads, stale-state reset and mobile layout passed')
+        print('Browser: bilingual analysis, negation, graph, ambiguity, on-screen representations, modeling, stale-state reset and mobile layout passed')
 
 
 if __name__ == '__main__':

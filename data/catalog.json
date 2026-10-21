@@ -1,0 +1,425 @@
+{
+  "provenance": {
+    "en": "Small manually curated reference catalog, not a full official terminology import. English and Spanish labels and aliases are local editorial text. No automatic clinical inference or cross-ontology equivalence is asserted.",
+    "es": "Pequeño catálogo de referencias seleccionadas manualmente, no una importación completa de terminologías oficiales. Etiquetas y alias en inglés y español son textos editoriales locales. No se afirma inferencia clínica automática ni equivalencia entre ontologías."
+  },
+  "concepts": [
+    {
+      "id": "ClinicalFinding",
+      "domain": "clinical",
+      "labels": {
+        "en": "Clinical finding",
+        "es": "Hallazgo clínico"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Local educational model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local"
+    },
+    {
+      "id": "ChemicalEntity",
+      "domain": "chemical",
+      "labels": {
+        "en": "Chemical entity",
+        "es": "Entidad química"
+      },
+      "aliases": {
+        "en": [],
+        "es": []
+      },
+      "source": "Local educational model",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local"
+    },
+    {
+      "id": "Cough",
+      "domain": "clinical",
+      "labels": {
+        "en": "Cough",
+        "es": "Tos"
+      },
+      "aliases": {
+        "en": [
+          "cough",
+          "coughing"
+        ],
+        "es": [
+          "tos"
+        ]
+      },
+      "parent": "ClinicalFinding",
+      "code": "R05",
+      "source": "WHO ICD-10",
+      "version": "2019",
+      "url": "https://icd.who.int/browse10/2019/en#/R05",
+      "status": "reference"
+    },
+    {
+      "id": "Fever",
+      "domain": "clinical",
+      "labels": {
+        "en": "Unspecified fever",
+        "es": "Fiebre no especificada"
+      },
+      "aliases": {
+        "en": [
+          "fever",
+          "pyrexia"
+        ],
+        "es": [
+          "fiebre",
+          "pirexia"
+        ]
+      },
+      "parent": "ClinicalFinding",
+      "code": "R50.9",
+      "source": "WHO ICD-10",
+      "version": "2019",
+      "url": "https://icd.who.int/browse10/2019/en#/R50.9",
+      "status": "reference"
+    },
+    {
+      "id": "Aspirin",
+      "domain": "chemical",
+      "labels": {
+        "en": "Acetylsalicylic acid",
+        "es": "Ácido acetilsalicílico"
+      },
+      "aliases": {
+        "en": [
+          "aspirin",
+          "acetylsalicylic acid"
+        ],
+        "es": [
+          "aspirina",
+          "ácido acetilsalicílico"
+        ]
+      },
+      "parent": "ChemicalEntity",
+      "code": "CHEBI:15365",
+      "formula": "C9H8O4",
+      "source": "ChEBI",
+      "version": "Unpinned / Sin fijar",
+      "url": "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:15365",
+      "status": "reference"
+    },
+    {
+      "id": "Water",
+      "domain": "chemical",
+      "labels": {
+        "en": "Water",
+        "es": "Agua"
+      },
+      "aliases": {
+        "en": [
+          "water",
+          "H2O"
+        ],
+        "es": [
+          "agua"
+        ]
+      },
+      "parent": "ChemicalEntity",
+      "code": "CHEBI:15377",
+      "formula": "H2O",
+      "source": "ChEBI",
+      "version": "Unpinned / Sin fijar",
+      "url": "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:15377",
+      "status": "reference"
+    },
+    {
+      "id": "Ethanol",
+      "domain": "chemical",
+      "labels": {
+        "en": "Ethanol",
+        "es": "Etanol"
+      },
+      "aliases": {
+        "en": [
+          "ethanol",
+          "ethyl alcohol"
+        ],
+        "es": [
+          "etanol",
+          "alcohol etílico"
+        ]
+      },
+      "parent": "ChemicalEntity",
+      "code": "CHEBI:16236",
+      "formula": "C2H6O",
+      "source": "ChEBI",
+      "version": "Unpinned / Sin fijar",
+      "url": "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:16236",
+      "status": "reference"
+    },
+    {
+      "id": "Person",
+      "domain": "modeling",
+      "labels": {
+        "en": "Person",
+        "es": "Persona"
+      },
+      "aliases": {
+        "en": [
+          "Person"
+        ],
+        "es": [
+          "Persona"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "entity"
+    },
+    {
+      "id": "Clinician",
+      "domain": "modeling",
+      "labels": {
+        "en": "Clinician",
+        "es": "Profesional sanitario"
+      },
+      "aliases": {
+        "en": [
+          "Clinician"
+        ],
+        "es": [
+          "Profesional sanitario"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "entity",
+      "parent": "Person"
+    },
+    {
+      "id": "Action",
+      "domain": "modeling",
+      "labels": {
+        "en": "Action",
+        "es": "Acción"
+      },
+      "aliases": {
+        "en": [
+          "Action"
+        ],
+        "es": [
+          "Acción"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "action"
+    },
+    {
+      "id": "MeasureTemperature",
+      "domain": "modeling",
+      "labels": {
+        "en": "Measure temperature",
+        "es": "Medir temperatura"
+      },
+      "aliases": {
+        "en": [
+          "Measure temperature"
+        ],
+        "es": [
+          "Medir temperatura"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "action",
+      "parent": "Action"
+    },
+    {
+      "id": "age",
+      "domain": "modeling",
+      "labels": {
+        "en": "Age",
+        "es": "Edad"
+      },
+      "aliases": {
+        "en": [
+          "Age"
+        ],
+        "es": [
+          "Edad"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "attribute",
+      "domainId": "Person",
+      "rangeId": "integer"
+    },
+    {
+      "id": "temperature",
+      "domain": "modeling",
+      "labels": {
+        "en": "Temperature in Celsius",
+        "es": "Temperatura en Celsius"
+      },
+      "aliases": {
+        "en": [
+          "Temperature in Celsius"
+        ],
+        "es": [
+          "Temperatura en Celsius"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "attribute",
+      "domainId": "MeasureTemperature",
+      "rangeId": "decimal"
+    },
+    {
+      "id": "performedBy",
+      "domain": "modeling",
+      "labels": {
+        "en": "Performed by",
+        "es": "Realizada por"
+      },
+      "aliases": {
+        "en": [
+          "Performed by"
+        ],
+        "es": [
+          "Realizada por"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "relationship",
+      "domainId": "Action",
+      "rangeId": "Person"
+    },
+    {
+      "id": "hasSubject",
+      "domain": "modeling",
+      "labels": {
+        "en": "Has subject",
+        "es": "Tiene sujeto"
+      },
+      "aliases": {
+        "en": [
+          "Has subject"
+        ],
+        "es": [
+          "Tiene sujeto"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "relationship",
+      "domainId": "Action",
+      "rangeId": "Person"
+    },
+    {
+      "id": "SamplePerson",
+      "domain": "modeling",
+      "labels": {
+        "en": "Example person",
+        "es": "Persona de ejemplo"
+      },
+      "aliases": {
+        "en": [
+          "Example person"
+        ],
+        "es": [
+          "Persona de ejemplo"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "individual",
+      "classId": "Person",
+      "properties": [
+        {
+          "property": "age",
+          "value": 35
+        }
+      ]
+    },
+    {
+      "id": "SampleClinician",
+      "domain": "modeling",
+      "labels": {
+        "en": "Example clinician",
+        "es": "Profesional de ejemplo"
+      },
+      "aliases": {
+        "en": [
+          "Example clinician"
+        ],
+        "es": [
+          "Profesional de ejemplo"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "individual",
+      "classId": "Clinician"
+    },
+    {
+      "id": "SampleMeasurement",
+      "domain": "modeling",
+      "labels": {
+        "en": "Example measurement",
+        "es": "Medición de ejemplo"
+      },
+      "aliases": {
+        "en": [
+          "Example measurement"
+        ],
+        "es": [
+          "Medición de ejemplo"
+        ]
+      },
+      "source": "Local synthetic modeling example",
+      "version": "1",
+      "url": "https://github.com/beabustor/knowledge_engineer",
+      "status": "local",
+      "kind": "individual",
+      "classId": "MeasureTemperature",
+      "properties": [
+        {
+          "property": "performedBy",
+          "target": "SampleClinician"
+        },
+        {
+          "property": "hasSubject",
+          "target": "SamplePerson"
+        },
+        {
+          "property": "temperature",
+          "value": 38.5
+        }
+      ]
+    }
+  ]
+}

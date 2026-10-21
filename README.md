@@ -9,8 +9,9 @@ Python, TypeScript, SQL, RDF/OWL and Neo4j, then retrieving candidate diseases
 from English or Spanish descriptions. Requires Python 3.10+; TypeScript examples
 require Node.js 22.18+. Neither example requires dependency installation.
 
-**All data is synthetic.** No SNOMED CT or María Moliner dictionary content is
-included. Results are educational candidates, not diagnoses or probabilities;
+**The original disease model and people/actions scenario are synthetic.**
+The explorer adds a small ICD-10/ChEBI reference identifier catalog with local
+labels. No SNOMED CT or María Moliner dictionary content is included. Results are educational candidates, not diagnoses or probabilities;
 do not use them for clinical decisions.
 
 ## Quick start
@@ -161,14 +162,13 @@ file retains the original legal text.
 ## Interactive browser demo
 
 `web/` contains a responsive, bilingual application with example descriptions,
-explainable candidate cards, selectable graph nodes, and RDF/OWL, Cypher and JSON
-downloads. It imports the same pure engine (`typescript/core.ts`) as the CLI;
+explainable candidate cards, selectable graph nodes, and on-screen RDF/OWL, Cypher and SQL
+representations. It imports the same pure engine (`typescript/core.ts`) as the CLI;
 there is no separate browser ranking implementation. The compiled site bundles
 the synthetic dataset and translations, so analysis requires no API, database,
 external font, account or credential. Descriptions stay in memory in the browser;
 the application does not transmit them or store them. GitHub Pages still serves
-and logs ordinary site requests. Downloads contain the full bilingual graph;
-JSON contains the current analysis.
+and logs ordinary site requests. Representations include both languages. There are no download buttons.
 
 ```sh
 cd web
@@ -190,7 +190,7 @@ python web/test_browser.py
 
 An existing Chromium can be selected with `CHROMIUM_PATH`. `DEMO_URL` overrides
 the test target. Tests exercise both languages, candidate selection, negation,
-ambiguity, mobile overflow, download contents and invalidation of stale results.
+ambiguity, mobile overflow, on-screen representations and invalidation of stale results.
 
 ### Publish to GitHub Pages
 
@@ -207,3 +207,36 @@ Pull requests validate without deployment. No hosting secret or paid service is
 required for a public repository under GitHub's applicable free-plan limits.
 Pages settings and successful publication must be checked separately from a Git
 push; a committed workflow alone does not establish that the site is live.
+
+
+## Explorer: entities, attributes, relationships and actions
+
+The demo shows all representations **on screen**, without downloads:
+
+- **Entity types:** Person and Clinician.
+- **Attributes:** Age (integer) and Temperature in Celsius (decimal), with domains and ranges.
+- **Relationships:** Performed by and Has subject, represented as OWL object properties.
+- **Action types:** Action and Measure temperature.
+- **Individuals:** a 35-year-old person, a clinician and a measurement of 38.5 °C.
+
+Ages and measurements form a fixed synthetic scenario, not facts extracted from
+input text. Selecting a card or link changes the graph, RDF/Turtle, OWL/RDF/XML,
+Neo4j/Cypher, SQL and a Protégé-inspired inspector. The inspector organizes
+classes, attributes, relationships and individuals; it does not run Protégé or
+a reasoner. Neo4j and SQL show representations without executing server queries.
+
+`data/catalog.json` defines the concepts; `explorer/model.ts` generates the views.
+Tests compare RDF, OWL and SQL triples and exercise the browser interface.
+
+The clinical catalog includes only cough (`R05`) and unspecified fever (`R50.9`)
+from **WHO ICD-10 2019**, not the Spanish clinical modification. The chemical
+catalog references aspirin (`CHEBI:15365`), water (`CHEBI:15377`) and ethanol
+(`CHEBI:16236`). These are manually selected references with source links, not a
+full terminology import or a live query. The ChEBI release is unpinned. Labels,
+aliases and broad hierarchies are local editorial text. `rdfs:seeAlso` links to
+the source without asserting `owl:equivalentClass`. Negated mentions are marked;
+they do not become positive evidence or coding decisions.
+
+To extend to other domains, add concepts, bilingual aliases, kinds, provenance
+and relationships to the catalog. Current domains are clinical, chemical and
+modeling. There is no universal entity recognition or treatment inference.

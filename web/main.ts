@@ -1,10 +1,9 @@
 import './style.css';
+import { renderExplorer } from './explorer.ts';
 import knowledge from '../data/knowledge.json';
 import en from '../locales/en.json';
 import es from '../locales/es.json';
 import messages from './messages.json';
-import rdf from '../rdf/knowledge.ttl?raw';
-import cypher from '../neo4j/knowledge.cypher?raw';
 import { retrieve } from '../typescript/core.ts';
 
 type Language = 'en' | 'es';
@@ -52,7 +51,6 @@ function renderResults() {
       ambiguity.append(element('p', `${term} → ${ids.map(id => labels()[id]).join(' / ')}`));
     }
   }
-  $<HTMLButtonElement>('json-download').disabled = !result;
 }
 function renderGraph() {
   const host = $('graph'); host.replaceChildren();
@@ -93,6 +91,7 @@ function renderGraph() {
   });
   host.append(left, right);
   $('legend').textContent = m().legend;
+  renderExplorer(input.value, lang, Boolean(result), text => { input.value = text; analyze(); });
 }
 function renderLanguage() {
   document.documentElement.lang = lang;
@@ -121,15 +120,4 @@ $('analyze-form').addEventListener('submit', event => { event.preventDefault(); 
 // Editing invalidates old evidence so it is never presented as an analysis of new text.
 input.addEventListener('input', () => { result = null; selected = ''; renderResults(); renderGraph(); });
 $('language').addEventListener('change', () => { lang = $<HTMLSelectElement>('language').value as Language; renderLanguage(); });
-function downloadLink(id: string, content: string, type: string) {
-  $<HTMLAnchorElement>(id).href = URL.createObjectURL(new Blob([content], { type }));
-}
-downloadLink('rdf-download', rdf, 'text/turtle;charset=utf-8');
-downloadLink('cypher-download', cypher, 'text/plain;charset=utf-8');
-$('json-download').addEventListener('click', () => {
-  if (!result) return;
-  const url = URL.createObjectURL(new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' }));
-  const anchor = element('a'); anchor.href = url; anchor.download = 'analysis.json'; anchor.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-});
 renderLanguage();

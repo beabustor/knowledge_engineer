@@ -9,7 +9,9 @@ Python, TypeScript, SQL, RDF/OWL y Neo4j, y recuperar enfermedades candidatas
 a partir de descripciones en inglés o español. Requiere Python 3.10+ y, para
 TypeScript, Node.js 22.18+. No es necesario instalar dependencias.
 
-**Todos los datos son sintéticos.** No se incluyen contenidos de SNOMED CT ni
+**El modelo clínico original y el caso de personas/acciones son sintéticos.**
+El explorador añade un catálogo reducido de identificadores de referencia
+CIE-10/ChEBI con etiquetas locales. No incluye contenidos de SNOMED CT ni
 del diccionario María Moliner. Los resultados son candidatos educativos, no
 diagnósticos ni probabilidades; no deben usarse para decisiones clínicas.
 
@@ -164,14 +166,14 @@ El archivo LICENSE conserva el texto legal original.
 ## Demo interactiva en el navegador
 
 `web/` contiene una aplicación adaptable a móvil, bilingüe, con descripciones
-de ejemplo, tarjetas explicables de candidatos, nodos seleccionables y descargas
-de RDF/OWL, Cypher y JSON. Importa el mismo motor puro (`typescript/core.ts`) que
+de ejemplo, tarjetas explicables de candidatos, nodos seleccionables y representaciones en pantalla
+de RDF/OWL, Cypher y SQL. Importa el mismo motor puro (`typescript/core.ts`) que
 la consola; no hay otra implementación de ranking para el navegador. El sitio
 compilado incluye los datos sintéticos y las traducciones: no necesita API,
 base de datos, fuentes externas, cuentas ni credenciales. Las descripciones
 permanecen en memoria en el navegador; la aplicación no las transmite ni las
 guarda. GitHub Pages sí sirve y registra las solicitudes normales del sitio.
-Las descargas del grafo contienen ambos idiomas; JSON contiene el análisis actual.
+Las representaciones en pantalla contienen ambos idiomas. No hay botones de descarga.
 
 ```sh
 cd web
@@ -193,7 +195,7 @@ python web/test_browser.py
 
 `CHROMIUM_PATH` permite seleccionar un Chromium existente. `DEMO_URL` cambia
 el destino de las pruebas. Estas verifican ambos idiomas, selección de candidatos,
-negación, ambigüedad, desbordamiento en móvil, contenido de descargas e invalidación
+negación, ambigüedad, desbordamiento en móvil, representaciones en pantalla e invalidación
 de resultados antiguos al editar la descripción.
 
 ### Publicar en GitHub Pages
@@ -211,3 +213,36 @@ Las solicitudes de cambios validan sin desplegar. No requiere secretos de
 alojamiento ni servicios de pago para un repositorio público dentro de los límites
 del plan gratuito aplicable. La configuración de Pages y la publicación correcta
 se deben comprobar por separado: subir el workflow no demuestra que la web esté activa.
+
+
+## Explorador de entidades, atributos, relaciones y acciones
+
+La demo muestra todas las representaciones **en pantalla**, sin descargables:
+
+- **Tipos de entidad:** Persona y Profesional sanitario.
+- **Atributos:** Edad (entero) y Temperatura en Celsius (decimal), con dominio y rango.
+- **Relaciones:** Realizada por y Tiene sujeto, como propiedades de objetos OWL.
+- **Tipos de acción:** Acción y Medir temperatura.
+- **Individuos:** una persona de 35 años, un profesional y una medición de 38.5 °C.
+
+Las edades y mediciones son un caso fijo sintético, no datos extraídos del texto.
+Seleccionar una tarjeta o un enlace cambia el grafo, RDF/Turtle, OWL/RDF/XML,
+Neo4j/Cypher, SQL y el inspector inspirado en Protégé. Este último organiza
+clases, atributos, relaciones e individuos; no ejecuta Protégé ni un razonador.
+Neo4j y SQL muestran la representación, sin ejecutar consultas contra servidores.
+
+`data/catalog.json` define los conceptos y `explorer/model.ts` genera las vistas.
+Las pruebas comparan las tripletas RDF, OWL y SQL, además de probar la interfaz.
+
+El catálogo clínico contiene solo tos (`R05`) y fiebre no especificada (`R50.9`)
+de la edición **OMS CIE-10 2019**, no CIE-10-ES. El químico referencia aspirina
+(`CHEBI:15365`), agua (`CHEBI:15377`) y etanol (`CHEBI:16236`). Son referencias
+seleccionadas manualmente con enlaces a la fuente; no son una importación
+completa ni una consulta en vivo. La versión ChEBI no está fijada. Etiquetas,
+alias y jerarquías generales son editoriales locales. `rdfs:seeAlso` enlaza la
+fuente sin afirmar `owl:equivalentClass`. Una mención negada se marca como tal;
+no se transforma en evidencia positiva ni en una decisión de codificación.
+
+Para ampliar a otros dominios, añadir conceptos, alias bilingües, tipo,
+procedencia y relaciones al catálogo. Los dominios actuales son clínica, química
+y modelado. No hay un reconocimiento universal ni inferencia de tratamientos.
