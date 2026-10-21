@@ -17,8 +17,12 @@ def canonical():
 import {readFileSync} from 'node:fs';
 import {representations} from './explorer/model.ts';
 import {reportedConcepts} from './explorer/observations.ts';
+import {normalizeResults} from './web/public-lookup.ts';
+import {annotationConcepts} from './explorer/annotations.ts';
+const remote=normalizeResults('wikidata',{search:[{id:'Q283',label:'agua',description:'compuesto',display:{label:{language:'es'}}}]},'es');
+const annotations=annotationConcepts('agua',[{id:'Annotation_remote',span:'agua',query:'agua',candidate:remote[0],review:'accepted',at:'2026-10-21T00:00:00Z'}]);
 import {confirmationConcepts} from './interview/engine.ts';
-const catalog=[...JSON.parse(readFileSync('data/catalog.json','utf8')).concepts,...reportedConcepts('Tengo 35 años y temperatura 38.5 grados Celsius'),...confirmationConcepts({Cough:{answer:'no',origin:'confirmation'}})];
+const catalog=[...remote,...annotations,...JSON.parse(readFileSync('data/catalog.json','utf8')).concepts,...reportedConcepts('Tengo 35 años y temperatura 38.5 grados Celsius'),...confirmationConcepts({Cough:{answer:'no',origin:'confirmation'}})];
 console.log(JSON.stringify(catalog.map(c=>representations(c,catalog).rdf)));
 """
     data = json.loads(subprocess.check_output(['node','--input-type=module','-e',script],cwd=ROOT,text=True))

@@ -55,7 +55,7 @@ def main():
                 return
             query = parse_qs(parsed.query)
             try:
-                result = proxy.search(self.client_address[0], query.get('source', [''])[0], query.get('term', [''])[0])
+                result = proxy.search(self.client_address[0], query.get('source', [''])[0], query.get('term', [''])[0], query.get('language', ['en'])[0])
                 self.reply(200, result)
             except LimitReached as error:
                 self.reply(429, {'error': str(error)})

@@ -93,6 +93,7 @@ def main():
             assert page.locator('#concept-explorer img').count()==0
             assert page.locator('.concept-detail').count()==0
             # Mocked source integration and exact browser request ceiling.
+            page.locator('#lookup-source').select_option('ols')
             external=[]
             def source_fixture(route):
                 external.append(route.request.url)
@@ -106,6 +107,17 @@ def main():
                 page.get_by_role('button',name='Look up and add graph candidates',exact=True).click()
                 expect(page.get_by_role('button',name='Look up and add graph candidates',exact=True)).to_be_enabled()
             expect(page.locator('#primary-graph')).to_contain_text('candidateMatch?')
+            # Source proposals are reviewable annotations, never equivalence assertions.
+            candidate=page.locator('.annotation-candidate').first
+            candidate.locator('[data-review=accepted]').click()
+            expect(candidate).to_contain_text('Accepted by you')
+            expect(page.locator('#primary-graph')).to_contain_text('reviewStatus')
+            candidate.locator('[data-review=rejected]').click()
+            expect(candidate).to_contain_text('Rejected by you')
+            expect(page.locator('#primary-graph .kind-remote')).to_have_count(0)
+            expect(page.locator('#primary-graph')).not_to_contain_text('candidateMatch?')
+            candidate.locator('[data-review=pending]').click()
+
             page.locator('#lookup-term').fill('over-quota')
             page.get_by_role('button',name='Look up and add graph candidates',exact=True).click()
             expect(page.locator('#concept-explorer')).to_contain_text('Limit reached')
@@ -121,6 +133,7 @@ def main():
             fresh.goto(url);fresh.locator('#description').fill('cough')
             expect(fresh.locator('.concept-detail')).to_contain_text('R05')
             open_details(fresh,'.advanced-controls')
+            fresh.locator('#lookup-source').select_option('ols')
             fresh.locator('#lookup-term').fill('cough')
             fresh.get_by_role('button',name='Look up and add graph candidates',exact=True).click()
             fresh.locator('#description').fill('fever')
@@ -133,7 +146,32 @@ def main():
             expect(fresh.locator('#primary-graph')).not_to_contain_text('HP:0012735')
             fresh.locator('#description').fill('')
             expect(fresh.locator('.concept-detail')).to_have_count(0)
-            isolated.close();assert not errors,errors
+            isolated.close()
+            adapters=browser.new_context(locale='en-US');all_sources=adapters.new_page()
+            adapters.route('https://www.wikidata.org/w/api.php?*',lambda route:route.fulfill(json={'search':[{'id':'Q283','label':'water','display':{'label':{'language':'en'}}}]}))
+            adapters.route('https://clinicaltables.nlm.nih.gov/api/icd10cm/v3/search?*',lambda route:route.fulfill(json=[1,['R50.9'],None,[['R50.9','Fever, unspecified']]]))
+            adapters.route('https://cima.aemps.es/cima/rest/medicamentos?*',lambda route:route.fulfill(json={'resultados':[{'nombre':'PARACETAMOL','nregistro':'77758'}]}))
+            adapters.route('https://www.ebi.ac.uk/ols4/api/search?*',lambda route:route.fulfill(json={'response':{'docs':[{'label':'Cough','obo_id':'HP:0012735','ontology_name':'hp','iri':'http://purl.obolibrary.org/obo/HP_0012735'} if 'ontology=hp' in route.request.url else {'label':'water','obo_id':'CHEBI:15377','ontology_name':'chebi','iri':'http://purl.obolibrary.org/obo/CHEBI_15377'}]}}))
+            all_sources.goto(url)
+            for source,phrase,span,code in [('wikidata','water','water','Q283'),('chebi','water','water','CHEBI:15377'),('hpo','cough','cough','HP:0012735'),('icd10','fever','fever','R50.9'),('cima','paracetamol','paracetamol','77758')]:
+                all_sources.locator('#description').fill(phrase)
+                expect(all_sources.locator('#query-counter')).to_contain_text(str(len(phrase))+' /')
+                all_sources.wait_for_timeout(400)
+                all_sources.locator('#lookup-source').select_option(source)
+                all_sources.locator('#annotation-span').fill(span)
+                all_sources.locator('#lookup-term').fill(span)
+                all_sources.get_by_role('button',name='Look up and add graph candidates',exact=True).click()
+                expect(all_sources.get_by_role('button',name='Look up and add graph candidates',exact=True)).to_be_enabled()
+                card=all_sources.locator('.annotation-candidate').filter(has_text=code).first
+                card.locator('[data-review=accepted]').click()
+                expect(card).to_contain_text('Accepted by you')
+                expect(all_sources.locator('#primary-graph')).to_contain_text('reviewStatus')
+                card.locator('button.linked-concept').click()
+                all_sources.get_by_role('tab',name='RDF / Turtle',exact=True).click()
+                expect(all_sources.locator('#representation-panel code')).to_contain_text('prov:wasDerivedFrom')
+                expect(all_sources.locator('#representation-panel code')).to_contain_text('skos:prefLabel')
+                expect(all_sources.locator('#representation-panel code')).to_contain_text('reviewStatus')
+            adapters.close();assert not errors,errors
         except Exception:
             folder=Path(__file__).parent/'test-results';folder.mkdir(exist_ok=True)
             page.screenshot(path=str(folder/'failure.png'),full_page=True)

@@ -4,7 +4,10 @@ from pathlib import Path
 import sqlite3
 import subprocess
 import unittest
+import rdflib
 from rdflib import Graph, Literal
+# Compare lossless lexical forms, including ISO timestamps, across SQL and RDF.
+rdflib.NORMALIZE_LITERALS = False
 from rdflib.compare import isomorphic
 
 
@@ -15,7 +18,11 @@ class RepresentationTests(unittest.TestCase):
 import {readFileSync} from 'node:fs';
 import {representations} from './explorer/model.ts';
 import {reportedConcepts} from './explorer/observations.ts';
-const catalog=[...JSON.parse(readFileSync('data/catalog.json','utf8')).concepts,...reportedConcepts('Tengo 35 años y temperatura 38,5 grados Celsius')];
+import {normalizeResults} from './web/public-lookup.ts';
+import {annotationConcepts} from './explorer/annotations.ts';
+const remote=normalizeResults('wikidata',{search:[{id:'Q283',label:'agua',description:'compuesto',display:{label:{language:'es'}}}]},'es');
+const annotations=annotationConcepts('agua',[{id:'Annotation_remote',span:'agua',query:'agua',candidate:remote[0],review:'accepted',at:'2026-10-21T00:00:00Z'}]);
+const catalog=[...remote,...annotations,...JSON.parse(readFileSync('data/catalog.json','utf8')).concepts,...reportedConcepts('Tengo 35 años y temperatura 38,5 grados Celsius')];
 console.log(JSON.stringify(catalog.map(c=>({id:c.id,...representations(c,catalog)}))));
 """
         results = json.loads(subprocess.check_output(['node', '--input-type=module', '-e', script], cwd=root, text=True))

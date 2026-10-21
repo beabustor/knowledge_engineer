@@ -20,14 +20,22 @@ def main():
             if proxy:options['proxy']={'server':proxy,'bypass':'127.0.0.1,localhost'}
             browser=p.chromium.launch(**options)
             try:
-                page=browser.new_page(locale='en-US');page.goto(url)
+                page=browser.new_page(locale='en-US')
+                failures=[]
+                page.on('requestfailed',lambda r:failures.append(r.failure))
+                report['browser_request_failures']=failures
+                page.goto(url)
                 page.locator('#description').fill('cough')
                 expect(page.locator('.concept-detail')).to_contain_text('R05')
                 open_details(page,'.advanced-controls')
+                page.locator('#lookup-source').select_option('ols')
                 page.locator('#lookup-term').fill('cough')
                 page.get_by_role('button',name='Look up and add graph candidates',exact=True).click()
-                expect(page.locator('#primary-graph')).to_contain_text('candidateMatch?',timeout=25000)
-                results=page.locator('.source-panel .examples button').all_text_contents()
+                expect(page.get_by_role('button',name='Look up and add graph candidates',exact=True)).to_be_enabled(timeout=15000)
+                if not page.locator('.annotation-candidate').count():
+                    raise AssertionError('No live candidates; browser network failures: '+repr(failures))
+                expect(page.locator('#primary-graph')).to_contain_text('candidateMatch?',timeout=5000)
+                results=page.locator('.annotation-candidate > button').all_text_contents()
                 assert results,'No real terminology candidates rendered'
                 report.update(status='passed',rendered_candidates=results[:5],tls_verification='enabled')
             finally:browser.close()

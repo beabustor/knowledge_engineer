@@ -34,9 +34,9 @@ class PublicLookup:
             raise ValueError('Source response too large')
         return json.loads(raw)
 
-    def search(self, ip, source, term):
-        if source not in ('ols', 'cima') or not 2 <= len(term.strip()) <= 80:
-            raise ValueError('Use source ols/cima and a term of 2–80 characters')
+    def search(self, ip, source, term, language="en"):
+        if source not in ('ols', 'chebi', 'hpo', 'cima', 'wikidata', 'icd10') or language not in ('en', 'es') or not 2 <= len(term.strip()) <= 80:
+            raise ValueError('Use a supported source, en/es and a term of 2–80 characters')
         term = term.strip()
         client = hashlib.blake2b(ip.encode(), key=self.salt, digest_size=16).hexdigest()
         now = self.clock()
@@ -47,7 +47,7 @@ class PublicLookup:
             if (client not in self.clients and len(self.clients) >= 1000) or len(times) >= PER_DAY or sum(t > now-60 for t in times) >= PER_MINUTE:
                 raise LimitReached('IP quota exceeded: 6/minute, 30/24h')
             self.clients[client] = times + [now]
-            key = (source, term.casefold())
+            key = (source, language, term.casefold())
             if key in self.cache and now - self.cache[key][0] < 86400:
                 self.cache.move_to_end(key)
                 return self.cache[key][1]
@@ -58,8 +58,16 @@ class PublicLookup:
         if not self.slots.acquire(blocking=False):
             raise LimitReached('Two upstream requests already in flight')
         try:
-            url = ('https://www.ebi.ac.uk/ols4/api/search?' + urlencode({'q': term, 'rows': 5})
-                   if source == 'ols' else 'https://cima.aemps.es/cima/rest/medicamentos?' + urlencode({'nombre': term}))
+            if source in ('ols', 'chebi', 'hpo'):
+                params = {'q': term, 'rows': 5}
+                if source != 'ols': params['ontology'] = 'hp' if source == 'hpo' else 'chebi'
+                url = 'https://www.ebi.ac.uk/ols4/api/search?' + urlencode(params)
+            elif source == 'wikidata':
+                url = 'https://www.wikidata.org/w/api.php?' + urlencode({'action': 'wbsearchentities', 'search': term, 'language': language, 'uselang': language, 'format': 'json', 'origin': '*', 'limit': 5, 'type': 'item'})
+            elif source == 'icd10':
+                url = 'https://clinicaltables.nlm.nih.gov/api/icd10cm/v3/search?' + urlencode({'sf': 'code,name', 'terms': term, 'maxList': 5})
+            else:
+                url = 'https://cima.aemps.es/cima/rest/medicamentos?' + urlencode({'nombre': term})
             result = self.fetch(url)
             with self.lock:
                 self.cache[key] = (now, result)

@@ -13,11 +13,17 @@ knowledge as a graph, RDF, OWL, Cypher and SQL. No diagnosis or automatic clinic
 1. Open the demo: a live example graph is already visible. Edit the sentence (maximum **100 characters**).
 2. Inspect the query-generated graph: mentions, negation, concepts and identifiers.
 3. Select a concept to see its source and technical representations.
-4. Optionally query OLS/CIMA with a separate short term; external links remain
+4. Optionally query Wikidata / ChEBI / HPO / NLM / CIMA with a separate short term; external links remain
    **unverified candidates**, not ontology equivalence.
 
 The demo runs locally in your browser. Paid AI and cloud deployment are not required.
 The catalog is deliberately small: [authored labels, reference IDs and rights](data/registry.json).
+
+### Review public-source annotations
+
+Connect **Wikidata, ChEBI, HPO, OLS, NLM ICD-10-CM and CIMA** directly in the demo. Choose a text fragment and search term, then accept or reject candidate annotations. The graph and all representations preserve your review, evidence and source. SKOS labels and PROV-O provenance are generated locally. **ICD-10-CM is the US adaptation, in English**, not Spanish CIE-10-ES. No API keys or paid AI; shared limits apply. [Workflow, endpoints and rights](docs/en/sources.md#connected-public-services).
+
+The technical tabs demonstrate different uses of one reviewed model: RDF for interchange, OWL for ontology semantics, Cypher for graph databases and SQL for relational integration. A Cypher preview does not execute Neo4j. Current validation is in CI; on-screen code is not proof of production deployment.
 
 ### Guided questions
 
@@ -44,7 +50,7 @@ It does not claim a custom LLM, a deployed Kubernetes platform or clinical exper
 | Candidate retrieval | **95.7% recall@5**; catalog order, no learned ranker | [Protocol](evaluation/README.md) |
 | Negation / abstention | 84.1% / 90.0%, with scoped denominators | [Errors and counts](evaluation/report.json) |
 | Semantic profile | Valid graph; **4 invalid fixtures rejected** | [SHACL + OWL RL report](semantic/report.json) |
-| Live terminology | OLS and CIMA returned expected real identifiers | [Timestamped live HTTP evidence](tests/integration/live-report.json) |
+| Live terminology | All six search connectors returned expected real identifiers | [Timestamped live HTTP evidence](tests/integration/live-report.json) |
 | Browser behavior | Bilingual graph/evidence, downloads, quotas, mobile and reset | [Acceptance test](web/test_browser.py) |
 
 **Evaluation limits:** 60 original synthetic phrases: 12 development + 48 frozen

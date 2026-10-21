@@ -1,5 +1,6 @@
 import { renderKnowledgeGraph } from './knowledge-graph.ts';
-import { lookup, type Source } from './public-lookup.ts';
+import {annotationConcepts,locateSpan,type Annotation,type Review} from '../explorer/annotations.ts';
+import { lookup, SOURCES, type Source } from './public-lookup.ts';
 import catalog from '../data/catalog.json';
 import { reportedConcepts } from '../explorer/observations.ts';
 import texts from './explorer-messages.json';
@@ -9,8 +10,9 @@ let remote:Concept[]=[];
 let remoteBusy=false;
 let remoteState='';
 let remoteTerm='';
-let remoteSource:Source='ols';
-const candidateLinks=new Map<string,string[]>();
+let remoteSource:Source='wikidata';
+let annotationSpan='';
+let annotations:Annotation[]=[];
 let remoteVersion=0;
 let cachedRemoteVersion=-1;
 let concepts: Concept[] = [...builtin];
@@ -40,14 +42,12 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
  const t = texts[lang];
  if(queryText!==text){
   queryText=text;requestGeneration++;selected='';domain='all';tab='sheet';lastText='';matchCache=null;
-  remote=[];candidateLinks.clear();remoteState='';remoteTerm='';remoteBusy=false;remoteVersion++;
+  remote=[];annotations=[];remoteState='';const first=matchConcepts(text,builtin)[0]?.evidence[0]?.term??'';remoteTerm=first;annotationSpan=first;remoteBusy=false;remoteVersion++;
  }
 
  refresh = () => renderExplorer(text,lang,analyzed,pick,confirmations);
  if(confirmationSignature!==JSON.stringify(confirmations)||cachedText!==text||cachedAnalyzed!==analyzed||cachedRemoteVersion!==remoteVersion){
-  concepts=[...builtin,...(analyzed?reportedConcepts(text):[]),...remote,...confirmations];
-  concepts=concepts.map(c=>candidateLinks.has(c.id)?{...c,properties:[...(c.properties??[]),...candidateLinks.get(c.id)!.map(target=>({property:'candidateMatch',target}))]}:c);
-  if(candidateLinks.size)concepts.push({id:'candidateMatch',kind:'annotation',domain:'biomedical',labels:{en:'Candidate match (unverified)',es:'Coincidencia candidata (sin verificar)'},aliases:{en:[],es:[]},source:'Local lookup association',version:'1',url:'https://github.com/beabustor/knowledge_engineer',status:'local'});
+  concepts=[...builtin,...(analyzed?reportedConcepts(text):[]),...remote.filter(c=>!annotations.some(a=>a.candidate.id===c.id&&a.review==='rejected')),...confirmations,...annotationConcepts(text,annotations)];
   confirmationSignature=JSON.stringify(confirmations);
   cachedRemoteVersion=remoteVersion;
   cachedText=text;cachedAnalyzed=analyzed;
@@ -58,25 +58,45 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
  const advanced=el('details','','advanced-controls');const summary=el('summary',lang==='es'?'Exploración avanzada y fuentes externas':'Advanced exploration and external sources');advanced.append(summary);advanced.open=advancedOpen;
  const external=el('section','','source-panel');external.append(el('h3',t.externalTitle),el('p',t.externalHelp,'hint'),el('p',t.externalLimit,'provenance'));
  const sourceLabel=el('label',t.externalSource+' ');const provider=el('select');provider.id='lookup-source';
- for(const [id,name] of [['ols','OLS · EMBL-EBI'],['cima','CIMA · AEMPS']]){const option=el('option',name);option.value=id;provider.append(option);}provider.value=remoteSource;
+ for(const [id,name] of Object.entries(SOURCES)){const option=el('option',name);option.value=id;provider.append(option);}provider.value=remoteSource;
  provider.addEventListener('change',()=>{remoteSource=provider.value as Source;});sourceLabel.append(provider);
  const termLabel=el('label',t.externalTerm+' ');const term=el('input');term.id='lookup-term';term.maxLength=80;term.placeholder=lang==='es'?'Escribe un término':'Enter a term';term.value=remoteTerm;term.addEventListener('input',()=>{remoteTerm=term.value;});termLabel.append(term);
  const button=el('button',remoteBusy?t.loading:t.externalSearch,'linked-concept');button.type='button';button.disabled=remoteBusy;
  button.addEventListener('click',async()=>{
-  remoteTerm=term.value.trim();const generation=requestGeneration;const anchor=selected;remote=[];candidateLinks.clear();remoteVersion++;remoteBusy=true;remoteState=t.loading;refresh();
+  remoteTerm=term.value.trim();const generation=requestGeneration;const source=remoteSource;const searchTerm=remoteTerm;const span=annotationSpan.trim()||searchTerm;remoteVersion++;remoteBusy=true;remoteState=t.loading;refresh();
   try{
-   const result=await lookup(remoteSource,remoteTerm);
+   const result=await lookup(source,searchTerm,lang);
    if(generation!==requestGeneration)return;
    const unique=new Map(remote.map(c=>[c.id,c]));result.concepts.forEach(c=>unique.set(c.id,c));remote=[...unique.values()].slice(-100);
-   const retained=new Set(remote.map(c=>c.id));
-   for(const [id,targets] of candidateLinks)candidateLinks.set(id,targets.filter(target=>retained.has(target)));
-   if(result.concepts.length)candidateLinks.set(anchor,[...new Set([...(candidateLinks.get(anchor)??[]),...result.concepts.map(c=>c.id)])]);
+   const kept=new Set(remote.map(c=>c.id));annotations=annotations.filter(a=>kept.has(a.candidate.id));
+   for(const c of result.concepts){
+    if(locateSpan(text,span)&&!annotations.some(a=>a.candidate.id===c.id))annotations.push({id:'Annotation_'+c.id,span,query:text,candidate:c,review:'pending',at:new Date().toISOString()});
+   }
+   // A source result alone never asserts an equivalence to the selected local concept.
+
    remoteVersion++;remoteState=`${result.concepts.length} ${t.externalResults}${result.cached?' · cache':''}`;
   }catch(error){if(generation!==requestGeneration)return;remoteState=t.externalError+' '+(error instanceof Error?error.message:'');}
   finally{if(generation===requestGeneration){remoteBusy=false;refresh();}}
  });
- external.append(sourceLabel,termLabel,button,el('p',remoteState,'hint'));
- const matchesPanel=el('div','','examples');remote.forEach(c=>{const b=el('button',displayLabel(c,lang)+' · '+c.code);b.type='button';b.addEventListener('click',()=>{domain='all';selected=c.id;refresh();});matchesPanel.append(b);});external.append(matchesPanel);advanced.append(external);
+ const spanLabel=el('label',lang==='es'?'Fragmento de tu frase que quieres etiquetar':'Fragment of your sentence to annotate');
+ const spanInput=el('input');spanInput.id='annotation-span';spanInput.maxLength=100;spanInput.value=annotationSpan;spanInput.placeholder=lang==='es'?'Ej.: tos (debe estar en tu frase)':'E.g. cough (must occur in your sentence)';spanInput.oninput=()=>{annotationSpan=spanInput.value;};spanLabel.append(spanInput);
+ external.append(sourceLabel,spanLabel,termLabel,button,el('p',remoteState,'hint'));
+ external.append(el('p',lang==='es'?'Puedes buscar en inglés y vincular el resultado a un fragmento español. No se traduce ni se confirma automáticamente.':'You may search in English and link the result to a Spanish fragment. No automatic translation or confirmation.','hint'));
+
+ const matchesPanel=el('div','','annotation-candidates');
+ remote.forEach(c=>{
+  const row=el('div','','annotation-candidate');const b=el('button',displayLabel(c,lang)+' · '+c.code,'linked-concept');b.type='button';b.onclick=()=>{if(annotations.some(a=>a.candidate.id===c.id&&a.review==='rejected'))return;domain='all';selected=c.id;technicalOpen=true;document.querySelector<HTMLDetailsElement>('.technical-views')?.setAttribute('open','');refresh();};
+  const a=annotations.find(a=>a.candidate.id===c.id);
+  row.append(b,el('p',`${c.source}${c.description?' · '+c.description:''}`,'hint'));
+  if(a)row.append(el('p',`${a.span} → ${{pending:lang==='es'?'Pendiente':'Pending',accepted:lang==='es'?'Aceptada por ti':'Accepted by you',rejected:lang==='es'?'Rechazada por ti':'Rejected by you'}[a.review]}`,'hint'));
+  const actions=el('div','','examples');
+  for(const [decision,label] of [['accepted',lang==='es'?'Aceptar anotación':'Accept annotation'],['rejected',lang==='es'?'Rechazar':'Reject'],['pending',lang==='es'?'Pendiente':'Pending']] as [Review,string][]){
+   const action=el('button',label);action.type='button';action.dataset.review=decision;action.disabled=!a||a.review===decision;
+   action.onclick=()=>{if(!a)return;a.review=decision;a.at=new Date().toISOString();if(decision==='rejected'&&selected===c.id)selected='';remoteVersion++;refresh();};actions.append(action);
+  }
+  row.append(actions);if(!a)row.append(el('p',lang==='es'?'Para anotar, indica un fragmento presente en tu frase y vuelve a consultar.':'To annotate, enter a fragment present in your sentence and search again.','hint'));
+  matchesPanel.append(row);
+ });external.append(matchesPanel);host.append(external);
  const palette=el('div','','model-palette');
  for(const [kind,id] of [['entity','Person'],['attribute','age'],['relationship','performedBy'],['action','MeasureTemperature'],['individual','SampleMeasurement']] as const){
   const button=el('button',t.kinds[kind]+' · '+concepts.find(c=>c.id===id)!.labels[lang]);button.type='button';
@@ -117,12 +137,15 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
   observations.forEach(c=>{const button=el('button',displayLabel(c,lang));button.type='button';button.id='observation-'+c.id;
    button.addEventListener('click',()=>{selected=c.id;domain='modeling';renderExplorer(text,lang,analyzed,pick,confirmations);});values.append(button);});host.append(values);
  }
- renderKnowledgeGraph(concepts,lang,selected,id=>{domain='all';const original=builtin.find(c=>c.id===id);selected=concepts.find(c=>c.id===id)?.id??concepts.find(c=>original?.code&&c.code===original.code)?.id??id;tab='sheet';technicalOpen=true;document.querySelector<HTMLDetailsElement>('.technical-views')?.setAttribute('open','');refresh();document.getElementById('concept-explorer')?.scrollIntoView({behavior:'smooth',block:'start'});}, text.trim()? [...new Set([...matches.map(r=>r.concept.id),...observations.map(c=>c.id),...(selected?[selected]:[])])]:[],text);
+ renderKnowledgeGraph(concepts,lang,selected,id=>{domain='all';const original=builtin.find(c=>c.id===id);selected=concepts.find(c=>c.id===id)?.id??concepts.find(c=>original?.code&&c.code===original.code)?.id??id;tab='sheet';technicalOpen=true;document.querySelector<HTMLDetailsElement>('.technical-views')?.setAttribute('open','');refresh();document.getElementById('concept-explorer')?.scrollIntoView({behavior:'smooth',block:'start'});}, text.trim()? [...new Set([...matches.map(r=>r.concept.id),...observations.map(c=>c.id),...remote.filter(c=>!annotations.some(a=>a.candidate.id===c.id&&a.review==='rejected')).map(c=>c.id),...(selected?[selected]:[])])]:[],text);
  host.append(advanced);
  if(!selected){host.append(el('p',lang==='es'?'Selecciona un concepto encontrado para ver sus representaciones.':'Select a matched concept to view its representations.','hint'));return;}
  const c=concepts.find(c=>c.id===selected)!;
  const detail=el('div','','concept-detail');detail.append(el('h3',displayLabel(c,lang)),el('p',c.status==='reference'?t.reference:c.status==='remote'?t.remoteCandidate:c.status==='imported'?t.imported:c.status==='reported'?t.reported:t.local,'hint'));
  const source=el('a',`${t.source}: ${c.status==='local'?t.local:c.source} · ${c.code??c.id}`);source.href=c.url;source.target='_blank';source.rel='noopener noreferrer';detail.append(source,el('p',`${t.version}: ${c.version}`,'hint'));
+ if(c.retrievedAt)detail.append(el('p',(lang==='es'?'Consultado: ':'Retrieved: ')+c.retrievedAt,'hint'));
+ if(c.sourceLicense)detail.append(el('p',c.sourceLicense,'hint'));
+ if(c.description)detail.append(el('p',c.description,'hint'));
  detail.append(el('p',t.kinds[(c.kind??'entity') as keyof typeof t.kinds]));
  if(c.domain==='modeling'&&c.status==='local') detail.append(el('p',t.fixture,'hint'));
  if(c.formula) detail.append(el('p',`${t.formula}: ${c.formula}`));host.append(detail);
@@ -139,7 +162,8 @@ export function renderExplorer(text: string, lang: Language, analyzed: boolean, 
   });tabs.append(button);
  }technical.append(tabs);
  const panel=el('div','','representation-panel');panel.id='representation-panel';panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby',`view-${tab}`);
- const outputs=representations(c,concepts);
+ const outputs=representations(c,concepts,annotations.filter(a=>a.candidate.id===c.id).map(a=>a.id));
+ technical.append(el('p',lang==='es'?'Un modelo, distintas herramientas: RDF intercambia hechos; OWL define tipos y restricciones lógicas; Cypher consulta conexiones en Neo4j; SQL integra datos en tablas. La hoja muestra la evidencia común. Las anotaciones de esta selección se incluyen en todos los formatos.':'One model, different tools: RDF exchanges facts; OWL defines types and logical constraints; Cypher queries connections in Neo4j; SQL integrates tabular data. The sheet shows shared evidence. Annotations attached to this selection are included in every format.','hint'));
  const follow = (id:string) => {
   const target=concepts.find(c=>c.id===id);
   const button=el('button',target?.labels[lang]??id,'linked-concept');button.type='button';

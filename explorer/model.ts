@@ -5,6 +5,7 @@ export type Language = 'en' | 'es';
 export type Concept = {
   id: string; domain: string; labels: Record<Language, string>;
   aliases: Record<Language, string[]>; parent?: string; code?: string; formula?: string;
+  retrievedAt?:string; labelLanguage?:Language; sourceLicense?:string; description?:string;
   kind?: string; domainId?: string; rangeId?: string; classId?: string;
   properties?: {property: string; value?: number | string; target?: string}[];
   source: string; version: string; url: string; status: string;
@@ -29,7 +30,7 @@ export function matchConcepts(text: string, concepts: Concept[], domain = 'all')
 const q = (value: string) => JSON.stringify(value);
 const xml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 const base = 'https://example.org/knowledge-explorer/';
-export function representations(concept: Concept, concepts: Concept[]) {
+export function representations(concept: Concept, concepts: Concept[], annotationIds:string[]=[]) {
   const nodes: Concept[] = [];
   const visit = (id?: string) => {
     const c = concepts.find(n => n.id === id);
@@ -39,6 +40,7 @@ export function representations(concept: Concept, concepts: Concept[]) {
     c.properties?.forEach(p => {visit(p.property);visit(p.target);});
   };
   visit(concept.id);
+  annotationIds.forEach(visit);
   type Triple = {s:string;p:string;o:string;literal?:boolean;lang?:string;datatype?:string};
   const triples: Triple[] = [];
   const push=(s:string,p:string,o:string)=>triples.push({s,p,o});
@@ -49,8 +51,12 @@ export function representations(concept: Concept, concepts: Concept[]) {
     const id='ex:'+c.id;
     const type=c.kind==='attribute'?'owl:DatatypeProperty':c.kind==='relationship'?'owl:ObjectProperty':c.kind==='annotation'?'owl:AnnotationProperty':c.kind==='individual'?'owl:NamedIndividual':'owl:Class';
     push(id,'rdf:type',type);
-    if(c.status==='remote')lit(id,'rdfs:label',c.labels.en);
-    else {lit(id,'rdfs:label',c.labels.en,'en');lit(id,'rdfs:label',c.labels.es,'es');}
+    if(c.status==='remote'){lit(id,'rdfs:label',c.labels.en,c.labelLanguage);lit(id,'skos:prefLabel',c.labels.en,c.labelLanguage);}
+    else {for(const lang of ['en','es'] as const){lit(id,'rdfs:label',c.labels[lang],lang);lit(id,'skos:prefLabel',c.labels[lang],lang);for(const alias of new Set(c.aliases[lang]))if(alias!==c.labels[lang])lit(id,'skos:altLabel',alias,lang);}}
+    push(id,'prov:wasDerivedFrom',c.url);
+    if(c.retrievedAt)lit(id,'prov:generatedAtTime',c.retrievedAt,undefined,'xsd:dateTime');
+    if(c.sourceLicense)lit(id,'dcterms:rights',c.sourceLicense);
+    if(c.description)lit(id,'skos:note',c.description,c.labelLanguage);
     push(id,'rdfs:seeAlso',c.url);lit(id,'ex:sourceVersion',c.version);lit(id,'ex:provenanceKind',c.status);
     if(c.code)lit(id,'ex:sourceCode',c.code);
     if(c.formula)lit(id,'ex:formula',c.formula);
@@ -66,9 +72,9 @@ export function representations(concept: Concept, concepts: Concept[]) {
       }
     });
   }
-  const ns:Record<string,string>={ex:base,rdf:'http://www.w3.org/1999/02/22-rdf-syntax-ns#',rdfs:'http://www.w3.org/2000/01/rdf-schema#',owl:'http://www.w3.org/2002/07/owl#',xsd:'http://www.w3.org/2001/XMLSchema#'};
+  const ns:Record<string,string>={ex:base,rdf:'http://www.w3.org/1999/02/22-rdf-syntax-ns#',rdfs:'http://www.w3.org/2000/01/rdf-schema#',owl:'http://www.w3.org/2002/07/owl#',skos:'http://www.w3.org/2004/02/skos/core#',prov:'http://www.w3.org/ns/prov#',dcterms:'http://purl.org/dc/terms/',xsd:'http://www.w3.org/2001/XMLSchema#'};
   const uri=(id:string)=>{const i=id.indexOf(':');return ns[id.slice(0,i)]?ns[id.slice(0,i)]+id.slice(i+1):id;};
-  const term=(id:string)=>id.startsWith('https://')?`<${id}>`:id;
+  const term=(id:string)=>/^https?:\/\//.test(id)?`<${id}>`:id;
   const ttl=Object.entries(ns).map(([k,v])=>`@prefix ${k}: <${v}> .`);
   triples.forEach(t=>ttl.push(`${term(t.s)} ${term(t.p)} ${t.literal?q(t.o)+(t.lang?'@'+t.lang:t.datatype?'^^'+t.datatype:''):term(t.o)} .`));
   const owl=`<?xml version="1.0" encoding="UTF-8"?>

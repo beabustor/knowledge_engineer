@@ -13,11 +13,17 @@ conocimiento como grafo, RDF, OWL, Cypher y SQL. Sin diagnóstico ni codificaci�
 1. Abre la demo: ya muestra un grafo de ejemplo. Edita la frase (máximo **100 caracteres**).
 2. Examina el grafo: menciones, negación, conceptos e identificadores.
 3. Selecciona un concepto para ver su fuente y sus representaciones.
-4. Opcionalmente consulta OLS/CIMA con un término breve separado; los enlaces son
+4. Opcionalmente consulta Wikidata / ChEBI / HPO / NLM / CIMA con un término breve separado; los enlaces son
    **candidatos sin verificar**, no equivalencias ontológicas.
 
 La demo funciona en tu navegador, sin necesitar IA de pago ni desplegar cloud.
 El catálogo es pequeño deliberadamente: [textos propios, referencias y derechos](data/registry.json).
+
+### Revisa anotaciones de fuentes públicas
+
+Conecta **Wikidata, ChEBI, HPO, OLS, NLM ICD-10-CM y CIMA** desde la demo. Elige un fragmento y un término de búsqueda; acepta o rechaza anotaciones candidatas. El grafo y las representaciones conservan revisión, evidencia y fuente. Las etiquetas SKOS y la procedencia PROV-O se generan localmente. **ICD-10-CM es la adaptación estadounidense en inglés**, no CIE-10-ES. Sin claves API ni IA de pago; con límites conjuntos. [Flujo, endpoints y derechos](docs/es/sources.md#servicios-públicos-conectados).
+
+Las pestañas muestran usos del mismo modelo revisado: RDF para intercambio, OWL para semántica ontológica, Cypher para bases de grafos y SQL para integración relacional. Previsualizar Cypher no ejecuta Neo4j. La validación actual se ejecuta en CI; ver código no demuestra un despliegue de producción.
 
 ### Preguntas guiadas
 
@@ -44,7 +50,7 @@ propio, una plataforma Kubernetes de producción ni experiencia clínica.
 | Recuperación de candidatos | **95,7 % recall@5**; orden de catálogo, sin ranker aprendido | [Protocolo](evaluation/README.md) |
 | Negación / abstención | 84,1 % / 90,0 %, con denominadores acotados | [Errores y recuentos](evaluation/report.json) |
 | Perfil semántico | Grafo válido; **4 ejemplos inválidos rechazados** | [Informe SHACL y OWL RL](semantic/report.json) |
-| Terminología en vivo | OLS y CIMA devolvieron identificadores reales esperados | [Evidencia HTTP fechada](tests/integration/live-report.json) |
+| Terminología en vivo | Los seis conectores devolvieron identificadores reales esperados | [Evidencia HTTP fechada](tests/integration/live-report.json) |
 | Navegador | Grafo/evidencia bilingües, descargas, cuotas, móvil y reinicio | [Prueba de aceptación](web/test_browser.py) |
 
 **Límites:** 60 frases sintéticas propias: 12 de desarrollo y 48 de prueba

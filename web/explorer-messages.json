@@ -8,7 +8,7 @@
     "chemical": "Chemistry · ChEBI",
     "matches": "Text matches",
     "browse": "Browse reference examples",
-    "noMatch": "No match. Load the spreadsheet or use a complete term, code or known alias. Matching uses rules, not unrestricted clinical understanding.",
+    "noMatch": "No local match. Search a public vocabulary below and review the proposed annotation.",
     "negated": "Negated mention — not positive evidence",
     "mentioned": "Term mentioned — not a diagnosis or recommendation",
     "source": "Source",
@@ -60,15 +60,15 @@
     "download": "Download this representation",
     "observedTitle": "Values reported in your text",
     "observedHelp": "Negation is retained; temperature does not infer a disease. Select a value to inspect its attributes in every representation.",
-    "externalTitle": "Enrich using public vocabularies",
-    "externalHelp": "Search a short term, not a clinical history. OLS searches biomedical/chemical concepts; CIMA searches medicine names. The source receives the term and your IP. Results are unverified candidates, not automatic ICD-10 mappings or translations.",
+    "externalTitle": "Connect your text to public knowledge",
+    "externalHelp": "Select a source, a fragment of your sentence, and a search term. Only the search term and connection IP reach the source. Accept or reject proposals to update the graph. Your review is local to this sentence, not clinical validation or ontology equivalence.",
     "externalLimit": "Demo: 6 requests/minute and 30 per 24 hours per browser profile; one at a time; 5 results. This is a bypassable local limit, not an IP limit. Cache hits do not issue another request.",
     "externalSource": "Source",
-    "externalTerm": "Term (2–80 characters)",
+    "externalTerm": "Search term (2–80 characters)",
     "externalSearch": "Look up and add graph candidates",
     "externalResults": "candidates retrieved",
     "externalError": "Source unavailable; try later. No results were invented.",
-    "remoteCandidate": "Unvalidated external result; original untranslated label. A link to the selected concept is only a proposed association."
+    "remoteCandidate": "External candidate with its original label. Accepting a text annotation does not assert ontology equivalence."
   },
   "es": {
     "title": "Conceptos y representaciones",
@@ -79,7 +79,7 @@
     "chemical": "Química · ChEBI",
     "matches": "Coincidencias en el texto",
     "browse": "Explorar referencias de ejemplo",
-    "noMatch": "Sin coincidencia. Carga el Excel o usa un término completo, código o alias reconocido. El emparejamiento usa reglas; no comprende cualquier descripción clínica.",
+    "noMatch": "Sin coincidencia local. Consulta un vocabulario público y revisa la anotación propuesta.",
     "negated": "Mención negada — no es evidencia positiva",
     "mentioned": "Término mencionado — no es diagnóstico ni recomendación",
     "source": "Fuente",
@@ -131,14 +131,14 @@
     "download": "Descargar esta representación",
     "observedTitle": "Valores referidos en tu texto",
     "observedHelp": "Se conserva la negación y no se infiere una enfermedad a partir de la temperatura. Selecciona un valor para verlo como atributo en las representaciones.",
-    "externalTitle": "Enriquecer con vocabularios públicos",
-    "externalHelp": "Busca un término breve, no una historia clínica. OLS busca conceptos biomédicos/químicos; CIMA busca nombres de medicamentos. La fuente recibirá el término y tu IP. Los resultados son candidatos sin verificar: no equivalen automáticamente a un código CIE-10 ni a una traducción.",
+    "externalTitle": "Conecta tu texto con conocimiento público",
+    "externalHelp": "Elige una fuente, un fragmento de tu frase y un término de búsqueda. Solo el término y la IP de conexión llegan a la fuente. Acepta o rechaza propuestas para actualizar el grafo. Tu revisión se aplica a esta frase: no es validación clínica ni equivalencia entre ontologías.",
     "externalLimit": "Demo: 6 peticiones/minuto y 30 por 24 horas por perfil de navegador; una simultánea; 5 resultados. Es un límite local evitable, no por IP. Los aciertos de caché no consumen otra petición.",
     "externalSource": "Fuente",
-    "externalTerm": "Término (2–80 caracteres)",
+    "externalTerm": "Término de búsqueda (2–80 caracteres)",
     "externalSearch": "Consultar y añadir candidatos al grafo",
     "externalResults": "candidatos recuperados",
     "externalError": "Fuente no disponible; prueba más tarde. No se han inventado resultados.",
-    "remoteCandidate": "Resultado externo sin validar; etiqueta original sin traducir. El enlace al concepto seleccionado solo propone una asociación."
+    "remoteCandidate": "Candidato externo con su etiqueta original. Aceptar una anotación de texto no afirma equivalencia entre ontologías."
   }
 }

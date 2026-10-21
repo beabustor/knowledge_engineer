@@ -24,8 +24,8 @@
   },
   "timing": {
     "runtime": "v24.19.0",
-    "p50_ms": 1.5150670000000162,
-    "p95_ms": 3.514175999999992,
+    "p50_ms": 0.8461269999999956,
+    "p95_ms": 1.5136820000000029,
     "note": "Single local run; not a production latency SLA."
   },
   "cases": [

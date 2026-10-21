@@ -11,7 +11,7 @@ flowchart LR
  D --> E
  E --> F[Query-scoped graph]
  E --> G[RDF / OWL / SQL / Cypher]
- H[Explicit short-term public lookup] --> I[OLS / CIMA]
+ H[Explicit short-term public lookup] --> I[Wikidata / ChEBI / HPO / NLM / CIMA]
  I --> J[Unverified candidate annotation]
  J --> E
  G --> K[SHACL + RDF/OWL/SQL equivalence]
@@ -32,7 +32,7 @@ flowchart LR
   candidates. Request-generation IDs reject late responses. Provider caches and
   quota timestamps survive only as shared resources, not evidence for a new query.
 - **Privacy and spending:** local analysis sends no description to a service.
-  An explicit separate lookup sends a short term to OLS/CIMA. Browser quotas are
+  An explicit separate lookup sends a short term to Wikidata/ChEBI/HPO/OLS/NLM/CIMA. Browser quotas are
   bypassable; the optional server has single-process peer-IP/global quotas.
   No API key, paid AI or training dependency is in the browser bundle.
 - **Deliberate simplicity:** no graph database is required to inspect this small
@@ -47,7 +47,7 @@ flowchart LR
 | RDF/OWL/SQL generation | Graph-isomorphism and SQL checks | Implemented |
 | SHACL + limited OWL RL reasoning | `semantic/report.json` | Implemented |
 | Local rule-based extraction | Frozen author benchmark | Implemented, limited |
-| OLS/CIMA HTTP integration | Timestamped live report + fixture tests | Verified for reported run |
+| Wikidata/ChEBI/HPO/OLS/NLM/CIMA HTTP integration | Timestamped live report + fixture tests | Verified for reported run |
 | Public backend/IP quotas | Unit tests | Optional; not publicly deployed |
 | Neo4j server | No execution evidence | Not validated |
 | AI, cloud infrastructure, bulk workers | Gates, tests and templates | Optional scaffolds, not production |

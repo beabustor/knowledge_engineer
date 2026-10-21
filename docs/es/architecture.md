@@ -11,7 +11,7 @@ flowchart LR
  D --> E
  E --> F[Grafo de la consulta actual]
  E --> G[RDF / OWL / SQL / Cypher]
- H[Consulta breve explícita] --> I[OLS / CIMA]
+ H[Consulta breve explícita] --> I[Wikidata / ChEBI / HPO / NLM / CIMA]
  I --> J[Anotación candidata sin validar]
  J --> E
  G --> K[SHACL y equivalencia RDF/OWL/SQL]
@@ -32,7 +32,7 @@ flowchart LR
   Generaciones de peticiones descartan respuestas tardías. Caché/cuotas son recursos
   compartidos; no cuentan como evidencia para otra búsqueda.
 - **Privacidad y costes:** el análisis local no envía la descripción. La consulta
-  explícita independiente envía un término breve a OLS/CIMA. Las cuotas de navegador
+  explícita independiente envía un término breve a Wikidata/ChEBI/HPO/OLS/NLM/CIMA. Las cuotas de navegador
   son evitables; el servidor opcional añade cuotas por IP/globales de proceso único.
   No se incluye IA de pago, claves ni entrenamiento en el bundle.
 - **Simplicidad deliberada:** no hace falta una base de grafos para inspeccionar el
@@ -47,7 +47,7 @@ flowchart LR
 | Generación RDF/OWL/SQL | Isomorfismo y comparación SQL | Implementado |
 | SHACL y razonamiento OWL RL limitado | `semantic/report.json` | Implementado |
 | Extracción por reglas | Benchmark congelado del autor | Implementada, limitada |
-| OLS/CIMA HTTP | Informe en vivo con fecha y pruebas simuladas | Verificada en esa ejecución |
+| Wikidata/ChEBI/HPO/OLS/NLM/CIMA HTTP | Informe en vivo con fecha y pruebas simuladas | Verificada en esa ejecución |
 | Backend público/cuotas IP | Pruebas unitarias | Opcional; no desplegado públicamente |
 | Servidor Neo4j | Sin evidencia de ejecución | No validado |
 | IA, cloud, trabajadores masivos | Bloqueos, pruebas y plantillas | Bases opcionales, no producción |

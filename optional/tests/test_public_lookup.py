@@ -29,3 +29,19 @@ class PublicLookupTests(unittest.TestCase):
         service.global_times = [now[0]] * 60
         with self.assertRaises(LimitReached):
             service.search('192.0.2.3', 'ols', 'new-term')
+
+    def test_all_connectors_keep_fixed_hosts_and_language_specific_cache(self):
+        from urllib.parse import urlparse, parse_qs
+        calls = []
+        service = PublicLookup(fetch=lambda url: calls.append(url) or {}, clock=lambda: 100000)
+        for source in ('chebi', 'hpo', 'wikidata', 'icd10'):
+            service.search('192.0.2.1', source, 'water', 'es')
+        self.assertEqual(parse_qs(urlparse(calls[0]).query)['ontology'], ['chebi'])
+        self.assertEqual(parse_qs(urlparse(calls[1]).query)['ontology'], ['hp'])
+        self.assertEqual(urlparse(calls[2]).hostname, 'www.wikidata.org')
+        self.assertEqual(parse_qs(urlparse(calls[2]).query)['language'], ['es'])
+        self.assertEqual(urlparse(calls[3]).hostname, 'clinicaltables.nlm.nih.gov')
+        service.search('192.0.2.1', 'wikidata', 'water', 'en')
+        self.assertEqual(len(calls), 5)
+        with self.assertRaises(ValueError):
+            service.search('192.0.2.2', 'wikidata', 'water', 'unsupported')

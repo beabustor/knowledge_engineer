@@ -1,21 +1,56 @@
 {
-  "observed_at_utc": "2026-10-21T16:21:12.020929+00:00",
+  "observed_at_utc": "2026-10-21T16:48:51.695273+00:00",
   "execution": "live HTTP; no mocked fallback",
   "results": [
     {
       "source": "ols",
       "status": "passed",
       "http_status": 200,
-      "identifier": "HP_0012735",
-      "latency_ms": 1684.9
+      "cors_allow_origin": "*",
+      "identifier": "HP:0012735",
+      "latency_ms": 1575.0
+    },
+    {
+      "source": "chebi",
+      "status": "passed",
+      "http_status": 200,
+      "cors_allow_origin": "*",
+      "identifier": "CHEBI:15377",
+      "latency_ms": 2655.3
+    },
+    {
+      "source": "hpo",
+      "status": "passed",
+      "http_status": 200,
+      "cors_allow_origin": "*",
+      "identifier": "HP:0012735",
+      "latency_ms": 461.7
+    },
+    {
+      "source": "wikidata",
+      "status": "passed",
+      "http_status": 200,
+      "cors_allow_origin": "*",
+      "identifier": "Q283",
+      "latency_ms": 1700.3
+    },
+    {
+      "source": "icd10",
+      "status": "passed",
+      "http_status": 200,
+      "cors_allow_origin": "*",
+      "identifier": "R50.9",
+      "latency_ms": 756.0
     },
     {
       "source": "cima",
       "status": "passed",
       "http_status": 200,
+      "cors_allow_origin": "*",
       "identifier": "77758",
-      "latency_ms": 1517.8
+      "latency_ms": 1796.5
     }
   ],
-  "at_least_one_passed": true
+  "at_least_one_passed": true,
+  "all_passed": true
 }
