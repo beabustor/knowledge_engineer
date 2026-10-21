@@ -77,6 +77,17 @@ def main():
             page.locator('#language').select_option('es')
             page.get_by_role('button', name='Negación y sinónimos', exact=True).click()
             expect(page.locator('.candidate').first).to_contain_text('Migraña de ejemplo')
+            for language in ('en', 'es'):
+                page.locator('#language').select_option(language)
+                for width in (320, 360, 390, 414, 768, 1280):
+                    page.set_viewport_size({'width': width, 'height': 844})
+                    dimensions = page.evaluate("""() => ({
+                        viewport: innerWidth, scroll: document.documentElement.scrollWidth,
+                        overflowing: [...document.querySelectorAll('body *')]
+                            .filter(el => el.getBoundingClientRect().right > innerWidth + 1)
+                            .map(el => el.tagName + '.' + el.className)
+                    })""")
+                    assert dimensions['scroll'] <= width, (language, dimensions)
             assert not errors, errors
         except Exception:
             artifacts = Path(__file__).parent / 'test-results'
