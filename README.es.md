@@ -182,8 +182,8 @@ npm run build
 npm run preview
 ```
 
-Para probar en un navegador, compilar la aplicación, servir `web/dist` en el
-puerto 4173 y ejecutar en otra terminal desde la raíz del repositorio:
+Para probar en un navegador, compilar la aplicación y ejecutar desde la raíz
+del repositorio. La prueba arranca y detiene su propio servidor en un puerto libre:
 
 ```sh
 python -m pip install -r web/requirements-test.txt

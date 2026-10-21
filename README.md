@@ -179,8 +179,8 @@ npm run build
 npm run preview
 ```
 
-For browser tests, build the app, serve `web/dist` on port 4173, and in another
-terminal run from the repository root:
+For browser tests, build the app, then run from the repository root. The test
+starts and stops its own local server on an available port:
 
 ```sh
 python -m pip install -r web/requirements-test.txt
