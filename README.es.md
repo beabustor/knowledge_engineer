@@ -246,3 +246,33 @@ no se transforma en evidencia positiva ni en una decisión de codificación.
 Para ampliar a otros dominios, añadir conceptos, alias bilingües, tipo,
 procedencia y relaciones al catálogo. Los dominios actuales son clínica, química
 y modelado. No hay un reconocimiento universal ni inferencia de tratamientos.
+
+
+## Preparada para crecer, sin activar servicios de pago
+
+La demo de Pages sigue siendo estática y funciona en el navegador. Las nuevas
+carpetas no se importan en la web ni se despliegan por CI; todas las funciones
+opcionales están desactivadas en `optional/config.example.json`.
+
+| Carpeta | Preparación | Guía |
+| --- | --- | --- |
+| `optional/terminology/` | Adaptador FHIR para un servidor CIE-10 autorizado | [Módulos opcionales](optional/README.es.md) |
+| `optional/ai/` | OpenAI/Claude por API, selección de modelo, controles y fundamentación | [Autenticación y límites](optional/README.es.md) |
+| `optional/bulk/` | Plan de lotes limitado; no envía trabajos | [Escala y costes](optional/README.es.md) |
+| `optional/storage/` | Rutas privadas de fuentes, consultas, índices y modelos | [Plan de almacenamiento](optional/storage/layout.json) |
+| `infrastructure/docker/` | Perfil Docker opcional, servidor solo de salud | [Infraestructura](infrastructure/README.es.md) |
+| `infrastructure/kubernetes/` | Plantillas: cero réplicas, sin exposición pública | [Activación gradual](infrastructure/README.es.md) |
+| `infrastructure/cloud/azure/`, `aws/`, `gcp/` | Planes de servicios, identidades y nombres; sin recursos creados | [Planes cloud](infrastructure/README.es.md) |
+| `research/snomed/` | Plan RF2 → etiquetas → evaluación → posible ajuste de modelo | [SNOMED CT](research/snomed/README.es.md) |
+| `research/maria-moliner/` | Plan de sentidos y relaciones léxicas autorizadas | [María Moliner](research/maria-moliner/README.es.md) |
+
+Las guías distinguen código disponible, plantillas y pasos aún sin implementar.
+Activar una bandera no crea una plataforma de producción ni concede licencias.
+ChatGPT/Claude web no equivalen a claves API; las credenciales solo van en
+servidor. No hay entrenamiento, ingesta masiva ni aprovisionamiento automático.
+Los recuentos de «dos millones de documentos» no se han verificado; RF2 contiene
+conceptos/descripciones/relaciones, no necesariamente documentos clínicos.
+
+Se ejecutan pruebas locales de bloqueo y límites, sin peticiones de pago:
+`python -m unittest discover -s optional/tests -v`. Docker/Kubernetes, servidores
+terminológicos autorizados y cuentas de IA/cloud requieren validación posterior.

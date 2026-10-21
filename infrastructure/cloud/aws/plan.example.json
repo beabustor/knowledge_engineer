@@ -1,0 +1,18 @@
+{
+  "enabled": false,
+  "provision_resources": false,
+  "provider": "aws",
+  "region": "OPERATOR_SELECTS",
+  "services": {
+    "compute": "ECS/Fargate or EKS",
+    "object_storage": "Amazon S3",
+    "object_name": "<org>-knowledge-engineer-private-<unique-suffix>",
+    "secrets": "AWS Secrets Manager",
+    "identity": "IAM task role / EKS Pod Identity",
+    "queue": "Amazon SQS",
+    "registry": "Amazon ECR"
+  },
+  "object_prefixes_reference": "optional/storage/layout.json",
+  "public_access": false,
+  "notes": "Architecture plan only; no live connection, credentials or resources."
+}

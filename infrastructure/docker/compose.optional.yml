@@ -1,0 +1,16 @@
+services:
+  optional-api:
+    profiles: ["backend"]
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+    ports: ["127.0.0.1:8080:8080"]
+    volumes:
+      - ../../optional/config.local.json:/config/config.json:ro
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp"]
+    mem_limit: 256m
+    cpus: 0.5
+    # No credentials are injected by default. Opt-in adapters are not HTTP routes.

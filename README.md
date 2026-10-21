@@ -240,3 +240,33 @@ they do not become positive evidence or coding decisions.
 To extend to other domains, add concepts, bilingual aliases, kinds, provenance
 and relationships to the catalog. Current domains are clinical, chemical and
 modeling. There is no universal entity recognition or treatment inference.
+
+
+## Ready to extend, without enabling paid services
+
+The Pages demo remains static and browser-only. New folders are not imported by
+the web app or deployed by CI; all optional features are off in
+`optional/config.example.json`.
+
+| Folder | Preparation | Guide |
+| --- | --- | --- |
+| `optional/terminology/` | FHIR adapter for an authorized ICD-10 server | [Optional modules](optional/README.md) |
+| `optional/ai/` | OpenAI/Claude API adapters, model selection, gates and grounding | [Authentication and limits](optional/README.md) |
+| `optional/bulk/` | Bounded batch planner; submits no jobs | [Scale and costs](optional/README.md) |
+| `optional/storage/` | Private source/query/index/model naming scheme | [Storage plan](optional/storage/layout.json) |
+| `infrastructure/docker/` | Opt-in Docker profile with health-only backend | [Infrastructure](infrastructure/README.md) |
+| `infrastructure/kubernetes/` | Zero-replica templates, no public endpoint | [Gradual activation](infrastructure/README.md) |
+| `infrastructure/cloud/azure/`, `aws/`, `gcp/` | Service/identity/naming plans; no resources created | [Cloud plans](infrastructure/README.md) |
+| `research/snomed/` | RF2 → labels → evaluation → possible fine-tuning plan | [SNOMED CT](research/snomed/README.md) |
+| `research/maria-moliner/` | Authorized senses and lexical-relation research plan | [María Moliner](research/maria-moliner/README.md) |
+
+Guides distinguish working scaffolds, templates and missing implementations.
+A feature flag does not create a production platform or grant source rights.
+ChatGPT/Claude web accounts are not API credentials; keys belong on servers.
+No training, bulk ingestion or resource provisioning runs automatically. The
+“two million documents” count is unverified; RF2 concepts/descriptions/relations
+are not necessarily clinical documents.
+
+Offline gate/limit tests make no paid calls:
+`python -m unittest discover -s optional/tests -v`. Docker/Kubernetes, authorized
+terminology servers and real AI/cloud accounts require separate validation.

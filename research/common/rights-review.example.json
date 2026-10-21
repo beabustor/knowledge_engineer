@@ -1,0 +1,13 @@
+{
+  "status": "pending",
+  "source": "",
+  "edition": "",
+  "territory": "",
+  "rights_holder": "",
+  "license_document_reference": "",
+  "reviewer": "",
+  "review_date": "",
+  "permissions": {"download": false, "extract": false, "store": false, "text_and_data_mining": false, "send_to_external_model": false, "train": false, "publish_dataset": false, "publish_weights": false},
+  "retention_and_deletion_policy": "",
+  "notes": "Reading access is not automatically a license to scrape, train or redistribute."
+}

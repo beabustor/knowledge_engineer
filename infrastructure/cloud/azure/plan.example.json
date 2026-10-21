@@ -1,0 +1,18 @@
+{
+  "enabled": false,
+  "provision_resources": false,
+  "provider": "azure",
+  "region": "OPERATOR_SELECTS",
+  "services": {
+    "compute": "Azure Container Apps or AKS",
+    "object_storage": "Azure Blob Storage",
+    "object_name": "knowledge-engineer-private (container)",
+    "secrets": "Azure Key Vault",
+    "identity": "Managed Identity / Workload Identity",
+    "queue": "Azure Service Bus",
+    "registry": "Azure Container Registry"
+  },
+  "object_prefixes_reference": "optional/storage/layout.json",
+  "public_access": false,
+  "notes": "Architecture plan only; no live connection, credentials or resources."
+}

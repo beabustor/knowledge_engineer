@@ -1,0 +1,18 @@
+{
+  "enabled": false,
+  "provision_resources": false,
+  "provider": "gcp",
+  "region": "OPERATOR_SELECTS",
+  "services": {
+    "compute": "Cloud Run or GKE",
+    "object_storage": "Google Cloud Storage",
+    "object_name": "<org>-knowledge-engineer-private-<unique-suffix>",
+    "secrets": "Secret Manager",
+    "identity": "Workload Identity",
+    "queue": "Pub/Sub or Cloud Tasks",
+    "registry": "Artifact Registry"
+  },
+  "object_prefixes_reference": "optional/storage/layout.json",
+  "public_access": false,
+  "notes": "Architecture plan only; no live connection, credentials or resources."
+}

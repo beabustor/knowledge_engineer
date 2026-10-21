@@ -3,3 +3,10 @@ __pycache__/
 node_modules/
 dist/
 web/test-results/
+.env
+.env.*
+!.env.example
+optional/config.local.json
+var/
+research/**/data/
+research/**/outputs/

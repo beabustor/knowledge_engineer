@@ -1,0 +1,11 @@
+# Restricted starting point: blocks all ingress/egress. Operator must define
+# ingress-controller, DNS and egress rules for the actual cluster before activation.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: knowledge-api-isolate}
+spec:
+  podSelector:
+    matchLabels: {app: knowledge-optional-api}
+  policyTypes: [Ingress, Egress]
+  ingress: []
+  egress: []

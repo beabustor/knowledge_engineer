@@ -1,0 +1,10 @@
+{
+  "local_root": "var/knowledge-engineer",
+  "azure_blob_container": "knowledge-engineer-private",
+  "s3_bucket_example": "<organization>-knowledge-engineer-private-<unique-suffix>",
+  "gcs_bucket_example": "<organization>-knowledge-engineer-private-<unique-suffix>",
+  "prefixes": ["raw/<source>/<edition>/", "normalized/<source>/<edition>/", "ontologies/<version>/", "indexes/<version>/", "jobs/<job-id>/", "evaluations/<run-id>/", "training/<source>/<approval-id>/", "models/<source>/<run-id>/", "audit/<year>/<month>/", "quarantine/"],
+  "query_text_storage": false,
+  "public_access": false,
+  "notes": "Naming plan only. No bucket, container or cloud resource is created."
+}

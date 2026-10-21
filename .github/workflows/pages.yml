@@ -27,6 +27,7 @@ jobs:
       - run: node --test typescript/demo.test.ts explorer/model.test.ts
       - run: PYTHONPATH=python python -m unittest discover -s python/tests -v
       - run: python -m unittest discover -s sql -p 'test_*.py' -v
+      - run: python -m unittest discover -s optional/tests -v
       - run: npm run build
         working-directory: web
       - run: pip install -r web/requirements-test.txt

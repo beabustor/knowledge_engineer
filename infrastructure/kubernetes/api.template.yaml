@@ -1,0 +1,42 @@
+# TEMPLATE ONLY: not applied by CI. Replace image digest and supply operator config.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: knowledge-optional-api
+  labels: {app: knowledge-optional-api}
+spec:
+  replicas: 0
+  selector:
+    matchLabels: {app: knowledge-optional-api}
+  template:
+    metadata:
+      labels: {app: knowledge-optional-api}
+    spec:
+      automountServiceAccountToken: false
+      securityContext: {runAsNonRoot: true, runAsUser: 65532}
+      containers:
+        - name: api
+          image: YOUR_PRIVATE_REGISTRY/knowledge-api@sha256:REPLACE_WITH_VERIFIED_DIGEST
+          ports: [{containerPort: 8080}]
+          resources:
+            requests: {cpu: 100m, memory: 64Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+          readinessProbe:
+            httpGet: {path: /health, port: 8080}
+          volumeMounts:
+            - {name: config, mountPath: /config, readOnly: true}
+      volumes:
+        - name: config
+          configMap: {name: knowledge-api-operator-config}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: knowledge-optional-api}
+spec:
+  type: ClusterIP
+  selector: {app: knowledge-optional-api}
+  ports: [{port: 8080, targetPort: 8080}]
