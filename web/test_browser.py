@@ -44,7 +44,7 @@ def main():
         context.tracing.start(screenshots=True,snapshots=True,sources=True)
         try:
             page.goto(url)
-            expect(page.locator('#primary-graph')).to_contain_text('Escribe una descripción')
+            expect(page.locator('#primary-graph')).to_contain_text('denotes')
             assert page.locator('#primary-graph').bounding_box()['y'] > page.locator('#description').bounding_box()['y']
             assert page.locator('.candidate').count()==0
             expect(page.locator('#description')).to_have_attribute('maxlength','100')
@@ -54,6 +54,7 @@ def main():
             expect(page.locator('#primary-graph .kind-negated')).to_have_count(1)
             expect(page.locator('#primary-graph')).to_contain_text('denotes')
             assert not any('.xls' in u for u in requests)
+            open_details(page,'.interview-disclosure')
             page.get_by_role('button',name='Explorar con preguntas',exact=True).click()
             page.locator('[data-answer=no]').click()
             expect(page.locator('#primary-graph')).to_contain_text('answerState')

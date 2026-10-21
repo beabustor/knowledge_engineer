@@ -6,7 +6,7 @@ let previousQuery='';
 export function renderKnowledgeGraph(concepts:Concept[],lang:Language,selected:string,onSelect:(id:string)=>void,activeIds:string[]=[],query=''){
  const host=document.getElementById('primary-graph')!;host.replaceChildren();
  if(query!==previousQuery){previousQuery=query;zoom=1;}
- const words=lang==='es'?{title:'Grafo de tu descripción',intro:'Cuadros, flechas y relaciones generados con los conceptos reconocidos en esta consulta.',reset:'Restablecer',up:'Acercar',down:'Alejar',note:'Solo conceptos de esta búsqueda y sus relaciones. Las menciones negadas y las asociaciones externas candidatas no afirman hechos clínicos.'}:{title:'Graph of your description',intro:'Boxes, arrows and relationships generated from concepts recognized in this query.',reset:'Reset',up:'Zoom in',down:'Zoom out',note:'Only concepts from this search and their relationships. Negated mentions and external candidate associations do not assert clinical facts.'};
+ const words=lang==='es'?{title:'Grafo de tu descripción',intro:'Toca un concepto para inspeccionar su modelo y su fuente.',reset:'Restablecer',up:'Acercar',down:'Alejar',note:'Solo conceptos de esta búsqueda y sus relaciones. Las menciones negadas y las asociaciones externas candidatas no afirman hechos clínicos.'}:{title:'Graph of your description',intro:'Tap a concept to inspect its model and source.',reset:'Reset',up:'Zoom in',down:'Zoom out',note:'Only concepts from this search and their relationships. Negated mentions and external candidate associations do not assert clinical facts.'};
  const title=document.createElement('h2');title.textContent=words.title;host.append(title);
  const intro=document.createElement('p');intro.className='hint';intro.textContent=words.intro;host.append(intro);
  const active=concepts.filter(c=>activeIds.includes(c.id));
@@ -35,15 +35,29 @@ export function renderKnowledgeGraph(concepts:Concept[],lang:Language,selected:s
    else {const id='value_'+c.id+p.property;add(id,String(p.value),800,y+85+j*75,'attribute',p.property);edge(c.id,id,p.property);}
   }
  });
- const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');const height=Math.max(650,...nodes.map(n=>n.y+100));
- svg.setAttribute('viewBox',`0 0 1350 ${height}`);svg.setAttribute('class','knowledge-svg');svg.setAttribute('role','img');svg.setAttribute('aria-label',words.title);
+ const mobile=window.innerWidth<=600;
+ if(mobile){
+  nodes.splice(nodes.findIndex(n=>n.id==='query'),1);
+  for(let i=edges.length-1;i>=0;i--)if(edges[i].a==='query')edges.splice(i,1);
+  nodes.forEach((n,i)=>{n.x=15+(i%2)*230;n.y=20+Math.floor(i/2)*110;});
+  shown.forEach((c,i)=>{
+   const y=20+i*330;
+   const place=(id:string,x:number,dy:number)=>{const n=nodes.find(n=>n.id===id);if(n){n.x=x;n.y=y+dy;}};
+   place('mention_'+c.id,15,0);place(c.id,245,0);place('code_'+c.id,245,105);
+   place(c.classId??c.parent??'',15,210);place('formula_'+c.id,245,210);
+  });
+ }
+ const width=mobile?440:1350;
+ const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');const height=Math.max(mobile?200:450,...nodes.map(n=>n.y+100));
+ svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.setAttribute('class','knowledge-svg');svg.setAttribute('role','img');svg.setAttribute('aria-label',words.title);
  const defs=document.createElementNS(ns,'defs');const marker=document.createElementNS(ns,'marker');marker.id='kg-arrow';marker.setAttribute('viewBox','0 0 10 10');marker.setAttribute('refX','9');marker.setAttribute('refY','5');marker.setAttribute('markerWidth','7');marker.setAttribute('markerHeight','7');marker.setAttribute('orient','auto-start-reverse');const arrow=document.createElementNS(ns,'path');arrow.setAttribute('d','M 0 0 L 10 5 L 0 10 z');arrow.setAttribute('fill','#7ca994');marker.append(arrow);defs.append(marker);svg.append(defs);
- const group=document.createElementNS(ns,'g');group.setAttribute('transform',`translate(${675*(1-zoom)} ${height/2*(1-zoom)}) scale(${zoom})`);svg.append(group);
+ const group=document.createElementNS(ns,'g');group.setAttribute('transform',`translate(${width/2*(1-zoom)} ${height/2*(1-zoom)}) scale(${zoom})`);svg.append(group);
  for(const e of edges){const a=nodes.find(n=>n.id===e.a),b=nodes.find(n=>n.id===e.b);if(!a||!b)continue;
   const path=document.createElementNS(ns,'path');const x1=a.x+175,y1=a.y+32,x2=b.x,y2=b.y+32;
   const backwards=x2<=x1;const control=backwards?80:Math.max(40,(x2-x1)/2);
-  path.setAttribute('d',`M ${x1} ${y1} C ${x1+control} ${y1}, ${x2-control} ${y2}, ${x2} ${y2}`);path.setAttribute('class','kg-edge'+(e.label==='candidateMatch?'?' candidate-edge':''));path.setAttribute('marker-end','url(#kg-arrow)');group.append(path);
-  const text=document.createElementNS(ns,'text');text.setAttribute('x',String((x1+x2)/2));text.setAttribute('y',String((y1+y2)/2-8));text.setAttribute('class','kg-edge-label');text.textContent=e.label;group.append(text);
+  const vertical=mobile&&Math.abs(a.y-b.y)>65;
+  path.setAttribute('d',vertical?`M ${a.x+87.5} ${a.y+64} C ${a.x+87.5} ${a.y+85}, ${b.x+87.5} ${b.y-20}, ${b.x+87.5} ${b.y}`:`M ${x1} ${y1} C ${x1+control} ${y1}, ${x2-control} ${y2}, ${x2} ${y2}`);path.setAttribute('class','kg-edge'+(e.label==='candidateMatch?'?' candidate-edge':''));path.setAttribute('marker-end','url(#kg-arrow)');group.append(path);
+  const text=document.createElementNS(ns,'text');text.setAttribute('x',String(vertical?(a.x+b.x)/2+87.5:(x1+x2)/2));text.setAttribute('y',String((y1+y2)/2-8));text.setAttribute('class','kg-edge-label');text.textContent=e.label;group.append(text);
  }
  for(const n of nodes){const g=document.createElementNS(ns,'g');g.setAttribute('transform',`translate(${n.x},${n.y})`);g.setAttribute('class','kg-node kind-'+n.kind+(n.target===selected?' kg-active':''));g.setAttribute('role','button');g.setAttribute('tabindex','0');g.setAttribute('aria-label',n.label);
   const rect=document.createElementNS(ns,'rect');rect.setAttribute('width','175');rect.setAttribute('height','64');rect.setAttribute('rx','8');g.append(rect);

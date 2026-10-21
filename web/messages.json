@@ -1,14 +1,14 @@
 {
   "en": {
-    "eyebrow": "THE KNOWLEDGE PLAYGROUND",
-    "title": "From text to a traceable knowledge graph",
-    "intro": "A bilingual concept and relationship explorer with evidence, provenance and interoperable representations.",
+    "eyebrow": "KNOWLEDGE / ONTOLOGY ENGINEERING",
+    "title": "One sentence. Connected knowledge.",
+    "intro": "Write it. See the concepts connect. Inspect the same model in OWL, RDF, Cypher and SQL.",
     "notice": "Knowledge Engineering prototype. No diagnosis or automatic clinical coding. Small local catalog, original text and external references.",
-    "inputTitle": "Describe & explore",
-    "inputLabel": "Describe symptoms or name a chemical",
-    "privacy": "Up to 100 characters. Updates as you type. Analysis stays in your browser; descriptions are not sent or saved.",
+    "inputTitle": "Try the graph",
+    "inputLabel": "Your sentence",
+    "privacy": "100 characters · Local analysis · No paid AI",
     "analyze": "Analyze description →",
-    "examplesTitle": "TRY AN EXAMPLE",
+    "examplesTitle": "CHANGE THE EXAMPLE",
     "examples": [
       "Concepts and negation",
       "Chemical entities",
@@ -22,7 +22,7 @@
       "The transport is late"
     ],
     "methodTitle": "How does this work?",
-    "method": "Whole-term matching, synonyms and simple negation. Each matching symptom adds 1 point; each associated negated symptom subtracts 2. Unmentioned symptoms are not treated as absent. Scores are not probabilities. Complex negation and context are not understood.",
+    "method": "Explicit terms, synonyms and simple negation map text to a small authored catalog. Every concept keeps its source. Unrecognized text stays unmatched; no disease is inferred.",
     "resultsTitle": "Candidate explanations",
     "empty": "Write a description and select Analyze to explore its connections.",
     "noResults": "No candidates for the recognized evidence. Try an example or use terms from the graph.",
@@ -43,18 +43,19 @@
     "exportHint": "Download the complete bilingual knowledge graph or your current analysis as JSON.",
     "footer": "A small, explainable experiment in knowledge engineering.",
     "source": "Explore the source ↗",
-    "resultDownload": "Analyze a description first."
+    "resultDownload": "Analyze a description first.",
+    "interviewTitle": "Optional: explore an educational symptom interview"
   },
   "es": {
-    "eyebrow": "LABORATORIO DE CONOCIMIENTO",
-    "title": "Del texto a un grafo trazable",
-    "intro": "Explorador bilingüe de conceptos y relaciones, con evidencia, procedencia y representaciones interoperables.",
+    "eyebrow": "KNOWLEDGE / ONTOLOGY ENGINEERING",
+    "title": "Una frase. Conocimiento conectado.",
+    "intro": "Escribe. Mira cómo se conectan los conceptos. Inspecciona el mismo modelo en OWL, RDF, Cypher y SQL.",
     "notice": "Prototipo de Knowledge Engineering. No realiza diagnóstico ni codificación clínica automática. Catálogo local pequeño, textos propios y referencias externas.",
-    "inputTitle": "Describe y explora",
-    "inputLabel": "Describe síntomas o nombra una sustancia química",
-    "privacy": "Hasta 100 caracteres. Se actualiza al escribir. El análisis ocurre en tu navegador; las descripciones no se envían ni guardan.",
+    "inputTitle": "Prueba el grafo",
+    "inputLabel": "Tu frase",
+    "privacy": "100 caracteres · Análisis local · Sin IA de pago",
     "analyze": "Analizar descripción →",
-    "examplesTitle": "PRUEBA UN EJEMPLO",
+    "examplesTitle": "CAMBIA EL EJEMPLO",
     "examples": [
       "Conceptos y negación",
       "Entidades químicas",
@@ -68,7 +69,7 @@
       "El transporte llega tarde"
     ],
     "methodTitle": "¿Cómo funciona?",
-    "method": "Coincidencia de términos completos, sinónimos y negación simple. Cada síntoma coincidente suma 1 punto; cada síntoma asociado negado resta 2. Los síntomas no mencionados no se consideran ausentes. Las puntuaciones no son probabilidades. No interpreta negación compleja ni contexto.",
+    "method": "Términos explícitos, sinónimos y negación simple vinculan el texto a un catálogo propio pequeño. Cada concepto conserva su fuente. El texto no reconocido queda sin vincular; no se infieren enfermedades.",
     "resultsTitle": "Explicaciones de candidatos",
     "empty": "Escribe una descripción y pulsa Analizar para explorar sus conexiones.",
     "noResults": "Sin candidatos para la evidencia reconocida. Prueba un ejemplo o usa términos del grafo.",
@@ -89,6 +90,7 @@
     "exportHint": "Descarga el grafo bilingüe completo o tu análisis actual en JSON.",
     "footer": "Un pequeño experimento explicable de ingeniería del conocimiento.",
     "source": "Explorar el código ↗",
-    "resultDownload": "Analiza primero una descripción."
+    "resultDownload": "Analiza primero una descripción.",
+    "interviewTitle": "Opcional: explorar una entrevista educativa de síntomas"
   }
 }

@@ -10,7 +10,7 @@ conocimiento como grafo, RDF, OWL, Cypher y SQL. Sin diagnóstico ni codificaci�
 
 ## Pruébalo en un minuto
 
-1. Escribe `Sin fiebre, pero tengo tos` (máximo **100 caracteres**).
+1. Abre la demo: ya muestra un grafo de ejemplo. Edita la frase (máximo **100 caracteres**).
 2. Examina el grafo: menciones, negación, conceptos e identificadores.
 3. Selecciona un concepto para ver su fuente y sus representaciones.
 4. Opcionalmente consulta OLS/CIMA con un término breve separado; los enlaces son

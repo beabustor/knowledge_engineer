@@ -10,7 +10,7 @@ knowledge as a graph, RDF, OWL, Cypher and SQL. No diagnosis or automatic clinic
 
 ## Try it in one minute
 
-1. Enter `No fever, but I have a cough` (maximum **100 characters**).
+1. Open the demo: a live example graph is already visible. Edit the sentence (maximum **100 characters**).
 2. Inspect the query-generated graph: mentions, negation, concepts and identifiers.
 3. Select a concept to see its source and technical representations.
 4. Optionally query OLS/CIMA with a separate short term; external links remain

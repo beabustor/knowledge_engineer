@@ -6,7 +6,8 @@ type Language='en'|'es';
 const input=document.getElementById('description') as HTMLTextAreaElement;
 const language=document.getElementById('language') as HTMLSelectElement;
 let lang:Language=navigator.language.startsWith('es')?'es':'en';
-let analyzed=false;
+let analyzed=true;
+input.value=messages[lang].texts[0];
 let timer:ReturnType<typeof setTimeout>;
 const LIMIT=100;
 function render(){
