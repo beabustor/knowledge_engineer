@@ -1,0 +1,8 @@
+{
+  "profile": "project SHACL v1; not OWL DL certification",
+  "canonical_conforms": true,
+  "canonical_triples": 241,
+  "negative_fixtures_rejected": 4,
+  "reasoning": "OWL RL subclass inference and non-inference verified",
+  "clinical_validation": false
+}

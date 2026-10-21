@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
       - run: npm ci
         working-directory: web
-      - run: node --test typescript/demo.test.ts explorer/model.test.ts web/import-catalog.test.ts web/public-lookup.test.ts
+      - run: node --test typescript/demo.test.ts explorer/model.test.ts web/import-catalog.test.ts web/public-lookup.test.ts interview/engine.test.ts
       - run: PYTHONPATH=python python -m unittest discover -s python/tests -v
       - run: python -m unittest discover -s sql -p 'test_*.py' -v
       - run: python -m unittest discover -s optional/tests -v
@@ -32,6 +32,8 @@ jobs:
         working-directory: web
       - run: pip install -r web/requirements-test.txt
       - run: python -m unittest discover -s explorer -p 'test_*.py' -v
+      - run: python semantic/validate.py
+      - run: node evaluation/run.ts
       - run: python -m playwright install --with-deps chromium
       - name: Browser smoke test
         run: python web/test_browser.py

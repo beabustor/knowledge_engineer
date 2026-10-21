@@ -1,0 +1,21 @@
+name: Verify live terminology sources (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Verify a real terminology response
+        run: python tests/integration/live_sources.py --output live-evidence/report.json
+      - name: Retain live evidence including failed attempts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-terminology-evidence
+          path: live-evidence/report.json

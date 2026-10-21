@@ -44,14 +44,14 @@ export function representations(concept: Concept, concepts: Concept[]) {
   const push=(s:string,p:string,o:string)=>triples.push({s,p,o});
   const lit=(s:string,p:string,o:string,lang?:string,datatype?:string)=>triples.push({s,p,o,literal:true,lang,datatype});
   push('ex:Ontology','rdf:type','owl:Ontology');
-  for(const p of ['sourceCode','sourceVersion','formula'])push('ex:'+p,'rdf:type','owl:AnnotationProperty');
+  for(const p of ['sourceCode','sourceVersion','formula','provenanceKind'])push('ex:'+p,'rdf:type','owl:AnnotationProperty');
   for(const c of nodes){
     const id='ex:'+c.id;
     const type=c.kind==='attribute'?'owl:DatatypeProperty':c.kind==='relationship'?'owl:ObjectProperty':c.kind==='annotation'?'owl:AnnotationProperty':c.kind==='individual'?'owl:NamedIndividual':'owl:Class';
     push(id,'rdf:type',type);
     if(c.status==='remote')lit(id,'rdfs:label',c.labels.en);
     else {lit(id,'rdfs:label',c.labels.en,'en');lit(id,'rdfs:label',c.labels.es,'es');}
-    push(id,'rdfs:seeAlso',c.url);lit(id,'ex:sourceVersion',c.version);
+    push(id,'rdfs:seeAlso',c.url);lit(id,'ex:sourceVersion',c.version);lit(id,'ex:provenanceKind',c.status);
     if(c.code)lit(id,'ex:sourceCode',c.code);
     if(c.formula)lit(id,'ex:formula',c.formula);
     if(c.parent)push(id,'rdfs:subClassOf','ex:'+c.parent);

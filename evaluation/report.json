@@ -1,0 +1,679 @@
+{
+  "dataset": "KE-author-challenge-v1",
+  "review_status": "pending user terminology review",
+  "clinical_validation": false,
+  "test_cases": 48,
+  "dataset_sha256": "b359d7eff832395ed28ef3c98f4279c138eb2b959b6c9d1c9183a921e653dd58",
+  "catalog_sha256": "118e5f4143b6181b91360b440f2193c0a60c127306606e9d2412b484c44ed9ba",
+  "metrics": {
+    "micro_precision": 0.8222222222222222,
+    "micro_recall": 0.8043478260869565,
+    "micro_f1": 0.8131868131868132,
+    "exact_case_accuracy": 0.7916666666666666,
+    "candidate_recall_at_5": 0.9565217391304348,
+    "negation_accuracy_on_retrieved_mentions": 0.8409090909090909,
+    "abstention_accuracy": 0.9
+  },
+  "counts": {
+    "tp": 37,
+    "fp": 8,
+    "fn": 9,
+    "exact_cases": 38,
+    "negation_scored": 44,
+    "abstention_cases": 10
+  },
+  "timing": {
+    "runtime": "v24.19.0",
+    "p50_ms": 1.5150670000000162,
+    "p95_ms": 3.514175999999992,
+    "note": "Single local run; not a production latency SLA."
+  },
+  "cases": [
+    {
+      "id": "KE-001",
+      "text": "La tos comenzó anoche.",
+      "tags": [
+        "literal"
+      ],
+      "expected": [
+        "Cough|positive"
+      ],
+      "actual": [
+        "Cough|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-002",
+      "text": "A cough started yesterday.",
+      "tags": [
+        "literal"
+      ],
+      "expected": [
+        "Cough|positive"
+      ],
+      "actual": [
+        "Cough|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-003",
+      "text": "Esta mañana apareció fiebre.",
+      "tags": [
+        "literal"
+      ],
+      "expected": [
+        "Fever|positive"
+      ],
+      "actual": [
+        "Fever|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-004",
+      "text": "Pyrexia was reported overnight.",
+      "tags": [
+        "synonym"
+      ],
+      "expected": [
+        "Fever|positive"
+      ],
+      "actual": [
+        "Fever|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-005",
+      "text": "La cefalea empezó al despertar.",
+      "tags": [
+        "synonym"
+      ],
+      "expected": [
+        "Headache|positive"
+      ],
+      "actual": [
+        "Headache|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-006",
+      "text": "There is head pain today.",
+      "tags": [
+        "synonym"
+      ],
+      "expected": [
+        "Headache|positive"
+      ],
+      "actual": [
+        "Headache|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-007",
+      "text": "El paciente refiere astenia.",
+      "tags": [
+        "synonym"
+      ],
+      "expected": [
+        "Fatigue|positive"
+      ],
+      "actual": [
+        "Fatigue|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-008",
+      "text": "I have no energy this morning.",
+      "tags": [
+        "lexicalized_negative"
+      ],
+      "expected": [
+        "Fatigue|positive"
+      ],
+      "actual": [
+        "Fatigue|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-009",
+      "text": "Me he levantado sin fuerzas.",
+      "tags": [
+        "lexicalized_negative"
+      ],
+      "expected": [
+        "Fatigue|positive"
+      ],
+      "actual": [
+        "Fatigue|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-010",
+      "text": "I am feeling weak today.",
+      "tags": [
+        "synonym"
+      ],
+      "expected": [
+        "Fatigue|positive"
+      ],
+      "actual": [
+        "Fatigue|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-011",
+      "text": "Sin signos de fiebre.",
+      "tags": [
+        "negation"
+      ],
+      "expected": [
+        "Fever|negative"
+      ],
+      "actual": [
+        "Fever|negative"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-012",
+      "text": "Without a cough.",
+      "tags": [
+        "negation"
+      ],
+      "expected": [
+        "Cough|negative"
+      ],
+      "actual": [
+        "Cough|negative"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-013",
+      "text": "Sin tos ni fiebre.",
+      "tags": [
+        "negation_scope"
+      ],
+      "expected": [
+        "Cough|negative",
+        "Fever|negative"
+      ],
+      "actual": [
+        "Cough|negative",
+        "Fever|negative"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-014",
+      "text": "No fever or cough.",
+      "tags": [
+        "negation_scope"
+      ],
+      "expected": [
+        "Cough|negative",
+        "Fever|negative"
+      ],
+      "actual": [
+        "Cough|negative",
+        "Fever|negative"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-015",
+      "text": "Niega tos.",
+      "tags": [
+        "unsupported_negation"
+      ],
+      "expected": [
+        "Cough|negative"
+      ],
+      "actual": [
+        "Cough|positive"
+      ],
+      "passed": false
+    },
+    {
+      "id": "KE-016",
+      "text": "Cough is denied.",
+      "tags": [
+        "post_negation"
+      ],
+      "expected": [
+        "Cough|negative"
+      ],
+      "actual": [
+        "Cough|positive"
+      ],
+      "passed": false
+    },
+    {
+      "id": "KE-017",
+      "text": "No solo fiebre: también tos.",
+      "tags": [
+        "complex_negation"
+      ],
+      "expected": [
+        "Cough|positive",
+        "Fever|positive"
+      ],
+      "actual": [
+        "Cough|positive",
+        "Fever|negative"
+      ],
+      "passed": false
+    },
+    {
+      "id": "KE-018",
+      "text": "Not only fever, also a cough.",
+      "tags": [
+        "complex_negation"
+      ],
+      "expected": [
+        "Cough|positive",
+        "Fever|positive"
+      ],
+      "actual": [
+        "Cough|positive",
+        "Fever|negative"
+      ],
+      "passed": false
+    },
+    {
+      "id": "KE-019",
+      "text": "Fiebre descartada.",
+      "tags": [
+        "post_negation"
+      ],
+      "expected": [
+        "Fever|negative"
+      ],
+      "actual": [
+        "Fever|positive"
+      ],
+      "passed": false
+    },
+    {
+      "id": "KE-020",
+      "text": "Fiebre y nada de tos.",
+      "tags": [
+        "negation_scope"
+      ],
+      "expected": [
+        "Cough|negative",
+        "Fever|positive"
+      ],
+      "actual": [
+        "Cough|positive",
+        "Fever|positive"
+      ],
+      "passed": false
+    },
+    {
+      "id": "KE-021",
+      "text": "No fever, but coughing persists.",
+      "tags": [
+        "contrast"
+      ],
+      "expected": [
+        "Cough|positive",
+        "Fever|negative"
+      ],
+      "actual": [
+        "Cough|positive",
+        "Fever|negative"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-022",
+      "text": "Sin tos, pero con fiebre.",
+      "tags": [
+        "contrast"
+      ],
+      "expected": [
+        "Cough|negative",
+        "Fever|positive"
+      ],
+      "actual": [
+        "Cough|negative",
+        "Fever|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-023",
+      "text": "Agua en el recipiente.",
+      "tags": [
+        "chemical"
+      ],
+      "expected": [
+        "Water|positive"
+      ],
+      "actual": [
+        "Water|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-024",
+      "text": "Water is in the container.",
+      "tags": [
+        "chemical"
+      ],
+      "expected": [
+        "Water|positive"
+      ],
+      "actual": [
+        "Water|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-025",
+      "text": "El compuesto es etanol.",
+      "tags": [
+        "chemical"
+      ],
+      "expected": [
+        "Ethanol|positive"
+      ],
+      "actual": [
+        "Ethanol|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-026",
+      "text": "The sample contains ethyl alcohol.",
+      "tags": [
+        "chemical_synonym"
+      ],
+      "expected": [
+        "Ethanol|positive"
+      ],
+      "actual": [
+        "Ethanol|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-027",
+      "text": "El envase indica aspirina.",
+      "tags": [
+        "chemical_synonym"
+      ],
+      "expected": [
+        "Aspirin|positive"
+      ],
+      "actual": [
+        "Aspirin|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-028",
+      "text": "The label says acetylsalicylic acid.",
+      "tags": [
+        "chemical_synonym"
+      ],
+      "expected": [
+        "Aspirin|positive"
+      ],
+      "actual": [
+        "Aspirin|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-029",
+      "text": "No contiene ácido acetilsalicílico.",
+      "tags": [
+        "chemical_negation"
+      ],
+      "expected": [
+        "Aspirin|negative"
+      ],
+      "actual": [
+        "Aspirin|negative"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-030",
+      "text": "The mixture is without ethanol.",
+      "tags": [
+        "chemical_negation"
+      ],
+      "expected": [
+        "Ethanol|negative"
+      ],
+      "actual": [
+        "Ethanol|negative"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-031",
+      "text": "No veo manchas moradas.",
+      "tags": [
+        "descriptive_finding"
+      ],
+      "expected": [
+        "PurpleSkinSpots|negative"
+      ],
+      "actual": [
+        "PurpleSkinSpots|negative"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-032",
+      "text": "There are purple patches on the skin.",
+      "tags": [
+        "descriptive_finding"
+      ],
+      "expected": [
+        "PurpleSkinSpots|positive"
+      ],
+      "actual": [
+        "PurpleSkinSpots|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-033",
+      "text": "Tengo fiebrex desde ayer.",
+      "tags": [
+        "typo"
+      ],
+      "expected": [
+        "Fever|positive"
+      ],
+      "actual": [],
+      "passed": false
+    },
+    {
+      "id": "KE-034",
+      "text": "I keep caughing.",
+      "tags": [
+        "typo"
+      ],
+      "expected": [
+        "Cough|positive"
+      ],
+      "actual": [],
+      "passed": false
+    },
+    {
+      "id": "KE-035",
+      "text": "Hay náuseas.",
+      "tags": [
+        "out_of_catalog"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-036",
+      "text": "There is ankle swelling.",
+      "tags": [
+        "out_of_catalog"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-037",
+      "text": "El transporte llega tarde.",
+      "tags": [
+        "abstention"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-038",
+      "text": "The meeting starts at noon.",
+      "tags": [
+        "abstention"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-039",
+      "text": "Es un artículo costoso.",
+      "tags": [
+        "word_boundary"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-040",
+      "text": "The waterfall is beautiful.",
+      "tags": [
+        "word_boundary"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-041",
+      "text": "Frío.",
+      "tags": [
+        "ambiguity"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-042",
+      "text": "Cold.",
+      "tags": [
+        "ambiguity"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-043",
+      "text": "CIE-10: R05.",
+      "tags": [
+        "identifier"
+      ],
+      "expected": [
+        "Cough|positive"
+      ],
+      "actual": [
+        "Cough|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-044",
+      "text": "Reference CHEBI:15377.",
+      "tags": [
+        "identifier"
+      ],
+      "expected": [
+        "Water|positive"
+      ],
+      "actual": [
+        "Water|positive"
+      ],
+      "passed": true
+    },
+    {
+      "id": "KE-045",
+      "text": "35 años; 37,2 grados Celsius.",
+      "tags": [
+        "numeric_only"
+      ],
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "KE-046",
+      "text": "Age 42 years old; temperature 99 degrees Fahrenheit.",
+      "tags": [
+        "numeric_only"
+      ],
+      "expected": [],
+      "actual": [
+        "age|positive"
+      ],
+      "passed": false
+    },
+    {
+      "id": "KE-047",
+      "text": "Fiebre ausente, astenia presente.",
+      "tags": [
+        "post_negation"
+      ],
+      "expected": [
+        "Fatigue|positive",
+        "Fever|negative"
+      ],
+      "actual": [
+        "Fatigue|positive",
+        "Fever|positive"
+      ],
+      "passed": false
+    },
+    {
+      "id": "KE-048",
+      "text": "No evidence of headache.",
+      "tags": [
+        "negation"
+      ],
+      "expected": [
+        "Headache|negative"
+      ],
+      "actual": [
+        "Headache|negative"
+      ],
+      "passed": true
+    }
+  ]
+}

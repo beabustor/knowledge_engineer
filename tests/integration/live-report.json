@@ -1,0 +1,21 @@
+{
+  "observed_at_utc": "2026-10-21T16:21:12.020929+00:00",
+  "execution": "live HTTP; no mocked fallback",
+  "results": [
+    {
+      "source": "ols",
+      "status": "passed",
+      "http_status": 200,
+      "identifier": "HP_0012735",
+      "latency_ms": 1684.9
+    },
+    {
+      "source": "cima",
+      "status": "passed",
+      "http_status": 200,
+      "identifier": "77758",
+      "latency_ms": 1517.8
+    }
+  ],
+  "at_least_one_passed": true
+}

@@ -1,0 +1,13 @@
+{
+  "dataset": "KE-author-challenge-v1",
+  "license": "CC0-1.0",
+  "sha256": "b359d7eff832395ed28ef3c98f4279c138eb2b959b6c9d1c9183a921e653dd58",
+  "cases": 60,
+  "test_cases": 48,
+  "dev_cases": 12,
+  "baseline_commit": "59d12cd93d3774f31ca0990d5a5a5bfac1923e33",
+  "annotation_author": "Project author/assistant",
+  "independent_review": "pending user terminology review",
+  "clinical_validation": false,
+  "policy": "Test labels frozen before first evaluation; no model or alias tuning on this test set. Dev/test phrasing separation is not concept-family independence. This is author-created synthetic data, not an independently sampled clinical corpus."
+}

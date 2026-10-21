@@ -9,5 +9,7 @@
   "edition": "Unverified. Source README references DEIS Chile updates to December 2013; do not label as WHO 2019 or CIE-10-ES.",
   "sheet": "CIE10",
   "original_rows": 12424,
-  "normalized_unique_codes": 13750
+  "normalized_unique_codes": 13750,
+  "status": "removed_from_current_tree_and_demo",
+  "reason": "No explicit redistribution permission verified; historical commits still contain the file. No Git history rewrite performed."
 }

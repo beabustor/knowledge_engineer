@@ -1,29 +1,25 @@
 {
   "en": {
     "eyebrow": "THE KNOWLEDGE PLAYGROUND",
-    "title": "From a description<br>to a connected idea.",
-    "intro": "Explore clinical and chemical concepts, inspect their sources and see how the same knowledge is represented across technologies.",
-    "notice": "Educational demo · Curated ICD-10 / ChEBI references and a separate synthetic disease example. Not a diagnosis, coding decision or treatment recommendation.",
+    "title": "From text to a traceable knowledge graph",
+    "intro": "A bilingual concept and relationship explorer with evidence, provenance and interoperable representations.",
+    "notice": "Knowledge Engineering prototype. No diagnosis or automatic clinical coding. Small local catalog, original text and external references.",
     "inputTitle": "Describe & explore",
     "inputLabel": "Describe symptoms or name a chemical",
     "privacy": "Up to 100 characters. Updates as you type. Analysis stays in your browser; descriptions are not sent or saved.",
     "analyze": "Analyze description →",
     "examplesTitle": "TRY AN EXAMPLE",
     "examples": [
-      "Respiratory symptoms",
-      "Negation & synonyms",
-      "An ambiguous word",
-      "Chemical entity",
-      "Clinical code",
-      "Fever & weakness"
+      "Concepts and negation",
+      "Chemical entities",
+      "Reported attributes",
+      "No match"
     ],
     "texts": [
-      "I have fever, cough and sore throat",
-      "Headache and nausea, but without fever",
-      "I feel cold",
+      "No fever, but I have a cough",
       "Acetylsalicylic acid and water",
-      "R05",
-      "I have a fever of 38 degrees and I feel weak"
+      "I am 35 years old and report 38.5 degrees Celsius",
+      "The transport is late"
     ],
     "methodTitle": "How does this work?",
     "method": "Whole-term matching, synonyms and simple negation. Each matching symptom adds 1 point; each associated negated symptom subtracts 2. Unmentioned symptoms are not treated as absent. Scores are not probabilities. Complex negation and context are not understood.",
@@ -51,29 +47,25 @@
   },
   "es": {
     "eyebrow": "LABORATORIO DE CONOCIMIENTO",
-    "title": "De una descripción<br>a una idea conectada.",
-    "intro": "Explora conceptos clínicos y químicos, examina sus fuentes y descubre cómo se representa el mismo conocimiento en distintas tecnologías.",
-    "notice": "Demo educativa · Referencias seleccionadas CIE-10 / ChEBI y un ejemplo separado de enfermedades sintéticas. No es diagnóstico, decisión de codificación ni recomendación de tratamiento.",
+    "title": "Del texto a un grafo trazable",
+    "intro": "Explorador bilingüe de conceptos y relaciones, con evidencia, procedencia y representaciones interoperables.",
+    "notice": "Prototipo de Knowledge Engineering. No realiza diagnóstico ni codificación clínica automática. Catálogo local pequeño, textos propios y referencias externas.",
     "inputTitle": "Describe y explora",
     "inputLabel": "Describe síntomas o nombra una sustancia química",
     "privacy": "Hasta 100 caracteres. Se actualiza al escribir. El análisis ocurre en tu navegador; las descripciones no se envían ni guardan.",
     "analyze": "Analizar descripción →",
     "examplesTitle": "PRUEBA UN EJEMPLO",
     "examples": [
-      "Síntomas respiratorios",
-      "Negación y sinónimos",
-      "Una palabra ambigua",
-      "Entidad química",
-      "Código clínico",
-      "Fiebre y falta de fuerzas"
+      "Conceptos y negación",
+      "Entidades químicas",
+      "Atributos referidos",
+      "Sin correspondencia"
     ],
     "texts": [
-      "Tengo fiebre, tos y dolor de garganta",
-      "Cefalea y náuseas, pero sin fiebre",
-      "Tengo frío",
+      "Sin fiebre, pero tengo tos",
       "Ácido acetilsalicílico y agua",
-      "R05",
-      "Tengo fiebre de 38 grados y me encuentro sin fuerzas"
+      "Tengo 35 años y temperatura de 38,5 grados Celsius",
+      "El transporte llega tarde"
     ],
     "methodTitle": "¿Cómo funciona?",
     "method": "Coincidencia de términos completos, sinónimos y negación simple. Cada síntoma coincidente suma 1 punto; cada síntoma asociado negado resta 2. Los síntomas no mencionados no se consideran ausentes. Las puntuaciones no son probabilidades. No interpreta negación compleja ni contexto.",

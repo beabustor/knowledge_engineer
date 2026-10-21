@@ -1,0 +1,21 @@
+{
+  "version": "educational-patterns-v1",
+  "clinical_validation": false,
+  "features": [
+    {"id":"Fever","labels":{"en":"Fever","es":"Fiebre"},"terms":["fever","fiebre","pyrexia"]},
+    {"id":"Cough","labels":{"en":"Cough","es":"Tos"},"terms":["cough","coughing","tos"]},
+    {"id":"SoreThroat","labels":{"en":"Sore throat","es":"Dolor de garganta"},"terms":["sore throat","dolor de garganta"]},
+    {"id":"RunnyNose","labels":{"en":"Runny nose","es":"Secreción nasal"},"terms":["runny nose","secreción nasal","moqueo"]},
+    {"id":"Headache","labels":{"en":"Headache","es":"Cefalea"},"terms":["headache","head pain","cefalea","dolor de cabeza"]},
+    {"id":"Nausea","labels":{"en":"Nausea","es":"Náuseas"},"terms":["nausea","náuseas","náusea"]},
+    {"id":"LightSensitivity","labels":{"en":"Light sensitivity","es":"Molestia con la luz"},"terms":["light sensitivity","molestia con la luz","fotofobia"]},
+    {"id":"BodyAches","labels":{"en":"Muscle aches","es":"Dolores musculares"},"terms":["muscle aches","body aches","dolores musculares"]},
+    {"id":"Fatigue","labels":{"en":"Fatigue","es":"Fatiga"},"terms":["fatigue","fatiga","sin fuerzas","cansancio"]}
+  ],
+  "patterns": [
+    {"id":"ColdPattern","labels":{"en":"Common-cold example pattern","es":"Patrón de ejemplo de resfriado"},"reference_code":"J00","features":["Cough","SoreThroat","RunnyNose"],"url":"https://icd.who.int/browse10/2019/en#/J00"},
+    {"id":"FluPattern","labels":{"en":"Influenza example pattern","es":"Patrón de ejemplo de gripe"},"reference_code":"J11","features":["Fever","Cough","BodyAches","Fatigue"],"url":"https://icd.who.int/browse10/2019/en#/J11"},
+    {"id":"MigrainePattern","labels":{"en":"Migraine example pattern","es":"Patrón de ejemplo de migraña"},"reference_code":"G43","features":["Headache","Nausea","LightSensitivity"],"url":"https://icd.who.int/browse10/2019/en#/G43"}
+  ],
+  "provenance": "Author-constructed illustrative feature sets, not ICD-10 diagnostic rules. Reference codes identify categories; they do not validate the pattern or assign a diagnosis."
+}

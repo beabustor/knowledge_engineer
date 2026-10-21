@@ -1,0 +1,46 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex: <https://example.org/knowledge-explorer/> .
+
+# Project profile, not universal restrictions on legal OWL ontologies.
+ex:ClassShape a sh:NodeShape ; sh:targetClass owl:Class ;
+ sh:property [sh:path rdfs:label; sh:minCount 1; sh:nodeKind sh:Literal; sh:uniqueLang true] ;
+ sh:property [sh:path ex:sourceVersion; sh:minCount 1; sh:maxCount 1] ;
+ sh:property [sh:path ex:provenanceKind; sh:minCount 1; sh:maxCount 1;
+              sh:in ("local" "reference" "reported" "remote")] ;
+ sh:property [sh:path rdfs:seeAlso; sh:minCount 1; sh:nodeKind sh:IRI] ;
+ sh:not [sh:class owl:DatatypeProperty] ; sh:not [sh:class owl:ObjectProperty] ;
+ sh:not [sh:class owl:NamedIndividual] .
+
+ex:DataPropertyShape a sh:NodeShape ; sh:targetClass owl:DatatypeProperty ;
+ sh:property [sh:path rdfs:domain; sh:minCount 1; sh:maxCount 1; sh:class owl:Class] ;
+ sh:property [sh:path rdfs:range; sh:minCount 1; sh:maxCount 1;
+              sh:in (xsd:string xsd:integer xsd:decimal)] ;
+ sh:not [sh:class owl:ObjectProperty] .
+
+ex:ObjectPropertyShape a sh:NodeShape ; sh:targetClass owl:ObjectProperty ;
+ sh:property [sh:path rdfs:domain; sh:minCount 1; sh:maxCount 1; sh:class owl:Class] ;
+ sh:property [sh:path rdfs:range; sh:minCount 1; sh:maxCount 1; sh:class owl:Class] .
+
+ex:IndividualShape a sh:NodeShape ; sh:targetClass owl:NamedIndividual ;
+ sh:property [sh:path rdf:type; sh:qualifiedValueShape [sh:class owl:Class]; sh:qualifiedMinCount 1] ;
+ sh:property [sh:path rdfs:label; sh:minCount 1; sh:uniqueLang true] ;
+ sh:not [sh:class owl:Class] .
+
+ex:AgeShape a sh:NodeShape ; sh:targetSubjectsOf ex:age ; sh:targetSubjectsOf ex:reportedAgeValue ;
+ sh:property [sh:path ex:age; sh:datatype xsd:integer; sh:minInclusive 0; sh:maxInclusive 130] ;
+ sh:property [sh:path ex:reportedAgeValue; sh:datatype xsd:integer; sh:minInclusive 0; sh:maxInclusive 130] .
+ex:TemperatureShape a sh:NodeShape ; sh:targetSubjectsOf ex:reportedValue ;
+ sh:property [sh:path ex:reportedValue; sh:datatype xsd:decimal; sh:maxCount 1] .
+
+# Candidate associations must not be silently promoted into equivalence.
+ex:CandidateShape a sh:NodeShape ; sh:targetSubjectsOf ex:candidateMatch ;
+ sh:property [sh:path ex:candidateMatch; sh:nodeKind sh:IRI] ;
+ sh:property [sh:path owl:equivalentClass; sh:maxCount 0] ;
+ sh:property [sh:path owl:sameAs; sh:maxCount 0] .
+ex:CandidatePredicateShape a sh:NodeShape ; sh:targetNode ex:candidateMatch ;
+ sh:or ([sh:property [sh:path rdf:type; sh:hasValue owl:AnnotationProperty]]
+        [sh:property [sh:path [sh:inversePath ex:candidateMatch]; sh:maxCount 0]]) .

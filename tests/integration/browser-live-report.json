@@ -1,0 +1,8 @@
+{
+  "observed_at_utc": "2026-10-21T16:25:14.528405+00:00",
+  "source": "OLS",
+  "mode": "real browser fetch, CORS and graph update; no fixtures",
+  "status": "failed",
+  "error_type": "AssertionError",
+  "error": "Locator expected to contain text 'candidateMatch?'\nActual value: Graph of your descriptionBoxes, arrows and relationships generated from concepts recognized in this query.mentionsdenotessourceCodeisAcoughcoughCoughR05Clinical findingZoom outResetZoom inOnly concepts from this search and their relationships. Negated mentions and external candidate associations do not assert clinical facts. \nCall lo"
+}

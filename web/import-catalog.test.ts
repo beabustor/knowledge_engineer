@@ -18,15 +18,7 @@ test('quoted CSV and malformed/oversize input',()=>{
  assert.equal(conceptsFromRows(parsed,base,'https://example.org').length,1);
  assert.throws(()=>conceptsFromRows([['bad']],base,''));assert.throws(()=>parseCsv('code,"unfinished'));
 });
-test('bundled Excel checksum, count and natural-language lookup',async()=>{
- const {createHash}=await import('node:crypto');
- const file=readFileSync(new URL('../data/sources/cie10/cie10.xls',import.meta.url));
- const meta=JSON.parse(readFileSync(new URL('../data/sources/cie10/provenance.json',import.meta.url),'utf8'));
- assert.equal(createHash('sha256').update(file).digest('hex'),meta.sha256);
- const bytes=file.buffer.slice(file.byteOffset,file.byteOffset+file.byteLength);
- const catalog=await readCatalogFile(bytes,'cie10.xls',base,meta.origin);
- assert.equal(catalog.length,13750);
- const results=matchConcepts('tengo fiebre de 38 grados y me encuentro sin fuerzas',catalog);
- assert.deepEqual(results.map(r=>r.concept.code),['R50.9','R53']);
- assert.ok(results.every(r=>r.evidence.every(e=>!e.negated)));
+test('unverified third-party workbook is not redistributed in current tree',async()=>{
+ const {existsSync}=await import('node:fs');
+ assert.equal(existsSync(new URL('../data/sources/cie10/cie10.xls',import.meta.url)),false);
 });
