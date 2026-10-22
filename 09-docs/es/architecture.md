@@ -4,7 +4,7 @@
 
 The main product is a guided catalog-change example, separate from the public-vocabulary text experiment. Domain code under `03-pipelines` does not import the UI. Data, concepts, mapping decisions and purchase records remain separate objects.
 
-El producto principal es un caso guiado de cambio de catálogo, separado del experimento de vocabularios públicos. El dominio de `03-pipelines` no importa la interfaz. Datos, conceptos, decisiones y compras son objetos distintos.
+El producto principal es un caso de guantes en cuatro pantallas: antes → cambio → dos decisiones de material → resultado. Expone seis correspondencias y 180 líneas, no las 8.640 del conjunto de regresión. Está separado del experimento de vocabularios públicos. El dominio de `03-pipelines` no importa la interfaz. Datos, conceptos, decisiones y compras son objetos distintos.
 
 | Responsibility / Responsabilidad | Location / Ubicación |
 | --- | --- |

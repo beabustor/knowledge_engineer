@@ -1,14 +1,111 @@
 {
   "purpose": "Dependency/navigation map, not a claim that browser events execute linearly",
   "nodes": [
-    {"id":"S01","name":"Load versioned fixtures","source":"03-pipelines/01-impact/engine.ts","input":"01-data/02-impact-scenario/manifest.json","output":"catalogs, supplier mappings, purchases","depends_on":[]},
-    {"id":"S02","name":"Compare catalog versions","source":"03-pipelines/01-impact/engine.ts","function":"diff","depends_on":["S01"]},
-    {"id":"S03","name":"Trace affected mappings and records","source":"03-pipelines/01-impact/engine.ts","function":"analyze","depends_on":["S02"]},
-    {"id":"S04","name":"Review replacement, split, merge or quarantine","source":"03-pipelines/01-impact/engine.ts","function":"suggestedDecision","depends_on":["S03"],"trigger":"Explicit user action; scenario proposals are never automatically approved"},
-    {"id":"S05","name":"Recompute graph and accounting invariants","source":"03-pipelines/01-impact/engine.ts","function":"analyze","depends_on":["S03","S04"]},
-    {"id":"S06","name":"Execute independent SQLite query","source":"04-app/adapters/sqlite.ts","depends_on":["S05"],"trigger":"Run SQL button"},
-    {"id":"S07","name":"Serialize the same knowledge as RDF, OWL and Cypher","source":"03-pipelines/01-impact/representations.ts","depends_on":["S05"],"trigger":"Inspect representations"},
-    {"id":"S08","name":"Validate full fixtures and inference","source":"05-validation/04-impact/verify.py","depends_on":["S07"],"trigger":"CI / explicit local command"},
-    {"id":"B01","name":"Optional live text annotation branch","source":"04-app/features/text-annotation/explorer.ts","depends_on":[],"trigger":"Open secondary workbench; external lookups need a click"}
+    {
+      "id": "S01",
+      "name": "Load versioned fixtures",
+      "source": "03-pipelines/01-impact/engine.ts",
+      "input": "01-data/02-impact-scenario/manifest.json",
+      "output": "catalogs, supplier mappings, purchases",
+      "depends_on": []
+    },
+    {
+      "id": "S02",
+      "name": "Compare catalog versions",
+      "source": "03-pipelines/01-impact/engine.ts",
+      "function": "diff",
+      "depends_on": [
+        "S01"
+      ]
+    },
+    {
+      "id": "S03",
+      "name": "Trace affected mappings and records",
+      "source": "03-pipelines/01-impact/engine.ts",
+      "function": "analyze",
+      "depends_on": [
+        "S02"
+      ]
+    },
+    {
+      "id": "S04",
+      "name": "Review replacement, split, merge or quarantine",
+      "source": "03-pipelines/01-impact/engine.ts",
+      "function": "suggestedDecision",
+      "depends_on": [
+        "S03"
+      ],
+      "trigger": "Explicit user action; scenario proposals are never automatically approved"
+    },
+    {
+      "id": "S05",
+      "name": "Recompute graph and accounting invariants",
+      "source": "03-pipelines/01-impact/engine.ts",
+      "function": "analyze",
+      "depends_on": [
+        "S03",
+        "S04"
+      ]
+    },
+    {
+      "id": "S06",
+      "name": "Execute independent SQLite query",
+      "source": "04-app/adapters/sqlite.ts",
+      "depends_on": [
+        "S05"
+      ],
+      "trigger": "Run SQL button"
+    },
+    {
+      "id": "S07",
+      "name": "Serialize the same knowledge as RDF, OWL and Cypher",
+      "source": "03-pipelines/01-impact/representations.ts",
+      "depends_on": [
+        "S05"
+      ],
+      "trigger": "Inspect representations"
+    },
+    {
+      "id": "S08",
+      "name": "Validate full fixtures and inference",
+      "source": "05-validation/04-impact/verify.py",
+      "depends_on": [
+        "S07"
+      ],
+      "trigger": "CI / explicit local command"
+    },
+    {
+      "id": "B01",
+      "name": "Optional live text annotation branch",
+      "source": "04-app/features/text-annotation/explorer.ts",
+      "depends_on": [],
+      "trigger": "Open secondary workbench; external lookups need a click"
+    },
+    {
+      "id": "G01",
+      "name": "Scope the guided case to six glove mappings and 180 dependent lines",
+      "source": "03-pipelines/01-impact/glove-case.ts",
+      "depends_on": [
+        "S01"
+      ]
+    },
+    {
+      "id": "G02",
+      "name": "Confirm two material-specific decisions; reject incompatible choices",
+      "source": "03-pipelines/01-impact/glove-case.ts",
+      "function": "reviewMaterial",
+      "depends_on": [
+        "G01"
+      ]
+    },
+    {
+      "id": "G03",
+      "name": "Four visible screens and same-case SQL evidence",
+      "source": "04-app/features/change-impact/dashboard.ts",
+      "depends_on": [
+        "G02"
+      ],
+      "trigger": "Explicit navigation, material choices and Run SQL"
+    }
   ]
 }

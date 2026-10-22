@@ -1,549 +1,586 @@
-/** UI entry for the guided scenario. Domain rules live in 03-pipelines, never here. */
+/** Four-step business journey. Every action changes the visible step or gives inline feedback. */
+import type { Decisions, Lang } from '../../../03-pipelines/01-impact/engine.ts';
 import {
   baseline,
   updated,
-  mappings,
-  records,
-  diff,
-  analyze,
-  stateOf,
-  suggestedDecision,
-  scenarioDecisions,
-  validateData,
-  type Lang,
-  type Decisions,
-  type Catalog,
-} from '../../../03-pipelines/01-impact/engine.ts';
+  caseMappings,
+  caseRecords,
+  caseSummary,
+  reviewMaterial,
+  caseReportSQL,
+  targetFor,
+  type Material,
+} from '../../../03-pipelines/01-impact/glove-case.ts';
 import { graph, serialize } from '../../../03-pipelines/01-impact/representations.ts';
-let phase: 'v1' | 'v2' = 'v2';
+import { icon, flowDiagram } from './diagrams.ts';
+let step = 0;
+let lang: Lang = 'es';
+let choices: Partial<Record<Material, string>> = {};
 let decisions: Decisions = {};
-let selected = 'ProtectiveGlove';
-let fault = false;
-let language: Lang = 'en';
-let sqlState = '';
+let feedback: '' | 'correct' | 'wrong' | 'missing' = '';
 let sqlBusy = false;
-let generation = 0;
-let validationShown = false;
-let technicalOpen = false;
-let codeTab: 'rdf' | 'owl' | 'cypher' | 'sql' = 'rdf';
-const t = (en: string, es: string) => (language === 'es' ? es : en);
-const el = <K extends keyof HTMLElementTagNameMap>(tag: K, text = '', className = '') => {
-  const node = document.createElement(tag);
-  node.textContent = text;
-  node.className = className;
-  return node;
+let sqlMessage: '' | 'loading' | 'verified' | 'error' = '';
+let sqlError = '';
+let sqlRows: { id: string; count: number; amountCents: number }[] = [];
+let request = 0;
+let proofOpen = false;
+const t = (en: string, es: string) => (lang === 'es' ? es : en);
+const el = <K extends keyof HTMLElementTagNameMap>(tag: K, text = '', cls = '') => {
+  const e = document.createElement(tag);
+  e.textContent = text;
+  e.className = cls;
+  return e;
 };
-const number = (n: number) => new Intl.NumberFormat(language).format(n);
-const label = (id: string, catalog: Catalog = updated) =>
-  catalog.concepts.find((c) => c.id === id)?.labels[language] ??
-  baseline.concepts.find((c) => c.id === id)?.labels[language] ??
-  {
-    unresolved: t('Not classified', 'Sin clasificar'),
-    quarantined: t('Set aside for review', 'Separadas para revisión'),
-  }[id] ??
-  id;
-const button = (text: string, id: string, action: () => void) => {
-  const node = el('button', text, 'impact-button');
-  node.type = 'button';
-  node.id = id;
-  node.onclick = action;
-  return node;
+const names = (id: string) =>
+  ({
+    NitrileGlove: t('Nitrile', 'Nitrilo'),
+    LatexGlove: t('Latex', 'Látex'),
+    ProtectiveGlove: t('Gloves, unspecified material', 'Guantes, sin separar por material'),
+    unresolved: t('Needs review', 'Pendiente de revisión'),
+  })[id] ?? id;
+const button = (text: string, id: string, action: () => void, cls = 'case-button') => {
+  const b = el('button', text, cls);
+  b.type = 'button';
+  b.id = id;
+  b.onclick = action;
+  return b;
 };
-function resetResults() {
-  generation++;
-  sqlState = '';
-  validationShown = false;
+function move(next: number) {
+  request++;
+  sqlBusy = false;
+  sqlRows = [];
+  sqlMessage = '';
+  step = next;
+  feedback = '';
+  proofOpen = false;
+  renderImpact(lang);
+  const h = document.getElementById('case-heading')!;
+  h.focus({ preventScroll: true });
+  document.getElementById('impact-workbench')!.scrollIntoView({ block: 'start', behavior: 'auto' });
 }
-function table(headers: string[], rows: (string | number)[][]) {
-  const wrap = el('div', '', 'impact-table-wrap');
-  const grid = el('table', '', 'impact-table');
-  const head = el('thead'),
-    header = el('tr');
-  headers.forEach((v) => header.append(el('th', v)));
-  head.append(header);
-  grid.append(head);
-  const body = el('tbody');
-  for (const row of rows) {
-    const tr = el('tr');
-    row.forEach((v) => tr.append(el('td', String(v))));
-    body.append(tr);
-  }
-  grid.append(body);
-  wrap.append(grid);
-  return wrap;
+function choose(material: Material, target: string) {
+  choices[material] = target;
+  feedback = target === targetFor[material] ? 'correct' : 'wrong';
+  renderImpact(lang);
+  document
+    .querySelector<HTMLButtonElement>(`[data-material="${material}"][data-target="${target}"]`)
+    ?.focus({ preventScroll: true });
 }
-export function renderImpact(lang: Lang) {
-  language = lang;
+export function renderImpact(language: Lang) {
+  lang = language;
   const host = document.getElementById('impact-workbench')!;
-  const previous = document.querySelector<HTMLDetailsElement>('#impact-technical');
-  if (previous) technicalOpen = previous.open;
+  const previous = host.querySelector<HTMLDetailsElement>('#case-proof');
+  if (previous && step === 3) proofOpen = previous.open;
   host.replaceChildren();
-  const catalog = structuredClone(phase === 'v1' ? baseline : updated);
-  if (fault) catalog.concepts.find((c) => c.id === 'Supplies')!.broader = ['Glassware'];
-  const ds = phase === 'v1' ? {} : decisions;
-  const analysis = analyze(catalog, ds),
-    original = analyze(baseline),
-    changed = analyze(updated, ds);
-  const story = el('section', '', 'radar-story');
-  story.append(
-    el('p', t('EXAMPLE · LABORATORY PURCHASES', 'EJEMPLO · COMPRAS DE UN LABORATORIO'), 'eyebrow'),
-  );
-  story.append(
+  const header = el('div', '', step > 0 ? 'case-context compact' : 'case-context');
+  header.append(
+    el('p', t('A PURCHASE TEAM’S PROBLEM', 'EL PROBLEMA DE UN EQUIPO DE COMPRAS'), 'eyebrow'),
     el(
-      'h2',
-      phase === 'v1'
-        ? t('Before: every purchase has a category.', 'Antes: cada compra tiene una categoría.')
-        : Object.keys(ds).length === 30
-          ? t('Reviewed: nothing disappears.', 'Revisado: no desaparece ninguna compra.')
-          : t(
-              'The catalog changed. Some purchases need review.',
-              'El catálogo cambió. Algunas compras necesitan revisión.',
-            ),
+      'h1',
+      t(
+        'The catalog changed. Which purchases need fixing?',
+        'Cambió el catálogo. ¿Qué compras hay que revisar?',
+      ),
     ),
   );
-  story.append(
+  header.append(
     el(
       'p',
       t(
-        'Three suppliers use different product names. One shared catalog lets a team group its purchases. When that catalog changes, some links stop working.',
-        'Tres proveedores usan nombres diferentes para sus productos. Un catálogo común permite agrupar las compras. Cuando ese catálogo cambia, algunos enlaces dejan de servir.',
+        '“We need to distinguish nitrile and latex purchases without checking every purchase by hand.”',
+        '«Necesitamos distinguir las compras de nitrilo y látex sin revisar cada compra a mano».',
       ),
     ),
   );
-  const stats = el('div', '', 'impact-stats');
-  for (const [value, title, kind] of [
-    [
-      analysis.unresolvedRecords,
-      t(
-        'purchase lines still need classification review',
-        'líneas de compra necesitan revisar su clasificación',
-      ),
-      analysis.unresolvedRecords ? 'risk' : 'good',
-    ],
-    [records.length, t('purchase lines preserved', 'líneas de compra conservadas'), ''],
-    [
-      analysis.quarantinedRecords,
-      t('lines set aside, with an explicit reason', 'líneas separadas, con un motivo explícito'),
-      '',
-    ],
-  ] as const) {
-    const card = el('div', '', 'impact-stat ' + kind);
-    card.append(el('strong', number(value)), el('span', title));
-    stats.append(card);
-  }
-  story.append(stats);
-  const controls = el('div', '', 'impact-actions phase-controls');
-  controls.append(
-    button(t('See the original catalog', 'Ver el catálogo original'), 'impact-v1', () => {
-      phase = 'v1';
-      decisions = {};
-      fault = false;
-      resetResults();
-      renderImpact(language);
-    }),
-    button(t('See the update problem', 'Ver el problema al actualizar'), 'impact-v2', () => {
-      phase = 'v2';
-      decisions = {};
-      fault = false;
-      resetResults();
-      renderImpact(language);
-    }),
-  );
-  story.append(controls);
-  host.append(story);
-  const example = el('section', '', 'radar-example');
-  example.id = 'impact-trace';
-  example.append(
-    el('p', t('ONE CHANGE, EXPLAINED', 'UN CAMBIO, EXPLICADO'), 'eyebrow'),
-    el(
-      'h2',
-      t(
-        '“Protective glove” becomes two categories.',
-        '«Guante de protección» pasa a ser dos categorías.',
-      ),
+  host.append(header);
+  const progress = el('ol', '', 'case-progress');
+  const labels = [
+    t('Before', 'Antes'),
+    t('Change', 'Cambio'),
+    t('Decide', 'Decidir'),
+    t('Result', 'Resultado'),
+  ];
+  labels.forEach((label, index) => {
+    const li = el('li');
+    if (index === step) li.setAttribute('aria-current', 'step');
+    if (index < step) li.classList.add('done');
+    li.append(el('span', String(index + 1)), el('strong', label));
+    progress.append(li);
+  });
+  progress.setAttribute('aria-label', t('Progress', 'Progreso'));
+  host.append(progress);
+  const panel = el('section', '', 'case-stage');
+  panel.id = 'case-stage';
+  const title = [
+    t('One shared category: “gloves”.', 'Una categoría común: «guantes».'),
+    t(
+      'Two new categories. Six links to review.',
+      'Dos categorías nuevas. Seis enlaces que revisar.',
     ),
+    t('Use the supplier’s evidence to decide.', 'Decide con el dato del proveedor.'),
+    t('You can now report purchases by material.', 'Ya puedes comparar las compras por material.'),
+  ][step];
+  const heading = el('h2', title);
+  heading.id = 'case-heading';
+  heading.tabIndex = -1;
+  panel.append(
+    el('p', t(`STEP ${step + 1} OF 4`, `PASO ${step + 1} DE 4`), 'case-step-label'),
+    heading,
   );
-  example.append(
-    el(
-      'p',
-      t(
-        'The new catalog distinguishes nitrile and latex. Moving every glove to the same new category would be wrong. The supplier’s material field tells the reviewer which option to choose.',
-        'El nuevo catálogo distingue nitrilo y látex. Mover todos los guantes a la misma categoría sería un error. El material indicado por el proveedor permite revisar qué opción corresponde.',
-      ),
-    ),
-  );
-  const cards = el('div', '', 'glove-cards');
-  for (const material of ['nitrile', 'latex']) {
-    const m = mappings.find(
-      (m) => m.target === 'ProtectiveGlove' && m.attributes.material === material,
-    )!;
-    const reviewed = ds[m.id];
-    const card = el('div', '', 'glove-card');
-    card.append(
-      el('span', t('Supplier evidence', 'Dato del proveedor')),
+  if (step === 0) {
+    panel.append(
       el(
-        'strong',
-        material === 'nitrile'
-          ? t('Material: nitrile', 'Material: nitrilo')
-          : t('Material: latex', 'Material: látex'),
+        'p',
+        t(
+          'Three suppliers sell six glove products. Their 180 purchase lines point to the same catalog category. The report cannot separate nitrile from latex.',
+          'Tres proveedores venden seis productos de guantes. Sus 180 líneas de compra apuntan a la misma categoría del catálogo. El informe no distingue nitrilo de látex.',
+        ),
       ),
-      el('div', '↓', 'glove-arrow'),
+    );
+    panel.append(flowDiagram(lang, 'before'));
+    panel.append(
+      el(
+        'p',
+        t(
+          'The supplier already tells us the material. That evidence will let us update six product links instead of opening 180 purchases.',
+          'El proveedor ya indica el material. Ese dato permite actualizar seis enlaces de producto en lugar de abrir 180 compras.',
+        ),
+        'case-takeaway',
+      ),
+    );
+  } else if (step === 1) {
+    panel.append(
+      el(
+        'p',
+        t(
+          'The new catalog retires “protective glove” and introduces “nitrile glove” and “latex glove”. The app traces the retired category to six supplier products, then to 180 purchase lines. It does not guess a replacement.',
+          'El nuevo catálogo retira «guante de protección» y crea «guante de nitrilo» y «guante de látex». La aplicación sigue la categoría retirada hasta seis productos de proveedores y sus 180 líneas de compra. No elige un sustituto por su cuenta.',
+        ),
+      ),
+    );
+    panel.append(flowDiagram(lang, 'broken'));
+    const evidence = el('div', '', 'case-impact-count');
+    evidence.append(
+      el('strong', String(caseMappings.length)),
       el(
         'span',
-        reviewed
-          ? t('Reviewed classification', 'Clasificación revisada')
-          : t('Proposed classification', 'Clasificación propuesta'),
+        t(
+          'product links to review → 180 dependent purchase lines',
+          'enlaces de producto que revisar → 180 líneas de compra dependientes',
+        ),
       ),
-      el('strong', label(material === 'nitrile' ? 'NitrileGlove' : 'LatexGlove')),
     );
-    cards.append(card);
+    panel.append(evidence);
+  } else if (step === 2) {
+    panel.append(
+      el(
+        'p',
+        t(
+          'Review two material groups. Each decision applies to three supplier products and 90 purchase lines. Choose a category for each group.',
+          'Revisa dos grupos de material. Cada decisión se aplica a tres productos de proveedores y 90 líneas de compra. Elige una categoría para cada grupo.',
+        ),
+      ),
+    );
+    for (const material of ['nitrile', 'latex'] as Material[]) {
+      const card = el('section', '', 'case-decision ' + material);
+      card.append(
+        icon('glove', material),
+        el(
+          'h3',
+          t('Supplier says: ', 'El proveedor indica: ') +
+            (material === 'nitrile' ? t('NITRILE', 'NITRILO') : t('LATEX', 'LÁTEX')),
+        ),
+        el(
+          'p',
+          t(
+            'Which category should these products use?',
+            '¿Qué categoría corresponde a estos productos?',
+          ),
+        ),
+      );
+      const actions = el('div', '', 'case-choices');
+      for (const target of ['NitrileGlove', 'LatexGlove']) {
+        const b = button(names(target), `choice-${material}-${target}`, () =>
+          choose(material, target),
+        );
+        b.dataset.material = material;
+        b.dataset.target = target;
+        b.setAttribute('aria-pressed', String(choices[material] === target));
+        actions.append(b);
+      }
+      card.append(actions);
+      if (choices[material]) {
+        const correct = choices[material] === targetFor[material];
+        card.append(
+          el(
+            'p',
+            correct
+              ? t('✓ Matches the supplier evidence', '✓ Coincide con el dato del proveedor')
+              : t(
+                  '✕ Does not match the supplier evidence',
+                  '✕ No coincide con el dato del proveedor',
+                ),
+            correct ? 'choice-correct' : 'choice-wrong',
+          ),
+        );
+      }
+      panel.append(card);
+    }
+  } else {
+    const after = caseSummary(updated, decisions);
+    const overview = el('div', '', 'case-success');
+    overview.append(
+      el('strong', t('180 purchase lines classified', '180 líneas de compra clasificadas')),
+      el(
+        'p',
+        t(
+          '6 product links updated · 0 purchases deleted',
+          '6 enlaces de producto actualizados · 0 compras borradas',
+        ),
+      ),
+    );
+    panel.append(overview);
+    panel.append(flowDiagram(lang, 'resolved'));
+    const result = el('section', '', 'case-report');
+    result.id = 'case-result';
+    result.append(
+      icon('report', 'purchase report'),
+      el('h3', t('The purchasing team’s report', 'El informe del equipo de compras')),
+    );
+    for (const row of after.rows) {
+      const line = el('div', '', 'case-report-row');
+      line.append(
+        el('strong', names(row.id)),
+        el('span', `${row.count} ${t('purchase lines', 'líneas de compra')}`),
+      );
+      const track = el('div', '', 'case-bar');
+      const fill = el(
+        'div',
+        '',
+        'case-bar-fill ' + (row.id === 'NitrileGlove' ? 'nitrile' : 'latex'),
+      );
+      fill.style.width = `${(row.count / after.total) * 100}%`;
+      track.append(fill);
+      result.append(line, track);
+    }
+    result.append(
+      el(
+        'p',
+        t(
+          'Before: one undifferentiated category. Now: 90 nitrile lines and 90 latex lines, with the original amounts preserved.',
+          'Antes: una categoría sin separar. Ahora: 90 líneas de nitrilo y 90 de látex, conservando los importes originales.',
+        ),
+      ),
+    );
+    panel.append(result);
+    panel.append(
+      el(
+        'p',
+        t(
+          'The useful result: review the six affected links once, update all 180 dependent lines, and retain the reason for every decision. This example does not measure real customer time savings.',
+          'El resultado útil: revisar una vez los seis enlaces afectados, actualizar las 180 líneas dependientes y conservar el motivo de cada decisión. Este ejemplo no mide ahorro real de tiempo en clientes.',
+        ),
+        'case-takeaway',
+      ),
+    );
   }
-  example.append(cards);
-  const gloveGroup = changed.groups.find((g) => g.change.id === 'ProtectiveGlove')!;
-  example.append(
-    el(
-      'p',
-      t(
-        'This change touches 6 supplier products and 180 purchase lines. One review group explains every affected line.',
-        'Este cambio afecta a 6 productos de proveedores y 180 líneas de compra. Un grupo de revisión permite seguir el motivo de cada línea afectada.',
+  const feedbackText = {
+    correct: t(
+      'The category matches the supplier material.',
+      'La categoría coincide con el material del proveedor.',
+    ),
+    wrong: t(
+      'This does not match the supplier material. Check the evidence above.',
+      'No coincide con el material del proveedor. Revisa el dato que aparece encima.',
+    ),
+    missing: t(
+      'Choose the category that matches each material before continuing.',
+      'Elige la categoría que coincide con cada material antes de continuar.',
+    ),
+    '': '',
+  }[feedback];
+  const alert = el('p', feedbackText, 'case-feedback');
+  alert.id = 'case-feedback';
+  alert.setAttribute('role', 'status');
+  panel.append(alert);
+  const actions = el('div', '', 'case-navigation');
+  if (step > 0)
+    actions.append(
+      button(t('← Back', '← Atrás'), 'case-back', () => move(step - 1), 'case-button secondary'),
+    );
+  if (step < 3) {
+    const text = [
+      t('Update the catalog →', 'Actualizar el catálogo →'),
+      t('Review the six links →', 'Revisar los seis enlaces →'),
+      t('Apply decisions and see the report →', 'Aplicar decisiones y ver el informe →'),
+    ][step];
+    actions.append(
+      button(
+        text,
+        'case-next',
+        () => {
+          if (step < 2) {
+            move(step + 1);
+            return;
+          }
+          if (choices.nitrile !== 'NitrileGlove' || choices.latex !== 'LatexGlove') {
+            feedback = 'missing';
+            renderImpact(lang);
+            document.getElementById('case-feedback')!.scrollIntoView({ block: 'center' });
+            return;
+          }
+          decisions = reviewMaterial(
+            reviewMaterial({}, 'nitrile', choices.nitrile),
+            'latex',
+            choices.latex,
+          );
+          request++;
+          sqlRows = [];
+          sqlMessage = '';
+          move(3);
+        },
+        'case-button primary',
       ),
-    ),
-  );
-  const reviewGroup = button(
-    gloveGroup.pending
-      ? t('Review these gloves using the material field', 'Revisar estos guantes según su material')
-      : t('Glove review applied', 'Revisión de guantes aplicada'),
-    'impact-review-group',
-    () => {
-      phase = 'v2';
-      for (const m of gloveGroup.mappings) decisions[m.id] = suggestedDecision(m, updated);
-      resetResults();
-      renderImpact(language);
-    },
-  );
-  reviewGroup.disabled = gloveGroup.pending === 0;
-  example.append(reviewGroup);
-  host.append(example);
-  const finish = el('section', '', 'radar-finish');
-  finish.append(
-    el('p', t('THE OUTCOME', 'EL RESULTADO'), 'eyebrow'),
-    el(
-      'h2',
-      t(
-        'Recover the classification. Keep the exceptions.',
-        'Recuperar la clasificación. Conservar las excepciones.',
+    );
+  } else
+    actions.append(
+      button(
+        t('Try again from the beginning', 'Volver a probar desde el principio'),
+        'case-reset',
+        () => {
+          choices = {};
+          decisions = {};
+          request++;
+          sqlRows = [];
+          sqlMessage = '';
+          sqlBusy = false;
+          move(0);
+        },
+        'case-button secondary',
       ),
-    ),
-  );
-  finish.append(
-    el(
-      'p',
-      t(
-        'The complete example also contains retired categories, a merge and a hierarchy change. Applying its authored review decisions reclassifies 720 lines. Another 180 have no justified replacement: they remain visible in a separate review group.',
-        'El caso completo incluye bajas, una fusión y un cambio de categoría. Al aplicar las decisiones del ejemplo, 720 líneas recuperan su clasificación. Otras 180 no tienen un sustituto justificado: siguen visibles en un grupo de revisión separado.',
-      ),
-    ),
-  );
-  finish.append(
-    button(
-      t('Apply all example review decisions', 'Aplicar todas las revisiones del ejemplo'),
-      'impact-review-all',
-      () => {
-        phase = 'v2';
-        fault = false;
-        decisions = scenarioDecisions();
-        resetResults();
-        renderImpact(language);
-      },
-    ),
-  );
-  const invariant = el(
+    );
+  panel.append(actions);
+  host.append(panel);
+  const note = el(
     'p',
     t(
-      'All 8,640 purchase lines and their amounts are preserved. This is synthetic example data, not real company data or measured customer savings.',
-      'Se conservan las 8.640 líneas de compra y sus importes. Son datos sintéticos de ejemplo: no datos reales de empresas ni ahorro medido en clientes.',
+      'Interactive example with fictional suppliers and purchase data. No paid services or uploads.',
+      'Ejemplo interactivo con proveedores y compras ficticios. Sin servicios de pago ni subida de datos.',
     ),
-    'impact-invariant',
+    'case-scenario-note',
   );
-  invariant.id = 'impact-invariant';
-  finish.append(invariant);
-  host.append(finish);
-  const tech = el('details', '', 'impact-technical');
-  tech.id = 'impact-technical';
-  tech.open = technicalOpen;
-  tech.append(
+  host.append(note);
+  if (step === 3) host.append(proof());
+}
+function proof() {
+  const details = el('details', '', 'case-proof');
+  details.id = 'case-proof';
+  details.open = proofOpen;
+  details.ontoggle = () => {
+    proofOpen = details.open;
+  };
+  details.append(
     el(
       'summary',
+      t('Technical evidence for this exact result', 'Evidencia técnica de este mismo resultado'),
+    ),
+  );
+  details.append(
+    el('h3', t('1. Trace the six decisions', '1. Seguir las seis decisiones')),
+    el(
+      'p',
       t(
-        'For technical reviewers: execute, inspect and validate',
-        'Para revisión técnica: ejecutar, inspeccionar y validar',
+        'These are the actual fixture SKUs and review targets, not a second example. Each SKU has 30 purchase lines.',
+        'Estos son los SKU del ejemplo y sus destinos revisados; no es otro caso. Cada SKU tiene 30 líneas de compra.',
       ),
     ),
   );
-  tech.append(
+  const list = el('ul', '', 'case-source-list');
+  for (const m of caseMappings) {
+    const item = el('li');
+    item.append(
+      el('strong', `${m.supplier} · ${m.sku}`),
+      el(
+        'span',
+        `${t('Material', 'Material')}: ${m.attributes.material === 'nitrile' ? names('NitrileGlove') : names('LatexGlove')} → ${names(decisions[m.id]?.target ?? m.target)}`,
+      ),
+      el('code', `${m.id} · demo-reviewer`),
+    );
+    list.append(item);
+  }
+  details.append(list);
+  const summary = caseSummary(updated, decisions);
+  const original = caseSummary(baseline);
+  const checks = el('ul', '', 'case-checks');
+  for (const [valid, text] of [
+    [
+      summary.total === original.total,
+      t('180 purchase lines preserved', '180 líneas de compra conservadas'),
+    ],
+    [
+      summary.totalCents === original.totalCents,
+      t('Original total amount preserved', 'Importe total original conservado'),
+    ],
+    [
+      summary.materialCorrect,
+      t(
+        'All six categories match supplier material',
+        'Las seis categorías coinciden con el material del proveedor',
+      ),
+    ],
+  ] as const)
+    checks.append(el('li', (valid ? '✓ ' : '✕ ') + text));
+  details.append(checks);
+  details.append(
     el(
       'h3',
-      t(
-        'Prove the report still accounts for every purchase',
-        'Comprobar que el informe conserva todas las compras',
-      ),
+      t('2. Execute an independent SQL check', '2. Ejecutar una comprobación SQL independiente'),
     ),
   );
-  const execute = button(
+  const run = button(
     sqlBusy
-      ? t('Executing SQLite…', 'Ejecutando SQLite…')
-      : t('Execute SQL and compare with the graph', 'Ejecutar SQL y comparar con el grafo'),
-    'impact-run-sql',
+      ? t('Running SQLite…', 'Ejecutando SQLite…')
+      : t('Run SQL on these 180 lines', 'Ejecutar SQL sobre estas 180 líneas'),
+    'case-run-sql',
     async () => {
-      const request = ++generation;
+      const token = ++request;
       sqlBusy = true;
-      renderImpact(language);
+      sqlMessage = 'loading';
+      renderImpact(lang);
       try {
         const { executeSQL } = await import('../../adapters/sqlite.ts');
-        const result = await executeSQL(catalog, ds);
-        const rows = (result[0]?.values ?? [])
+        const result = await executeSQL(updated, decisions, caseReportSQL);
+        if (token !== request) return;
+        const actual = (result[0]?.values ?? [])
           .map((r) => ({ id: String(r[0]), count: Number(r[1]), amountCents: Number(r[2]) }))
           .sort((a, b) => a.id.localeCompare(b.id));
-        if (JSON.stringify(rows) !== JSON.stringify(analysis.byCategory))
-          throw new Error('SQLite / graph mismatch');
-        if (request === generation)
-          sqlState = t(
-            'SQLite executed on all 8,640 rows. Results match the graph, including integer cents and exceptions.',
-            'SQLite ejecutado sobre las 8.640 filas. Coincide con el grafo, incluidos los céntimos y las excepciones.',
-          );
+        if (JSON.stringify(actual) !== JSON.stringify(caseSummary(updated, decisions).rows))
+          throw new Error('SQL / graph mismatch');
+        sqlRows = actual;
+        sqlMessage = 'verified';
       } catch (error) {
-        if (request === generation)
-          sqlState =
-            t('Execution failed: ', 'Error de ejecución: ') +
-            (error instanceof Error ? error.message : String(error));
+        if (token === request) {
+          sqlMessage = 'error';
+          sqlError = error instanceof Error ? error.message : String(error);
+        }
       } finally {
-        sqlBusy = false;
-        renderImpact(language);
+        if (token === request) {
+          sqlBusy = false;
+          renderImpact(lang);
+        }
       }
     },
   );
-  execute.disabled = sqlBusy || analysis.errors.length > 0;
-  tech.append(execute);
-  const status = el(
-    'p',
-    sqlState ||
-      t(
-        'SQL runs locally in bundled SQLite/WASM. No database server or paid API.',
-        'SQL se ejecuta localmente con SQLite/WASM incluido en la aplicación. Sin servidor de base de datos ni API de pago.',
-      ),
-    'hint',
-  );
-  status.id = 'impact-sql-status';
+  run.disabled = sqlBusy;
+  details.append(run);
+  const sqlText = {
+    '': '',
+    loading: t(
+      'Loading local SQLite and querying the source records…',
+      'Cargando SQLite local y consultando los registros de origen…',
+    ),
+    verified: t(
+      'Verified: SQL independently returns the same 90 + 90 lines and the same amounts.',
+      'Verificado: SQL devuelve de forma independiente las mismas 90 + 90 líneas y los mismos importes.',
+    ),
+    error: t('Check failed: ', 'Error de comprobación: ') + sqlError,
+  }[sqlMessage];
+  const status = el('p', sqlText, 'case-sql-status');
+  status.id = 'case-sql-status';
   status.setAttribute('role', 'status');
-  tech.append(status);
-  const ids = [
-    ...new Set([...original.byCategory.map((r) => r.id), ...analysis.byCategory.map((r) => r.id)]),
-  ].sort();
-  tech.append(
-    table(
-      [
-        t('Category', 'Categoría'),
-        t('Original lines', 'Líneas originales'),
-        t('Current lines', 'Líneas actuales'),
-      ],
-      ids.map((id) => [
-        label(id),
-        original.byCategory.find((r) => r.id === id)?.count ?? 0,
-        analysis.byCategory.find((r) => r.id === id)?.count ?? 0,
-      ]),
-    ),
-  );
-  tech.append(
-    el('h3', t('Inspect another catalog change', 'Inspeccionar otro cambio del catálogo')),
-  );
-  const choices = el('div', '', 'impact-change-list');
-  for (const group of changed.groups) {
-    const b = button(label(group.change.id), 'change-' + group.change.id, () => {
-      selected = group.change.id;
-      renderImpact(language);
-    });
-    b.setAttribute('aria-pressed', String(selected === group.change.id));
-    choices.append(b);
+  details.append(status);
+  if (sqlRows.length) {
+    const output = el('ul', '', 'case-query-results');
+    for (const row of sqlRows)
+      output.append(
+        el(
+          'li',
+          `${names(row.id)}: ${row.count} ${t('lines', 'líneas')} · ${row.amountCents} ${t('integer cents', 'céntimos enteros')}`,
+        ),
+      );
+    details.append(output);
   }
-  tech.append(choices);
-  const group = changed.groups.find((g) => g.change.id === selected)!;
-  const delta = diff(baseline, updated).find((c) => c.id === selected)!;
-  tech.append(
-    el(
-      'p',
-      t(
-        `${group.mappings.length} mappings → ${group.records} purchase lines. Change type: ${delta.kind}.`,
-        `${group.mappings.length} correspondencias → ${group.records} líneas de compra. Tipo de cambio: ${delta.kind}.`,
-      ),
-    ),
+  const query = el('details');
+  query.append(
+    el('summary', t('Inspect the query that actually ran', 'Ver la consulta que se ejecuta')),
   );
-  tech.append(
-    table(
-      [
-        t('Mapping / supplier', 'Correspondencia / proveedor'),
-        t('Evidence', 'Evidencia'),
-        t('Current target', 'Destino actual'),
-      ],
-      group.mappings.map((m) => {
-        const state = stateOf(m, catalog, ds);
-        return [
-          m.id + ' · ' + m.supplier,
-          JSON.stringify(m.attributes),
-          state.target ? label(state.target) : t('Set aside', 'Separada'),
-        ];
-      }),
-    ),
-  );
-  tech.append(
-    el('h3', t('Detect an invalid hierarchy', 'Detectar una jerarquía inválida')),
-    button(t('Validate the current state', 'Validar el estado actual'), 'impact-validate', () => {
-      validationShown = true;
-      renderImpact(language);
-    }),
-    button(
-      fault
-        ? t('Repair hierarchy', 'Reparar jerarquía')
-        : t('Inject a hierarchy cycle', 'Introducir un ciclo en la jerarquía'),
-      'impact-fault',
-      () => {
-        fault = !fault;
-        resetResults();
-        renderImpact(language);
-      },
-    ),
-  );
-  if (validationShown) {
-    const errors = validateData(catalog, ds);
-    tech.append(
-      el(
-        'p',
-        `${errors.length} ${t('structural/data errors', 'errores de estructura/datos')} · ${analysis.unresolvedMappings} ${t('unresolved classifications', 'clasificaciones sin resolver')}`,
-        'impact-validation-status',
-      ),
-    );
-    errors.slice(0, 6).forEach((error) => tech.append(el('p', error, 'impact-error')));
-  }
-  tech.append(
-    el(
-      'p',
-      t(
-        'Browser checks run on the current state. Full SHACL and OWL RL reasoning run in repository tests, not in the browser.',
-        'El navegador comprueba el estado actual. SHACL completo y razonamiento OWL RL se ejecutan en los tests del repositorio, no en el navegador.',
-      ),
-      'hint',
-    ),
-  );
-  tech.append(
+  const sql = el('pre');
+  sql.append(el('code', caseReportSQL));
+  query.append(sql);
+  details.append(query);
+  details.append(
     el(
       'h3',
       t(
-        'The same reviewed facts, different tools',
-        'Los mismos hechos revisados, distintas herramientas',
+        '3. Inspect the same decisions in standard formats',
+        '3. Inspeccionar las mismas decisiones en formatos estándar',
+      ),
+    ),
+    el(
+      'p',
+      t(
+        'Each view is generated from the same six mappings and their source evidence. These are representations, not separate applications.',
+        'Cada vista se genera con las mismas seis correspondencias y su evidencia. Son representaciones, no aplicaciones distintas.',
       ),
     ),
   );
-  const tabs = el('div', '', 'impact-actions');
-  for (const [key, name] of [
-    ['rdf', 'RDF / SKOS'],
-    ['owl', 'OWL / RDF/XML'],
-    ['cypher', 'Neo4j / Cypher'],
-    ['sql', 'SQLite'],
+  const outputs = serialize(
+    graph(
+      updated,
+      decisions,
+      caseMappings.map((m) => m.id),
+      true,
+    ),
+  );
+  for (const [key, title, explanation] of [
+    [
+      'rdf',
+      'RDF / SKOS',
+      t('Portable identifiers and relationships.', 'Identificadores y relaciones intercambiables.'),
+    ],
+    [
+      'owl',
+      'OWL / RDF/XML',
+      t(
+        'The same facts in RDF/XML with explicit ontology semantics.',
+        'Los mismos hechos en RDF/XML con semántica ontológica explícita.',
+      ),
+    ],
+    [
+      'cypher',
+      'Neo4j / Cypher',
+      t(
+        'Load these facts into Neo4j. Preview only; no Neo4j server is running.',
+        'Permite cargar estos hechos en Neo4j. Solo previsualización; no hay servidor Neo4j activo.',
+      ),
+    ],
   ] as const) {
-    const b = button(name, 'impact-tab-' + key, () => {
-      codeTab = key;
-      renderImpact(language);
-    });
-    b.setAttribute('aria-pressed', String(codeTab === key));
-    tabs.append(b);
+    const format = el('details');
+    format.append(el('summary', title), el('p', explanation));
+    const pre = el('pre');
+    pre.append(el('code', outputs[key]));
+    format.append(pre);
+    details.append(format);
   }
-  tech.append(tabs);
-  const purpose = {
-    rdf: t(
-      'RDF/SKOS exchanges stable concepts, classifications and provenance.',
-      'RDF/SKOS intercambia conceptos estables, clasificaciones y procedencia.',
-    ),
-    owl: t(
-      'The same graph in RDF/XML, with explicit property semantics. SKOS transitivity is verified in tests.',
-      'El mismo grafo en RDF/XML, con semántica explícita. La transitividad SKOS se verifica en tests.',
-    ),
-    cypher: t(
-      'Cypher loads the same facts into Neo4j. Preview only: no Neo4j server is deployed.',
-      'Cypher permite cargar los mismos hechos en Neo4j. Solo previsualización: no hay servidor Neo4j desplegado.',
-    ),
-    sql: t(
-      'This recursive query really executes in SQLite/WASM on all purchase lines.',
-      'Esta consulta recursiva se ejecuta en SQLite/WASM sobre todas las compras.',
-    ),
-  };
-  tech.append(el('p', purpose[codeTab]));
-  const pre = el('pre', '', 'impact-code'),
-    code = el('code');
-  code.textContent =
-    codeTab === 'sql'
-      ? 'SQL…'
-      : serialize(
-          graph(
-            catalog,
-            ds,
-            group.mappings.map((m) => m.id),
-            true,
-          ),
-        )[codeTab];
-  pre.append(code);
-  tech.append(pre);
-  if (codeTab === 'sql')
-    import('../../adapters/sqlite.ts').then(({ reportSQL }) => {
-      if (code.isConnected) code.textContent = reportSQL;
-    });
-  tech.append(
+  details.append(
     el(
       'p',
       t(
-        'Code preview: full taxonomy plus the selected group (6 mappings / 180 lines). Analysis and SQL include all 288 mappings / 8,640 lines.',
-        'Previsualización: taxonomía y grupo seleccionado (6 correspondencias / 180 líneas). Análisis y SQL incluyen las 288 correspondencias / 8.640 líneas.',
-      ),
-      'hint',
-    ),
-  );
-  tech.append(
-    el('h3', t('Sources and scope', 'Fuentes y alcance')),
-    el(
-      'p',
-      t(
-        'The catalog and version changes are authored examples. The common foundation is W3C SKOS for vocabularies, PROV-O for provenance, OWL for semantics and schema.org product types. There is no single domain ontology used by almost every team.',
-        'El catálogo y sus cambios son ejemplos propios. La base común son SKOS del W3C para vocabularios, PROV-O para procedencia, OWL para semántica y tipos de producto schema.org. No existe una ontología de dominio que usen casi todos los equipos.',
+        'Scope: this case uses 6 mappings and 180 lines from an 8,640-line synthetic regression dataset. It does not claim that unrelated catalog changes have been resolved. Current decisions reset on reload. Full SHACL and SKOS reasoning run in repository tests, not in the browser.',
+        'Alcance: este caso usa 6 correspondencias y 180 líneas de un conjunto sintético de pruebas de 8.640 líneas. No afirma haber resuelto otros cambios del catálogo. Las decisiones se reinician al recargar. SHACL completo y razonamiento SKOS se ejecutan en los tests, no en el navegador.',
       ),
     ),
   );
-  const link = el(
+  const a = el(
     'a',
     t(
-      'Data, decisions and reproducible checks on GitHub ↗',
-      'Datos, decisiones y comprobaciones reproducibles en GitHub ↗',
+      'Open the reproducible data and tests on GitHub ↗',
+      'Ver datos y pruebas reproducibles en GitHub ↗',
     ),
   );
-  link.href = 'https://github.com/beabustor/knowledge_engineer/tree/main/03-pipelines/01-impact';
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
-  tech.append(link);
-  const separate = el(
-    'a',
-    t(
-      'Separate experiment: annotate text with public vocabularies ↗',
-      'Experimento separado: anotar texto con vocabularios públicos ↗',
-    ),
-  );
-  separate.href = '?view=annotation';
-  tech.append(el('p'), separate);
-  tech.append(
-    el(
-      'p',
-      t(
-        'Scenario reviews reset on reload. No production authentication, persistent team review store, measured customer savings or deployed Neo4j service.',
-        'Las revisiones se reinician al recargar. Sin autenticación de producción, revisión persistente de equipo, ahorro medido en clientes ni Neo4j desplegado.',
-      ),
-      'hint',
-    ),
-  );
-  host.append(tech);
+  a.href = 'https://github.com/beabustor/knowledge_engineer/tree/main/05-validation/04-impact';
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  details.append(a);
+  return details;
 }

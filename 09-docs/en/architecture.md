@@ -2,7 +2,7 @@
 
 [Execution diagram / Diagrama de ejecución](../EXECUTION.md) · [Naming / Nombres](../NAMING.md)
 
-The main product is a guided catalog-change example, separate from the public-vocabulary text experiment. Domain code under `03-pipelines` does not import the UI. Data, concepts, mapping decisions and purchase records remain separate objects.
+The main product is a four-screen glove-classification case: before → change → two material decisions → result. It exposes six mappings and 180 lines, not the entire 8,640-line regression dataset. It is separate from the public-vocabulary text experiment. Domain code under `03-pipelines` does not import the UI. Data, concepts, mapping decisions and purchase records remain separate objects.
 
 El producto principal es un caso guiado de cambio de catálogo, separado del experimento de vocabularios públicos. El dominio de `03-pipelines` no importa la interfaz. Datos, conceptos, decisiones y compras son objetos distintos.
 

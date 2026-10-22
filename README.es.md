@@ -1,54 +1,43 @@
-# Tu catálogo cambia. ¿Qué pasa con tus datos?
+# Un catálogo cambia. ¿Cómo actualizas las compras sin revisarlas una a una?
 
-**Un ejemplo práctico de Beatriz Bustos · Knowledge / Ontology Engineering**
+**Demo de Beatriz Bustos · Knowledge / Ontology Engineering**
 
-[English](README.md) · **[Abrir la demo](https://beabustor.github.io/knowledge_engineer/)**
+[English](README.md) · **[Probar el recorrido visual](https://beabustor.github.io/knowledge_engineer/)**
 
-Tres proveedores llaman de forma distinta a sus productos. Un equipo usa un catálogo común para agrupar sus compras y preparar informes.
+Un laboratorio compra guantes a tres proveedores. Su informe agrupa todo como «guantes», pero el equipo necesita distinguir nitrilo y látex.
 
-**Cuando cambia ese catálogo, algunas compras dejan de estar bien clasificadas. Revisarlo todo a mano cuesta tiempo.**
+La nueva versión del catálogo introduce esas dos categorías. Ahora hay que actualizar los enlaces de seis productos sin perder ni clasificar mal sus 180 líneas de compra.
 
-Este proyecto localiza las compras afectadas, explica el motivo y permite comprobar la corrección sin perder registros.
+## Tú tomas la decisión
 
-## Un ejemplo que se entiende
+1. **Antes:** un diagrama muestra los proveedores, la categoría antigua y el informe.
+2. **Cambio:** la aplicación localiza seis enlaces afectados y sus 180 líneas dependientes.
+3. **Decidir:** consulta el material que indica el proveedor y elige nitrilo o látex. Una elección incompatible se explica y no se aplica.
+4. **Resultado:** el informe separa 90 líneas de nitrilo y 90 de látex. Ninguna compra ni importe se pierde.
 
-Antes, el catálogo tenía una categoría: **guante de protección**.
-
-Ahora distingue **guante de nitrilo** y **guante de látex**. No sirve mover todos los productos a la misma categoría. Hay que consultar el material que indica cada proveedor.
-
-La demo muestra ese dato, propone la clasificación y permite aplicar la revisión. Después se puede comprobar cómo cambia el informe de compras.
-
-## Pruébalo en tres pasos
-
-1. **Ver el problema:** una actualización deja 900 líneas de compra pendientes de revisar.
-2. **Revisar los guantes:** comprobar el material permite clasificar sus 180 líneas.
-3. **Completar el ejemplo:** 720 líneas recuperan su clasificación. Otras 180 no tienen sustituto justificado y quedan separadas para revisión. **No se borra ninguna compra.**
-
-El caso contiene 8.640 líneas de compra y tres proveedores ficticios. Todos los datos y decisiones son ejemplos: no clientes reales ni un ahorro de tiempo ya medido.
-
-## Qué aporta a un equipo
-
-Permite **concentrar la revisión en lo que ha cambiado**, en lugar de revisar todo el catálogo. Conserva la explicación de cada decisión y comprueba que los registros y sus importes no desaparecen.
+**La utilidad:** revisar los enlaces de producto afectados una vez, actualizar todas las compras que dependen de ellos y conservar el motivo de cada decisión. No se afirma un ahorro de tiempo medido en clientes.
 
 <details>
-<summary><strong>Para perfiles técnicos: cómo se demuestra</strong></summary>
+<summary><strong>¿Cómo puede comprobarlo un equipo técnico?</strong></summary>
 
-- Dos versiones del catálogo: 57 y 60 conceptos; 288 enlaces entre productos y categorías.
-- Comparación de versiones y seguimiento de las compras dependientes.
-- SQL ejecutado realmente en el navegador, comparado con el resultado del grafo.
-- Validación SHACL e inferencia SKOS en pruebas reproducibles.
-- RDF, OWL y Cypher representan los mismos datos revisados. Cypher se previsualiza; no hay Neo4j desplegado.
-- Base común: estándares SKOS, PROV-O, OWL y schema.org. El catálogo de ejemplo es propio; no se atribuyen sus cambios a organismos externos.
+En el resultado, abre «Evidencia técnica»:
 
-[Resultados verificables](05-validation/04-impact/report.json) · [Mapa del código](09-docs/README.md) · [Orden y nombres](09-docs/NAMING.md)
+- Inspecciona los seis SKU originales, su material y su decisión de revisión.
+- Ejecuta SQLite en el navegador. Consulta las mismas 180 líneas y comprueba que devuelve el mismo informe y los mismos importes.
+- Inspecciona las mismas decisiones en RDF/SKOS, OWL/RDF/XML y Cypher. Cypher es una previsualización; no hay servidor Neo4j.
+
+El caso es una parte explícita de un conjunto sintético de 8.640 líneas usado para pruebas de cambios más amplios. La demo no afirma haber resuelto todos esos otros cambios.
+
+[Datos y validación](05-validation/04-impact/) · [Mapa del código](09-docs/README.md)
 
 ```sh
 npm ci --prefix 04-app
 npm run dev --prefix 04-app
+npm test --prefix 04-app
 ```
 
-[Guía técnica y comandos de validación](09-docs/es/technical-guide.md)
+[Guía técnica](09-docs/es/technical-guide.md)
 
 </details>
 
-La demo principal funciona sin APIs de pago. Las revisiones duran la sesión. Importar catálogos de una empresa y compartir revisiones entre usuarios sería el siguiente paso; **no está implementado todavía**.
+Los proveedores y las compras son ficticios. Las decisiones duran la sesión. La demo funciona sin APIs de pago. Importar datos de una empresa o compartir revisiones entre usuarios sigue pendiente.

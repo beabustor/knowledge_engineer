@@ -27,10 +27,36 @@
       "totalCents": 35518608
     }
   ],
+  "guided_case": {
+    "scope": "6 glove mappings / 180 purchase lines; other fixture changes are not resolved by the UI",
+    "states": [
+      {
+        "state": "before",
+        "shacl_conforms": true,
+        "purchase_lines": 180,
+        "pending_lines": 0,
+        "totalCents": 752847
+      },
+      {
+        "state": "broken",
+        "shacl_conforms": false,
+        "purchase_lines": 180,
+        "pending_lines": 180,
+        "totalCents": 752847
+      },
+      {
+        "state": "resolved",
+        "shacl_conforms": true,
+        "purchase_lines": 180,
+        "pending_lines": 0,
+        "totalCents": 752847
+      }
+    ]
+  },
   "official_skos_transitive_inference": true,
   "negative_non_inference": true,
   "cycle_fixture_rejected": true,
   "rdf_xml_isomorphic": true,
-  "elapsed_seconds": 19.42,
+  "elapsed_seconds": 20.22,
   "savings_claim": "No measured customer time saving; prioritization and accounting invariants only"
 }

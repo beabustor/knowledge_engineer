@@ -1,4 +1,5 @@
 import './styles/main.css';
+import './styles/guided-case.css';
 import { renderImpact } from './features/change-impact/dashboard.ts';
 import { renderInterview } from './features/educational-interview.ts';
 import { renderExplorer } from './features/text-annotation/explorer.ts';
@@ -15,6 +16,8 @@ const annotationMode = new URLSearchParams(location.search).get('view') === 'ann
 document.getElementById('text-workbench')!.hidden = !annotationMode;
 (document.getElementById('text-workbench') as HTMLDetailsElement).open = annotationMode;
 document.getElementById('impact-workbench')!.hidden = annotationMode;
+document.querySelector<HTMLElement>('.hero')!.hidden = !annotationMode;
+document.body.classList.toggle('guided-case', !annotationMode);
 function render() {
   document.documentElement.lang = lang;
   language.value = lang;
@@ -23,6 +26,10 @@ function render() {
     const value = text[el.dataset.i18n as keyof typeof text];
     if (typeof value === 'string') el.textContent = value.replace('<br>', ' ');
   });
+  if (!annotationMode) {
+    renderImpact(lang);
+    return;
+  }
   input.placeholder =
     lang === 'es'
       ? 'Describe conceptos en hasta 100 caracteres'
@@ -41,7 +48,6 @@ function render() {
     };
     examples.append(button);
   });
-  renderImpact(lang);
   const confirmations = renderInterview(input.value, lang, analyzed, render);
   renderExplorer(
     input.value,

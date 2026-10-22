@@ -25,3 +25,9 @@ flowchart TD
 5. **B01:** the secondary text workbench uses public vocabularies only on request. It does not change the frozen impact scenario. / El explorador de texto consulta vocabularios solo bajo petición; no altera el escenario congelado.
 
 [Machine-readable stage map / Mapa de etapas](../03-pipelines/execution-map.json) · [Naming / Nombres](NAMING.md)
+
+## Guided public route / Ruta pública guiada
+
+G01 → G02 → G03 is the visible story: 6 glove SKU mappings and 180 lines. The UI requires two explicit material decisions, reports 90 nitrile / 90 latex lines and executes SQL on precisely those records. S01–S08 describe the separate broader regression pipeline, not claims of extra changes silently resolved by the public journey.
+
+G01 → G02 → G03 es la historia visible: 6 correspondencias y 180 líneas de guantes. Exige dos decisiones de material, informa de 90 líneas de nitrilo y 90 de látex y ejecuta SQL sobre esos registros. S01–S08 describen la regresión más amplia, no cambios adicionales resueltos silenciosamente por la demo.
