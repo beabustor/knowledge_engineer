@@ -1,0 +1,14 @@
+{
+  "execution": "Actual local SQLite execution on synthetic project fixtures",
+  "sqlite_version": "3.53.1",
+  "parameters": {},
+  "query_sha256": "233877076304f28cf83b585ca93af9e2f5d2aef17983b473c7eb3e94289d1aac",
+  "row_count": 1,
+  "rows": [
+    {
+      "mapping_id": "M0001",
+      "target": "Latest",
+      "event_id": 3
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "execution": "Actual local SQLite execution on synthetic project fixtures",
+  "sqlite_version": "3.53.1",
+  "parameters": {
+    "department": "Research",
+    "mapping_id": "M0001",
+    "row_limit": 100
+  },
+  "query_sha256": "e202c68b72ee40b83b319b564b398163f31bde4d1637283c9bf74e683c5f28ac",
+  "row_count": 10,
+  "rows": [
+    {
+      "id": "P00001",
+      "month": "2026-01",
+      "quantity": 1,
+      "amount_cents": 150
+    },
+    {
+      "id": "P00007",
+      "month": "2026-01",
+      "quantity": 7,
+      "amount_cents": 1050
+    },
+    {
+      "id": "P00013",
+      "month": "2026-01",
+      "quantity": 6,
+      "amount_cents": 900
+    },
+    {
+      "id": "P00019",
+      "month": "2026-01",
+      "quantity": 5,
+      "amount_cents": 750
+    },
+    {
+      "id": "P00025",
+      "month": "2026-01",
+      "quantity": 4,
+      "amount_cents": 600
+    },
+    {
+      "id": "P00004",
+      "month": "2026-04",
+      "quantity": 4,
+      "amount_cents": 600
+    },
+    {
+      "id": "P00010",
+      "month": "2026-04",
+      "quantity": 3,
+      "amount_cents": 450
+    },
+    {
+      "id": "P00016",
+      "month": "2026-04",
+      "quantity": 2,
+      "amount_cents": 300
+    },
+    {
+      "id": "P00022",
+      "month": "2026-04",
+      "quantity": 1,
+      "amount_cents": 150
+    },
+    {
+      "id": "P00028",
+      "month": "2026-04",
+      "quantity": 7,
+      "amount_cents": 1050
+    }
+  ]
+}

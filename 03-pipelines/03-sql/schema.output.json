@@ -1,0 +1,12 @@
+{
+  "status": "Executed SQLite schema + frozen fixture load",
+  "tables": {
+    "supplier": 3,
+    "dim_month": 6,
+    "concept": 117,
+    "broader": 115,
+    "product_mapping": 288,
+    "purchase": 8640,
+    "review_decision": 0
+  }
+}

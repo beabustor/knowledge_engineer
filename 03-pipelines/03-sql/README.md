@@ -1,5 +1,7 @@
 # SQL proficiency evidence / Evidencia de niveles SQL
 
+**Visual walkthrough:** [Question → exact SQL → actual output](VISUAL-GUIDE.md) · [Open saved query view](https://beabustor.github.io/knowledge_engineer/sql/query-demo.en.html).
+
 [Español](README.es.md) · [Project](../../README.md) · [Executable report](../../05-validation/06-sql/report.json)
 
 This pathway uses the **same 8,640 synthetic purchase lines, 288 mappings and two catalog releases** as the project. Each query answers a procurement or data-quality question. It is technical evidence, not an automatic certification of the author's proficiency.
@@ -27,3 +29,12 @@ Uses Python's standard-library SQLite, an in-memory database and frozen local JS
 ## Honest interpretation
 
 A local `SCAN` → indexed `SEARCH` demonstrates a query-plan change with identical results. It does not demonstrate speedups on billions of rows. Warehouse optimizers, cost models, constraints and SQL dialects differ. Cloud examples require native tests, controlled execution and real operational evidence before claiming production expertise. Completing or copying examples does not by itself make a person “advanced”; being able to explain, adapt and debug them is essential.
+
+<details>
+<summary>Real query and output: supplier spend</summary>
+
+![Documentary capture of SQLite source and saved output](../../09-docs/images/sql-supplier-en.png)
+
+Documentary browser rendering of real saved results; not a native BI screenshot or a live SQL editor.
+
+</details>

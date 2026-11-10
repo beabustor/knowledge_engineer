@@ -1,0 +1,22 @@
+{
+  "id": "demo",
+  "file": "../../03-pipelines/01-impact/glove-case.ts",
+  "code": "-- Scope: the six glove SKUs in the guided case, not the full dataset.\nSELECT CASE WHEN m.status='valid' THEN m.target ELSE m.status END AS category,\n       COUNT(*) AS purchase_lines,\n       SUM(p.amount_cents) AS amount_cents\nFROM purchase p JOIN mapping m ON p.mapping_id=m.id\nWHERE m.id IN ('M0145', 'M0146', 'M0147', 'M0148', 'M0149', 'M0150')\nGROUP BY category ORDER BY category;",
+  "execution": "Actual SQLite execution of the exported public-demo SQL; schema adapter is documented in build_guide.py",
+  "parameters": {},
+  "query_sha256": "aecaeef238725804afae9ea735e8cc304b85dc2426fcf2a99b4de73f91554c1d",
+  "row_count": 2,
+  "rows": [
+    {
+      "category": "LatexGlove",
+      "purchase_lines": 90,
+      "amount_cents": 386802
+    },
+    {
+      "category": "NitrileGlove",
+      "purchase_lines": 90,
+      "amount_cents": 366045
+    }
+  ],
+  "output": "guided-case.output.json"
+}

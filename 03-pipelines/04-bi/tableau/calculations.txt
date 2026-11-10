@@ -1,0 +1,11 @@
+Tableau calculated fields, create individually. NOT executed in Tableau.
+
+Purchase Lines: COUNT([purchase_id])
+Amount EUR: SUM([amount_cents]) / 100.0
+Pending Lines: SUM(IF [status] = 'unresolved' THEN 1 ELSE 0 END)
+Glove Lines: SUM(IF [original_target] = 'ProtectiveGlove' THEN 1 ELSE 0 END)
+Glove Pending Lines: SUM(IF [original_target] = 'ProtectiveGlove' AND [status] = 'unresolved' THEN 1 ELSE 0 END)
+
+For the public case set original_target = ProtectiveGlove as a dimension filter.
+Bars: material -> Columns; COUNT(purchase_id) -> Rows.
+Do not flatten all snapshot versions into a single fact table or join on material names.

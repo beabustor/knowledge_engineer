@@ -8,3 +8,10 @@ EN: troubleshooting is demonstrated in the verifier: an incorrect join at suppli
 ES: el verificador reproduce un join incorrecto por proveedor que multiplica por 96 y comprueba la corrección con totales originales. No arreglarlo con SUM(DISTINCT importe): dos compras distintas pueden tener el mismo importe.
 
 [Matrix / Matriz](../README.es.md) · [Verifier / Verificador](../../../05-validation/06-sql/verify.py)
+
+## Query logic and saved output / Lógica y salidas guardadas
+
+- [q02: explicación, SQL y resultado](../VISUAL-GUIDE.es.md#q02) · [English](../VISUAL-GUIDE.md#q02)
+- [q03: explicación, SQL y resultado](../VISUAL-GUIDE.es.md#q03) · [English](../VISUAL-GUIDE.md#q03)
+
+Every `.sql` query in this folder has a same-name `.output.json` from actual SQLite execution. / Cada consulta tiene un `.output.json` con el mismo nombre y resultados SQLite reales.

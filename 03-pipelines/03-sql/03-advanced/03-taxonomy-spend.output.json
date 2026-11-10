@@ -1,0 +1,16 @@
+{
+  "execution": "Actual local SQLite execution on synthetic project fixtures",
+  "sqlite_version": "3.53.1",
+  "parameters": {
+    "release": "scenario-v1",
+    "category": "Supplies"
+  },
+  "query_sha256": "ec98b02c4d4a3a8988d90e86485f4fc317f51fdfb21eb1407c9d15a419797b81",
+  "row_count": 1,
+  "rows": [
+    {
+      "purchase_lines": 8640,
+      "amount_cents": 35518608
+    }
+  ]
+}

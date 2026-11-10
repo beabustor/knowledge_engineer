@@ -13,3 +13,13 @@ EN: tests include missing months, zero denominators, equal ranks, timestamp ties
 ES: se verifican meses ausentes, denominadores cero, empates, jerarquías con varios caminos, lotes con FK inválida y destinos retirados. Índices y EXPLAIN demuestran una búsqueda indexada con igual resultado, no rendimiento a escala de un warehouse distribuido.
 
 [Level matrix / Matriz](../README.es.md) · [Observed checks / Comprobaciones](../../../05-validation/06-sql/report.json)
+
+## Query logic and saved output / Lógica y salidas guardadas
+
+- [q04: explicación, SQL y resultado](../VISUAL-GUIDE.es.md#q04) · [English](../VISUAL-GUIDE.md#q04)
+- [q05: explicación, SQL y resultado](../VISUAL-GUIDE.es.md#q05) · [English](../VISUAL-GUIDE.md#q05)
+- [q06: explicación, SQL y resultado](../VISUAL-GUIDE.es.md#q06) · [English](../VISUAL-GUIDE.md#q06)
+- [q07: explicación, SQL y resultado](../VISUAL-GUIDE.es.md#q07) · [English](../VISUAL-GUIDE.md#q07)
+- [q08: explicación, SQL y resultado](../VISUAL-GUIDE.es.md#q08) · [English](../VISUAL-GUIDE.md#q08)
+
+Every `.sql` query in this folder has a same-name `.output.json` from actual SQLite execution. / Cada consulta tiene un `.output.json` con el mismo nombre y resultados SQLite reales.

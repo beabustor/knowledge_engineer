@@ -1,0 +1,221 @@
+{
+  "execution": "Actual local SQLite execution on synthetic project fixtures",
+  "sqlite_version": "3.53.1",
+  "parameters": {
+    "release": "scenario-v2"
+  },
+  "query_sha256": "229941fafe18a6cb502db0200afbc855ef4b4aea79babbb6d752e0ebd63569f3",
+  "row_count": 30,
+  "rows": [
+    {
+      "id": "M0228",
+      "supplier_id": "S3",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 187902
+    },
+    {
+      "id": "M0226",
+      "supplier_id": "S2",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 185211
+    },
+    {
+      "id": "M0224",
+      "supplier_id": "S1",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 182520
+    },
+    {
+      "id": "M0227",
+      "supplier_id": "S3",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 179975
+    },
+    {
+      "id": "M0225",
+      "supplier_id": "S2",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 177330
+    },
+    {
+      "id": "M0223",
+      "supplier_id": "S1",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 174685
+    },
+    {
+      "id": "M0192",
+      "supplier_id": "S3",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 161928
+    },
+    {
+      "id": "M0190",
+      "supplier_id": "S2",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 159237
+    },
+    {
+      "id": "M0186",
+      "supplier_id": "S3",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 157599
+    },
+    {
+      "id": "M0188",
+      "supplier_id": "S1",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 156546
+    },
+    {
+      "id": "M0184",
+      "supplier_id": "S2",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 154908
+    },
+    {
+      "id": "M0191",
+      "supplier_id": "S3",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 154445
+    },
+    {
+      "id": "M0182",
+      "supplier_id": "S1",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 152217
+    },
+    {
+      "id": "M0189",
+      "supplier_id": "S2",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 151800
+    },
+    {
+      "id": "M0185",
+      "supplier_id": "S3",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 150190
+    },
+    {
+      "id": "M0187",
+      "supplier_id": "S1",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 149155
+    },
+    {
+      "id": "M0183",
+      "supplier_id": "S2",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 147545
+    },
+    {
+      "id": "M0181",
+      "supplier_id": "S1",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 144900
+    },
+    {
+      "id": "M0150",
+      "supplier_id": "S3",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 131625
+    },
+    {
+      "id": "M0148",
+      "supplier_id": "S2",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 128934
+    },
+    {
+      "id": "M0146",
+      "supplier_id": "S1",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 126243
+    },
+    {
+      "id": "M0149",
+      "supplier_id": "S3",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 124660
+    },
+    {
+      "id": "M0147",
+      "supplier_id": "S2",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 122015
+    },
+    {
+      "id": "M0145",
+      "supplier_id": "S1",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 119370
+    },
+    {
+      "id": "M0030",
+      "supplier_id": "S3",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 45045
+    },
+    {
+      "id": "M0028",
+      "supplier_id": "S2",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 42354
+    },
+    {
+      "id": "M0026",
+      "supplier_id": "S1",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 39663
+    },
+    {
+      "id": "M0029",
+      "supplier_id": "S3",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 39560
+    },
+    {
+      "id": "M0027",
+      "supplier_id": "S2",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 36915
+    },
+    {
+      "id": "M0025",
+      "supplier_id": "S1",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 34270
+    }
+  ]
+}

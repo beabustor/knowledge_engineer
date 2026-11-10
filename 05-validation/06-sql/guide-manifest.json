@@ -1,0 +1,70 @@
+{
+  "generated_by": "05-validation/06-sql/build_guide.py",
+  "sqlite_version": "3.53.1",
+  "panels": [
+    {
+      "id": "demo",
+      "source": "../../03-pipelines/01-impact/glove-case.ts",
+      "query_sha256": "aecaeef238725804afae9ea735e8cc304b85dc2426fcf2a99b4de73f91554c1d",
+      "row_count": 2,
+      "output": "guided-case.output.json"
+    },
+    {
+      "id": "q01",
+      "source": "01-basic/01-filter.sql",
+      "query_sha256": "e202c68b72ee40b83b319b564b398163f31bde4d1637283c9bf74e683c5f28ac",
+      "row_count": 10,
+      "output": "01-basic/01-filter.output.json"
+    },
+    {
+      "id": "q02",
+      "source": "02-intermediate/01-supplier-spend.sql",
+      "query_sha256": "e05c97ee7a563a3ddc671e67b77f6fc97de2574573e4f6cf95a6a893fd56e590",
+      "row_count": 3,
+      "output": "02-intermediate/01-supplier-spend.output.json"
+    },
+    {
+      "id": "q03",
+      "source": "02-intermediate/02-review-queue.sql",
+      "query_sha256": "229941fafe18a6cb502db0200afbc855ef4b4aea79babbb6d752e0ebd63569f3",
+      "row_count": 30,
+      "output": "02-intermediate/02-review-queue.output.json"
+    },
+    {
+      "id": "q04",
+      "source": "03-advanced/01-monthly-windows.sql",
+      "query_sha256": "68389484f506a50b56e05d64c4ecdb7ab8ed646974483308c1b40481e0800b93",
+      "row_count": 18,
+      "output": "03-advanced/01-monthly-windows.output.json"
+    },
+    {
+      "id": "q05",
+      "source": "03-advanced/02-prioritize-impact.sql",
+      "query_sha256": "8c3e0da4b240d9f7de7d9cb408f233b175d869b2ca047eec7d8e07be1b6eedb8",
+      "row_count": 30,
+      "output": "03-advanced/02-prioritize-impact.output.json"
+    },
+    {
+      "id": "q06",
+      "source": "03-advanced/03-taxonomy-spend.sql",
+      "query_sha256": "ec98b02c4d4a3a8988d90e86485f4fc317f51fdfb21eb1407c9d15a419797b81",
+      "row_count": 1,
+      "output": "03-advanced/03-taxonomy-spend.output.json"
+    },
+    {
+      "id": "q07",
+      "source": "03-advanced/04-deduplicate-events.sql",
+      "query_sha256": "233877076304f28cf83b585ca93af9e2f5d2aef17983b473c7eb3e94289d1aac",
+      "row_count": 1,
+      "output": "03-advanced/04-deduplicate-events.output.json"
+    },
+    {
+      "id": "q08",
+      "source": "03-advanced/05-review-transaction.sql",
+      "query_sha256": "02098ff3bdc2e670e9f757a9c16ab0e74eeeeb1ae58c52d7857100a0eedbe77f",
+      "row_count": 1,
+      "output": "03-advanced/05-review-transaction.output.json"
+    }
+  ],
+  "cloud_outputs": "SQLite reference only, never native execution"
+}

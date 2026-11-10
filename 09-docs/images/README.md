@@ -10,3 +10,5 @@
 
 01. [demo-mobile.png](demo-mobile.png)
 02. [demo.png](demo.png)
+
+`sql-supplier-*`, `sql-windows-*` and `bi-reference-*` are genuine browser captures of saved documentary views using actual SQLite/CSV results. They are NOT native Power BI/Tableau screenshots. / Capturas documentales reales, no de herramientas BI nativas.

@@ -1,0 +1,171 @@
+{
+  "execution": "Actual local SQLite execution on synthetic project fixtures",
+  "sqlite_version": "3.53.1",
+  "parameters": {},
+  "query_sha256": "68389484f506a50b56e05d64c4ecdb7ab8ed646974483308c1b40481e0800b93",
+  "row_count": 18,
+  "rows": [
+    {
+      "supplier_id": "S1",
+      "month": "2026-01",
+      "amount_cents": 2194512,
+      "previous_cents": null,
+      "delta_cents": null,
+      "growth_pct": null,
+      "running_cents": 2194512
+    },
+    {
+      "supplier_id": "S1",
+      "month": "2026-02",
+      "amount_cents": 1994832,
+      "previous_cents": 2194512,
+      "delta_cents": -199680,
+      "growth_pct": -9.099061659266388,
+      "running_cents": 4189344
+    },
+    {
+      "supplier_id": "S1",
+      "month": "2026-03",
+      "amount_cents": 1795152,
+      "previous_cents": 1994832,
+      "delta_cents": -199680,
+      "growth_pct": -10.009865492432445,
+      "running_cents": 5984496
+    },
+    {
+      "supplier_id": "S1",
+      "month": "2026-04",
+      "amount_cents": 1595472,
+      "previous_cents": 1795152,
+      "delta_cents": -199680,
+      "growth_pct": -11.123292066632798,
+      "running_cents": 7579968
+    },
+    {
+      "supplier_id": "S1",
+      "month": "2026-05",
+      "amount_cents": 1752120,
+      "previous_cents": 1595472,
+      "delta_cents": 156648,
+      "growth_pct": 9.818285748668732,
+      "running_cents": 9332088
+    },
+    {
+      "supplier_id": "S1",
+      "month": "2026-06",
+      "amount_cents": 2251320,
+      "previous_cents": 1752120,
+      "delta_cents": 499200,
+      "growth_pct": 28.49119923292925,
+      "running_cents": 11583408
+    },
+    {
+      "supplier_id": "S2",
+      "month": "2026-01",
+      "amount_cents": 2243088,
+      "previous_cents": null,
+      "delta_cents": null,
+      "growth_pct": null,
+      "running_cents": 2243088
+    },
+    {
+      "supplier_id": "S2",
+      "month": "2026-02",
+      "amount_cents": 2038992,
+      "previous_cents": 2243088,
+      "delta_cents": -204096,
+      "growth_pct": -9.098885108386296,
+      "running_cents": 4282080
+    },
+    {
+      "supplier_id": "S2",
+      "month": "2026-03",
+      "amount_cents": 1834896,
+      "previous_cents": 2038992,
+      "delta_cents": -204096,
+      "growth_pct": -10.009651827962053,
+      "running_cents": 6116976
+    },
+    {
+      "supplier_id": "S2",
+      "month": "2026-04",
+      "amount_cents": 1630800,
+      "previous_cents": 1834896,
+      "delta_cents": -204096,
+      "growth_pct": -11.123028226122898,
+      "running_cents": 7747776
+    },
+    {
+      "supplier_id": "S2",
+      "month": "2026-05",
+      "amount_cents": 1790760,
+      "previous_cents": 1630800,
+      "delta_cents": 159960,
+      "growth_pct": 9.808682855040471,
+      "running_cents": 9538536
+    },
+    {
+      "supplier_id": "S2",
+      "month": "2026-06",
+      "amount_cents": 2301000,
+      "previous_cents": 1790760,
+      "delta_cents": 510240,
+      "growth_pct": 28.492930375929774,
+      "running_cents": 11839536
+    },
+    {
+      "supplier_id": "S3",
+      "month": "2026-01",
+      "amount_cents": 2291664,
+      "previous_cents": null,
+      "delta_cents": null,
+      "growth_pct": null,
+      "running_cents": 2291664
+    },
+    {
+      "supplier_id": "S3",
+      "month": "2026-02",
+      "amount_cents": 2083152,
+      "previous_cents": 2291664,
+      "delta_cents": -208512,
+      "growth_pct": -9.098716042142303,
+      "running_cents": 4374816
+    },
+    {
+      "supplier_id": "S3",
+      "month": "2026-03",
+      "amount_cents": 1874640,
+      "previous_cents": 2083152,
+      "delta_cents": -208512,
+      "growth_pct": -10.009447222286228,
+      "running_cents": 6249456
+    },
+    {
+      "supplier_id": "S3",
+      "month": "2026-04",
+      "amount_cents": 1666128,
+      "previous_cents": 1874640,
+      "delta_cents": -208512,
+      "growth_pct": -11.12277557291,
+      "running_cents": 7915584
+    },
+    {
+      "supplier_id": "S3",
+      "month": "2026-05",
+      "amount_cents": 1829400,
+      "previous_cents": 1666128,
+      "delta_cents": 163272,
+      "growth_pct": 9.799487194261186,
+      "running_cents": 9744984
+    },
+    {
+      "supplier_id": "S3",
+      "month": "2026-06",
+      "amount_cents": 2350680,
+      "previous_cents": 1829400,
+      "delta_cents": 521280,
+      "growth_pct": 28.494588389635947,
+      "running_cents": 12095664
+    }
+  ]
+}

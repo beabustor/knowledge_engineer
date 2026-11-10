@@ -1,0 +1,10 @@
+{
+  "execution": "Actual EXPLAIN QUERY PLAN from verify.py",
+  "result_unchanged": true,
+  "before": [
+    "SCAN purchase"
+  ],
+  "after": [
+    "SEARCH purchase USING INDEX idx_purchase_mapping_month (mapping_id=? AND month=?)"
+  ]
+}

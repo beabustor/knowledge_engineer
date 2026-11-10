@@ -1,5 +1,7 @@
 # Evidencia de niveles SQL
 
+**Guía visual:** [Pregunta → SQL exacto → salida real](VISUAL-GUIDE.es.md) · [Abrir vista documental de consultas](https://beabustor.github.io/knowledge_engineer/sql/query-demo.es.html).
+
 [English](README.md) · [Proyecto](../../README.es.md) · [Informe ejecutable](../../05-validation/06-sql/report.json)
 
 Este itinerario usa **las mismas 8.640 líneas de compra sintéticas, 288 correspondencias y dos versiones del catálogo**. Cada consulta responde a un problema de compras o calidad de datos. Es evidencia técnica, no una certificación automática del nivel de la autora.
@@ -34,3 +36,12 @@ Usa SQLite de la biblioteca estándar de Python, una base en memoria y JSON loca
 - Interpretar un cambio de SCAN a SEARCH manteniendo los resultados. No presentarlo como un benchmark de gran escala.
 
 Saber explicar, adaptar y depurar estas consultas es lo que permite defender un nivel avanzado. Tener los archivos no certifica el nivel. La experiencia experta de producción requiere operación real, volumen representativo, costes y evidencias adicionales.
+
+<details>
+<summary>Consulta y salida reales: gasto por proveedor</summary>
+
+![Captura documental con SQL y salida SQLite guardada](../../09-docs/images/sql-supplier-es.png)
+
+Vista documental de resultados reales guardados; no es captura de BI nativo ni editor SQL en directo.
+
+</details>

@@ -1,0 +1,8 @@
+// DAX definitions to create individually; NOT executed in Power BI Desktop.
+Purchase Lines = COALESCE(COUNTROWS(FactPurchase), 0)
+Amount EUR = DIVIDE(SUM(FactPurchase[amount_cents]), 100)
+Pending Lines = CALCULATE([Purchase Lines], DimMapping[status] = "unresolved")
+Glove Lines = CALCULATE([Purchase Lines], DimMapping[original_target] = "ProtectiveGlove")
+Glove Pending Lines = CALCULATE([Pending Lines], DimMapping[original_target] = "ProtectiveGlove")
+// Filter original_target = ProtectiveGlove for the public demo view.
+// Use DimMapping[material] on the bar chart axis and [Purchase Lines] as value.

@@ -1,0 +1,17 @@
+{
+  "status": "Expected native-tool results; NOT executed in tableau",
+  "reference": "../output.json",
+  "glove_filter": "dim_mapping.original_target = 'ProtectiveGlove'",
+  "purchase_lines": 180,
+  "nitrile_lines": 90,
+  "latex_lines": 90,
+  "amount_cents": 752847,
+  "all_dataset_unresolved_lines": 720,
+  "measures": {
+    "Purchase Lines": 180,
+    "Amount EUR": 7528.47,
+    "Glove Lines": 180,
+    "Glove Pending Lines": 0
+  },
+  "measure_scope": "original_target = ProtectiveGlove; same as guided demo"
+}

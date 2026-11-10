@@ -1,0 +1,12 @@
+{
+  "snapshot": "v2 with ONLY the six guided glove mappings reviewed; other changes stay unresolved",
+  "generated_by": "03-pipelines/04-bi/export.py",
+  "native_tools_validated": false,
+  "csv_sha256": {
+    "dim_category.csv": "7874967e00c2ee45bc78da9a8a21f1a4e4a60e37e41b2b39290e28b93427b933",
+    "dim_mapping.csv": "1d770d72b6d87d7cc434ab2330f7ba041ed1e985dad82666b4895273f49c2465",
+    "dim_month.csv": "2ef6447b3b80363f4aa2a2ae62da0e98a29cc34dd1caa80c5f714921e994989c",
+    "dim_supplier.csv": "fb8305225a0b684add911b7cb13325cfbcf0cee022a4c54d4cd4a572c904bf6b",
+    "fact_purchase.csv": "c99fe5fa9e9370ddcf95ea87e1320d446d274d2bc72e55a69d58b6de9c491943"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "execution": "Actual local SQLite execution on synthetic project fixtures",
+  "sqlite_version": "3.53.1",
+  "parameters": {
+    "mapping_id": "M0001",
+    "release": "scenario-v2",
+    "target": "Water",
+    "actor": "example-reviewer",
+    "reason": "Synthetic documentary example"
+  },
+  "query_sha256": "02098ff3bdc2e670e9f757a9c16ab0e74eeeeb1ae58c52d7857100a0eedbe77f",
+  "row_count": 1,
+  "rows": [
+    {
+      "mapping_id": "M0001",
+      "version": "scenario-v2",
+      "target": "Water",
+      "actor": "example-reviewer",
+      "reason": "Synthetic documentary example"
+    }
+  ]
+}

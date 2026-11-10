@@ -1,0 +1,62 @@
+category_id,label_en,label_es
+Supplies,Laboratory supplies,Suministros de laboratorio
+Solvents,Solvents,Disolventes
+Water,Laboratory water,Agua de laboratorio
+Ethanol,Ethanol,Etanol
+Methanol,Methanol,Metanol
+Isopropanol,Isopropanol,Isopropanol
+Acetone,Acetone,Acetona
+Acetonitrile,Acetonitrile,Acetonitrilo
+Acids,Acids,Ácidos
+AceticAcid,Acetic acid,Ácido acético
+CitricAcid,Citric acid,Ácido cítrico
+HydrochloricAcid,Hydrochloric acid,Ácido clorhídrico
+SulfuricAcid,Sulfuric acid,Ácido sulfúrico
+PhosphoricAcid,Phosphoric acid,Ácido fosfórico
+NitricAcid,Nitric acid,Ácido nítrico
+Salts,Salts,Sales
+SodiumChloride,Sodium chloride,Cloruro de sodio
+PotassiumChloride,Potassium chloride,Cloruro de potasio
+SodiumCarbonate,Sodium carbonate,Carbonato de sodio
+SodiumBicarbonate,Sodium bicarbonate,Bicarbonato de sodio
+CalciumChloride,Calcium chloride,Cloruro de calcio
+MagnesiumSulfate,Magnesium sulfate,Sulfato de magnesio
+Glassware,Glassware,Material de vidrio
+Beaker,Beaker,Vaso de precipitados
+Flask,Flask,Matraz
+MeasuringCylinder,Measuring cylinder,Probeta
+GlassVial,Glass vial,Vial de vidrio
+Funnel,Funnel,Embudo
+ReagentBottle,Reagent bottle,Frasco de reactivos
+Protection,Protection,Protección
+ProtectiveGlove,Protective glove,Guante de protección
+Goggles,Safety goggles,Gafas protectoras
+LabCoat,Laboratory coat,Bata de laboratorio
+FaceShield,Face shield,Pantalla facial
+DisposableMask,Disposable mask,Mascarilla desechable
+ShoeCovers,Shoe covers,Cubrecalzado
+Consumables,Consumables,Consumibles
+PipetteTips200,Pipette tips 200 µL,Puntas de pipeta 200 µL
+PipetteTips300,Pipette tips 300 µL,Puntas de pipeta 300 µL
+Microtube,Microtube,Microtubo
+FilterPaper,Filter paper,Papel de filtro
+Syringe,Syringe,Jeringa
+SampleBag,Sample bag,Bolsa de muestras
+Equipment,Equipment,Equipos
+DigitalThermometer,Digital thermometer,Termómetro digital
+Balance,Precision balance,Balanza de precisión
+PHMeter,pH meter,Medidor de pH
+Centrifuge,Centrifuge,Centrífuga
+Stirrer,Magnetic stirrer,Agitador magnético
+Cleaning,Cleaning,Limpieza
+Detergent,Laboratory detergent,Detergente de laboratorio
+Bleach,Bleach,Lejía
+Tissues,Cleaning tissues,Toallitas de limpieza
+Brush,Cleaning brush,Cepillo de limpieza
+WasteBag,Waste bag,Bolsa de residuos
+Absorbent,Absorbent granules,Gránulos absorbentes
+AcetoneGeneral,"Acetone, general grade","Acetona, grado general"
+NitrileGlove,Nitrile glove,Guante de nitrilo
+LatexGlove,Latex glove,Guante de látex
+PipetteTipsUniversal,Pipette tips (capacity on product),Puntas de pipeta (capacidad en producto)
+unresolved,Unresolved,Sin resolver

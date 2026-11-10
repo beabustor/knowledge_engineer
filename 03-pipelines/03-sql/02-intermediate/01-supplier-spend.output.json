@@ -1,0 +1,29 @@
+{
+  "execution": "Actual local SQLite execution on synthetic project fixtures",
+  "sqlite_version": "3.53.1",
+  "parameters": {
+    "minimum_cents": 0
+  },
+  "query_sha256": "e05c97ee7a563a3ddc671e67b77f6fc97de2574573e4f6cf95a6a893fd56e590",
+  "row_count": 3,
+  "rows": [
+    {
+      "supplier_id": "S3",
+      "name": "Cobalt Science",
+      "purchase_lines": 2880,
+      "amount_cents": 12095664
+    },
+    {
+      "supplier_id": "S2",
+      "name": "Boreal Supply",
+      "purchase_lines": 2880,
+      "amount_cents": 11839536
+    },
+    {
+      "supplier_id": "S1",
+      "name": "Atlas Lab",
+      "purchase_lines": 2880,
+      "amount_cents": 11583408
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "execution": "Actual engine decisions -> CSV -> independently queried in SQLite",
+  "snapshot": "v2 with ONLY the six guided glove mappings reviewed; other changes stay unresolved",
+  "all_data": {
+    "purchase_lines": 8640,
+    "amount_cents": 35518608
+  },
+  "glove_filter": "dim_mapping.original_target = 'ProtectiveGlove'",
+  "glove_case": {
+    "purchase_lines": 180,
+    "amount_cents": 752847
+  },
+  "materials": [
+    {
+      "material": "latex",
+      "purchase_lines": 90
+    },
+    {
+      "material": "nitrile",
+      "purchase_lines": 90
+    }
+  ],
+  "other_unresolved_lines": 720,
+  "native_bi_execution": false,
+  "relationship_checks": "Unique dimension keys; inner joins preserve all 8640 rows and every cent"
+}

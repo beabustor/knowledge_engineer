@@ -1,0 +1,41 @@
+{
+  "status": "NOT EXECUTED ON redshift",
+  "reference_engine": "SQLite equivalent of the bounded monthly analytical intent; native syntax, date typing, access, costs and runtime are not validated",
+  "parameters": {
+    "start_date": "2026-01-01",
+    "end_date": "2026-07-01"
+  },
+  "row_count": 1728,
+  "preview_rows": [
+    {
+      "mapping_id": "M0001",
+      "month": "2026-01-01",
+      "amount_cents": 3450,
+      "running_cents": 3450
+    },
+    {
+      "mapping_id": "M0001",
+      "month": "2026-02-01",
+      "amount_cents": 3150,
+      "running_cents": 6600
+    },
+    {
+      "mapping_id": "M0001",
+      "month": "2026-03-01",
+      "amount_cents": 2850,
+      "running_cents": 9450
+    },
+    {
+      "mapping_id": "M0001",
+      "month": "2026-04-01",
+      "amount_cents": 2550,
+      "running_cents": 12000
+    },
+    {
+      "mapping_id": "M0001",
+      "month": "2026-05-01",
+      "amount_cents": 2250,
+      "running_cents": 14250
+    }
+  ]
+}

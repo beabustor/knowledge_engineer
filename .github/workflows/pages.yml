@@ -29,16 +29,19 @@ jobs:
       - run: PYTHONPATH=06-examples/python python -m unittest discover -s 06-examples/python/tests -v
       - run: python -m unittest discover -s 06-examples/sql -p 'test_*.py' -v
       - run: PYTHONPATH=07-deployment python -m unittest discover -s 07-deployment/optional/tests -v
+      - run: python 05-validation/06-sql/verify.py
+      - run: python 03-pipelines/04-bi/export.py
+      - run: python 05-validation/06-sql/check_docs.py
       - run: npm run build
         working-directory: 04-app
       - run: pip install -r 04-app/requirements-test.txt
       - run: python -m unittest discover -s 02-model -p 'test_*.py' -v
       - run: python 05-validation/01-semantic/validate.py
       - run: python 05-validation/04-impact/verify.py
-      - run: python 05-validation/06-sql/verify.py
       - run: python 05-validation/05-structure/verify.py
       - run: node 05-validation/02-extraction/run.ts
       - run: python -m playwright install --with-deps chromium
+      - run: python 05-validation/06-sql/test_guide_browser.py
       - run: python 05-validation/04-impact/test_browser.py
       - name: Browser smoke test
         run: python 04-app/test_browser.py

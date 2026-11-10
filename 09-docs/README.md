@@ -15,3 +15,5 @@
 05. [NAMING.md](NAMING.md)
 
 [SQL levels / Niveles SQL](../03-pipelines/03-sql/README.es.md) · [Observed checks / Comprobaciones](../05-validation/06-sql/report.json)
+
+[Visual SQL / SQL visual](../03-pipelines/03-sql/VISUAL-GUIDE.es.md) · [Power BI / Tableau](../03-pipelines/04-bi/README.md) · [Connection audit / Auditoría](CONNECTIONS.md)

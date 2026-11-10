@@ -1,0 +1,311 @@
+{
+  "execution": "Actual local SQLite execution on synthetic project fixtures",
+  "sqlite_version": "3.53.1",
+  "parameters": {
+    "release": "scenario-v2"
+  },
+  "query_sha256": "8c3e0da4b240d9f7de7d9cb408f233b175d869b2ca047eec7d8e07be1b6eedb8",
+  "row_count": 30,
+  "rows": [
+    {
+      "id": "M0228",
+      "supplier_id": "S3",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 187902,
+      "global_priority": 1,
+      "supplier_priority": 1,
+      "exposure_share": 0.04794951039196968
+    },
+    {
+      "id": "M0226",
+      "supplier_id": "S2",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 185211,
+      "global_priority": 2,
+      "supplier_priority": 1,
+      "exposure_share": 0.04726281130167372
+    },
+    {
+      "id": "M0224",
+      "supplier_id": "S1",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 182520,
+      "global_priority": 3,
+      "supplier_priority": 1,
+      "exposure_share": 0.04657611221137777
+    },
+    {
+      "id": "M0227",
+      "supplier_id": "S3",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 179975,
+      "global_priority": 4,
+      "supplier_priority": 2,
+      "exposure_share": 0.04592666992791318
+    },
+    {
+      "id": "M0225",
+      "supplier_id": "S2",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 177330,
+      "global_priority": 5,
+      "supplier_priority": 2,
+      "exposure_share": 0.045251709283605196
+    },
+    {
+      "id": "M0223",
+      "supplier_id": "S1",
+      "target": "MercuryThermometer",
+      "affected_lines": 30,
+      "affected_cents": 174685,
+      "global_priority": 6,
+      "supplier_priority": 2,
+      "exposure_share": 0.044576748639297205
+    },
+    {
+      "id": "M0192",
+      "supplier_id": "S3",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 161928,
+      "global_priority": 7,
+      "supplier_priority": 3,
+      "exposure_share": 0.04132137134650438
+    },
+    {
+      "id": "M0190",
+      "supplier_id": "S2",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 159237,
+      "global_priority": 8,
+      "supplier_priority": 3,
+      "exposure_share": 0.040634672256208426
+    },
+    {
+      "id": "M0186",
+      "supplier_id": "S3",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 157599,
+      "global_priority": 9,
+      "supplier_priority": 4,
+      "exposure_share": 0.040216681505593495
+    },
+    {
+      "id": "M0188",
+      "supplier_id": "S1",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 156546,
+      "global_priority": 10,
+      "supplier_priority": 3,
+      "exposure_share": 0.03994797316591247
+    },
+    {
+      "id": "M0184",
+      "supplier_id": "S2",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 154908,
+      "global_priority": 11,
+      "supplier_priority": 4,
+      "exposure_share": 0.039529982415297545
+    },
+    {
+      "id": "M0191",
+      "supplier_id": "S3",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 154445,
+      "global_priority": 12,
+      "supplier_priority": 5,
+      "exposure_share": 0.03941183240459259
+    },
+    {
+      "id": "M0182",
+      "supplier_id": "S1",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 152217,
+      "global_priority": 13,
+      "supplier_priority": 4,
+      "exposure_share": 0.03884328332500159
+    },
+    {
+      "id": "M0189",
+      "supplier_id": "S2",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 151800,
+      "global_priority": 14,
+      "supplier_priority": 5,
+      "exposure_share": 0.0387368717602846
+    },
+    {
+      "id": "M0185",
+      "supplier_id": "S3",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 150190,
+      "global_priority": 15,
+      "supplier_priority": 6,
+      "exposure_share": 0.03832602615070582
+    },
+    {
+      "id": "M0187",
+      "supplier_id": "S1",
+      "target": "PipetteTips300",
+      "affected_lines": 30,
+      "affected_cents": 149155,
+      "global_priority": 16,
+      "supplier_priority": 5,
+      "exposure_share": 0.038061911115976614
+    },
+    {
+      "id": "M0183",
+      "supplier_id": "S2",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 147545,
+      "global_priority": 17,
+      "supplier_priority": 6,
+      "exposure_share": 0.03765106550639784
+    },
+    {
+      "id": "M0181",
+      "supplier_id": "S1",
+      "target": "PipetteTips200",
+      "affected_lines": 30,
+      "affected_cents": 144900,
+      "global_priority": 18,
+      "supplier_priority": 6,
+      "exposure_share": 0.03697610486208985
+    },
+    {
+      "id": "M0150",
+      "supplier_id": "S3",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 131625,
+      "global_priority": 19,
+      "supplier_priority": 7,
+      "exposure_share": 0.0335885424601282
+    },
+    {
+      "id": "M0148",
+      "supplier_id": "S2",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 128934,
+      "global_priority": 20,
+      "supplier_priority": 7,
+      "exposure_share": 0.03290184336983225
+    },
+    {
+      "id": "M0146",
+      "supplier_id": "S1",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 126243,
+      "global_priority": 21,
+      "supplier_priority": 7,
+      "exposure_share": 0.03221514427953629
+    },
+    {
+      "id": "M0149",
+      "supplier_id": "S3",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 124660,
+      "global_priority": 22,
+      "supplier_priority": 8,
+      "exposure_share": 0.03181118862738523
+    },
+    {
+      "id": "M0147",
+      "supplier_id": "S2",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 122015,
+      "global_priority": 23,
+      "supplier_priority": 8,
+      "exposure_share": 0.031136227983077244
+    },
+    {
+      "id": "M0145",
+      "supplier_id": "S1",
+      "target": "ProtectiveGlove",
+      "affected_lines": 30,
+      "affected_cents": 119370,
+      "global_priority": 24,
+      "supplier_priority": 8,
+      "exposure_share": 0.030461267338769256
+    },
+    {
+      "id": "M0030",
+      "supplier_id": "S3",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 45045,
+      "global_priority": 25,
+      "supplier_priority": 9,
+      "exposure_share": 0.01149474564191054
+    },
+    {
+      "id": "M0028",
+      "supplier_id": "S2",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 42354,
+      "global_priority": 26,
+      "supplier_priority": 9,
+      "exposure_share": 0.010808046551614586
+    },
+    {
+      "id": "M0026",
+      "supplier_id": "S1",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 39663,
+      "global_priority": 27,
+      "supplier_priority": 9,
+      "exposure_share": 0.01012134746131863
+    },
+    {
+      "id": "M0029",
+      "supplier_id": "S3",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 39560,
+      "global_priority": 28,
+      "supplier_priority": 10,
+      "exposure_share": 0.010095063549649926
+    },
+    {
+      "id": "M0027",
+      "supplier_id": "S2",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 36915,
+      "global_priority": 29,
+      "supplier_priority": 10,
+      "exposure_share": 0.009420102905341936
+    },
+    {
+      "id": "M0025",
+      "supplier_id": "S1",
+      "target": "Acetone",
+      "affected_lines": 30,
+      "affected_cents": 34270,
+      "global_priority": 30,
+      "supplier_priority": 10,
+      "exposure_share": 0.008745142261033947
+    }
+  ]
+}
