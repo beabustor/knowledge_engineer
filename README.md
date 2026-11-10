@@ -36,6 +36,8 @@ npm run dev --prefix 04-app
 npm test --prefix 04-app
 ```
 
+**SQL proficiency evidence:** [Basic → Intermediate → Advanced → Production design](03-pipelines/03-sql/README.md). Executable joins, subqueries, window functions, recursive CTEs, transactions and query-plan diagnostics use this same dataset. BigQuery / Snowflake / Redshift examples are disabled design templates, not production experience.
+
 [Technical guide](09-docs/en/technical-guide.md)
 
 </details>

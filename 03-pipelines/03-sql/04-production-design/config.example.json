@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "automatic_execution": false,
+  "credentials_in_repository": false,
+  "dataset": "synthetic procurement fixture only",
+  "targets": ["bigquery", "snowflake", "redshift"],
+  "required_before_execution": ["operator-selected account and region", "least-privilege roles", "cost budget and query limits", "synthetic load reconciliation", "native syntax verification", "representative volume and skew tests"]
+}

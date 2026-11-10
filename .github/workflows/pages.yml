@@ -35,6 +35,7 @@ jobs:
       - run: python -m unittest discover -s 02-model -p 'test_*.py' -v
       - run: python 05-validation/01-semantic/validate.py
       - run: python 05-validation/04-impact/verify.py
+      - run: python 05-validation/06-sql/verify.py
       - run: python 05-validation/05-structure/verify.py
       - run: node 05-validation/02-extraction/run.ts
       - run: python -m playwright install --with-deps chromium

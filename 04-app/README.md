@@ -25,3 +25,5 @@
 15. [vite.config.ts](vite.config.ts)
 
 Run / Ejecutar: `npm run dev --prefix 04-app` from the repository root / desde la raíz.
+
+The separate [SQL proficiency pathway](../03-pipelines/03-sql/README.md) executes on the full frozen dataset; it deliberately adds no unrelated UI controls. / El itinerario SQL usa el conjunto completo sin añadir controles inconexos a la demo.

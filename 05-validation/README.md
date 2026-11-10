@@ -12,3 +12,5 @@
 02. [02-extraction/](02-extraction/)
 03. [03-integration/](03-integration/)
 04. [04-impact/](04-impact/)
+
+[06 · SQL verification / Verificación SQL](06-sql/README.md): fourteen semantic checks, source totals and query plans.

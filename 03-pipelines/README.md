@@ -11,3 +11,5 @@
 01. [01-impact/](01-impact/)
 02. [02-interview/](02-interview/)
 03. [execution-map.json](execution-map.json)
+
+[03 · SQL proficiency pathway / Itinerario SQL](03-sql/README.es.md): basic, intermediate and advanced executable evidence; disabled cloud production designs.

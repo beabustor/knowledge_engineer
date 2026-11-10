@@ -13,3 +13,5 @@
 03. [rank.sql](rank.sql)
 04. [schema.sql](schema.sql)
 05. [test_sql.py](test_sql.py)
+
+Current procurement SQL evidence lives in [03-pipelines/03-sql](../../03-pipelines/03-sql/README.md). This folder remains the separate legacy exercise. / La evidencia SQL actual está en ese itinerario; esta carpeta conserva el ejercicio antiguo separado.

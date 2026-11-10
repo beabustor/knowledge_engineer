@@ -1,0 +1,55 @@
+{
+  "engine": "SQLite",
+  "sqlite_version": "3.53.1",
+  "scope": {
+    "v1_concepts": 57,
+    "v2_concepts": 60,
+    "supplier_mappings": 288,
+    "purchase_lines": 8640,
+    "suppliers": 3
+  },
+  "passed_checks": [
+    "basic: bound parameters and filtering",
+    "joins: exact supplier totals and fact grain",
+    "subquery: NOT EXISTS finds 30 inactive mappings / 900 lines",
+    "windows: financial exposure ranking reconciles to queue",
+    "windows: LAG and explicit running frame match independent totals",
+    "edge: missing month becomes zero; zero denominator stays NULL",
+    "recursive CTE: multiple hierarchy paths do not duplicate facts",
+    "deduplication: timestamp ties resolve by stable event id",
+    "edge: tied exposure has shared dense rank and deterministic row numbers",
+    "troubleshooting: diagnose 96x join fan-out and reconcile corrected totals",
+    "plan: composite-index search preserves result; no scale/time claim",
+    "transaction: executed upsert and failed multi-row batch rolls back atomically",
+    "quality: foreign keys and monetary constraints reject invalid data",
+    "quality: review trigger rejects a retired target even when its identifier exists"
+  ],
+  "check_count": 14,
+  "total_amount_cents": 35518608,
+  "query_plan": {
+    "before": [
+      "SCAN purchase"
+    ],
+    "after": [
+      "SEARCH purchase USING INDEX idx_purchase_mapping_month (mapping_id=? AND month=?)"
+    ]
+  },
+  "sql_sha256": {
+    "indexes.sql": "61f6eceadbd316a9b4652df073a867770981590ba6f4685c48a8ebe39ee49ecb",
+    "schema.sql": "a1399e9c69528547ad42663d5fca65c3661f102604bec9246b22069d9804094c",
+    "01-basic/01-filter.sql": "e202c68b72ee40b83b319b564b398163f31bde4d1637283c9bf74e683c5f28ac",
+    "02-intermediate/02-review-queue.sql": "229941fafe18a6cb502db0200afbc855ef4b4aea79babbb6d752e0ebd63569f3",
+    "02-intermediate/01-supplier-spend.sql": "e05c97ee7a563a3ddc671e67b77f6fc97de2574573e4f6cf95a6a893fd56e590",
+    "03-advanced/02-prioritize-impact.sql": "8c3e0da4b240d9f7de7d9cb408f233b175d869b2ca047eec7d8e07be1b6eedb8",
+    "03-advanced/04-deduplicate-events.sql": "233877076304f28cf83b585ca93af9e2f5d2aef17983b473c7eb3e94289d1aac",
+    "03-advanced/05-review-transaction.sql": "02098ff3bdc2e670e9f757a9c16ab0e74eeeeb1ae58c52d7857100a0eedbe77f",
+    "03-advanced/01-monthly-windows.sql": "68389484f506a50b56e05d64c4ecdb7ab8ed646974483308c1b40481e0800b93",
+    "03-advanced/03-taxonomy-spend.sql": "ec98b02c4d4a3a8988d90e86485f4fc317f51fdfb21eb1407c9d15a419797b81",
+    "04-production-design/redshift/example.sql": "4a9ed70bbead470d1445b6b44f3e706a6d7e835f969559ce545615401e3d20a6",
+    "04-production-design/snowflake/example.sql": "d652f1294c266c9f6c4c1de323bf0ab3defb148cc33fdcf04f8e44ee11d037e5",
+    "04-production-design/bigquery/example.sql": "30c79467b44066cdf94a346ac5b2f9567d4fec189e35fad70975c926bd8d5182"
+  },
+  "cloud_execution": false,
+  "cloud_templates": "Design examples only; not syntax/runtime verified on cloud warehouses",
+  "proficiency_claim": "Executable evidence of basic/intermediate/advanced SQL techniques; not a certification of personal proficiency or production expertise"
+}

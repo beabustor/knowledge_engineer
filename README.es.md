@@ -36,6 +36,8 @@ npm run dev --prefix 04-app
 npm test --prefix 04-app
 ```
 
+**Evidencia de niveles SQL:** [Básico → Intermedio → Avanzado → Diseño de producción](03-pipelines/03-sql/README.es.md). Joins, subconsultas, ventanas, CTE recursiva, transacciones y diagnóstico ejecutables sobre los mismos datos. BigQuery / Snowflake / Redshift quedan como diseño desactivado, no experiencia de producción.
+
 [Guía técnica](09-docs/es/technical-guide.md)
 
 </details>

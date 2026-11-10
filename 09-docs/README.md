@@ -13,3 +13,5 @@
 03. [images/](images/)
 04. [EXECUTION.md](EXECUTION.md)
 05. [NAMING.md](NAMING.md)
+
+[SQL levels / Niveles SQL](../03-pipelines/03-sql/README.es.md) · [Observed checks / Comprobaciones](../05-validation/06-sql/report.json)
